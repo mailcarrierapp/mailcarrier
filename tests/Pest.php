@@ -1,5 +1,5 @@
 <?php
 
-use VendorName\Skeleton\Tests\TestCase;
+use MailCarrier\MailCarrier\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

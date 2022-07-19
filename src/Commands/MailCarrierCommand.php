@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace MailCarrier\MailCarrier\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class MailCarrierCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'mailcarrier';
 
     public $description = 'My command';
 

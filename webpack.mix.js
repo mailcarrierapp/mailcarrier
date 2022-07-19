@@ -19,7 +19,7 @@ mix
         languages: ['html', 'json'],
         features: ['!quickCommand'],
         globalAPI: true,
-        filename: 'js/[name].worker.js'
+        filename: 'dist/js/[name].worker.js'
       })
     ]
   })

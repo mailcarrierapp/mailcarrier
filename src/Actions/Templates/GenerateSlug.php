@@ -2,9 +2,9 @@
 
 namespace MailCarrier\MailCarrier\Actions\Templates;
 
+use Illuminate\Support\Str;
 use MailCarrier\MailCarrier\Actions\Action;
 use MailCarrier\MailCarrier\Models\Template;
-use Illuminate\Support\Str;
 
 class GenerateSlug extends Action
 {
@@ -25,7 +25,7 @@ class GenerateSlug extends Action
                 ->slug()
                 // Always reach the desired max length with the retries number and the dash
                 ->limit($maxLength - strlen((string) $retries) - 1, '')
-                ->append('-' . $retries)
+                ->append('-'.$retries)
                 ->toString();
         }
 

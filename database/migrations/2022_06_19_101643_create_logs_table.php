@@ -1,11 +1,12 @@
 <?php
 
-use MailCarrier\MailCarrier\Models\Template;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use MailCarrier\MailCarrier\Models\Template;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */

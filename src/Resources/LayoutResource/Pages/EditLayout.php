@@ -2,9 +2,9 @@
 
 namespace MailCarrier\MailCarrier\Resources\LayoutResource\Pages;
 
-use MailCarrier\MailCarrier\Resources\LayoutResource;
 use Filament\Pages\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use MailCarrier\MailCarrier\Resources\LayoutResource;
 
 class EditLayout extends EditRecord
 {
@@ -18,13 +18,13 @@ class EditLayout extends EditRecord
      */
     protected function getActions(): array
     {
-        $canBeDeleted = !$this->record->is_locked &&
+        $canBeDeleted = ! $this->record->is_locked &&
             LayoutResource::canDelete($this->record) &&
-            !$this->record->templates()->exists();
+            ! $this->record->templates()->exists();
 
         return [
             DeleteAction::make()
-                ->disabled(!$canBeDeleted),
+                ->disabled(! $canBeDeleted),
         ];
     }
 }

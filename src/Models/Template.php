@@ -15,7 +15,6 @@ use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
  * @property string $name
  * @property string $slug
  * @property string $content
- *
  * @property-read \MailCarrier\MailCarrier\Models\User|null $user
  * @property-read \MailCarrier\MailCarrier\Models\Layout|null $layout
  */
@@ -95,6 +94,6 @@ class Template extends Model
      */
     public function getHash(): string
     {
-        return md5($this->content . $this->layout?->content);
+        return md5($this->content.$this->layout?->content);
     }
 }

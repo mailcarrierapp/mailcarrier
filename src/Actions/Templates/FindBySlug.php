@@ -19,8 +19,7 @@ class FindBySlug extends Action
             ->usingCacheTags(Template::class)
             ->withCacheArgs(func_get_args())
             ->cached(
-                fn () =>
-                    Template::query()
+                fn () => Template::query()
                         ->where('slug', $slug)
                         ->firstOrFail()
             );

@@ -2,12 +2,12 @@
 
 namespace MailCarrier\MailCarrier\Resources\TemplateResource\Pages;
 
-use MailCarrier\MailCarrier\Resources\TemplateResource;
-use MailCarrier\MailCarrier\Models\Template;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Facades\URL;
+use MailCarrier\MailCarrier\Models\Template;
+use MailCarrier\MailCarrier\Resources\TemplateResource;
 
 class ListTemplates extends ListRecords
 {

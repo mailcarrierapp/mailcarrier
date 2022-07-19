@@ -2,12 +2,12 @@
 
 namespace MailCarrier\MailCarrier\Resources\LayoutResource\Pages;
 
-use MailCarrier\MailCarrier\Resources\LayoutResource;
-use MailCarrier\MailCarrier\Models\Layout;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Facades\URL;
+use MailCarrier\MailCarrier\Models\Layout;
+use MailCarrier\MailCarrier\Resources\LayoutResource;
 
 class ListLayouts extends ListRecords
 {

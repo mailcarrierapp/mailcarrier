@@ -2,16 +2,16 @@
 
 namespace MailCarrier\MailCarrier\Resources;
 
-use MailCarrier\MailCarrier\Resources\LayoutResource\Pages;
-use MailCarrier\MailCarrier\Forms\Components\MonacoEditor;
-use MailCarrier\MailCarrier\Models\Layout;
-use MailCarrier\MailCarrier\Models\User;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Support\HtmlString;
+use MailCarrier\MailCarrier\Forms\Components\MonacoEditor;
+use MailCarrier\MailCarrier\Models\Layout;
+use MailCarrier\MailCarrier\Models\User;
+use MailCarrier\MailCarrier\Resources\LayoutResource\Pages;
 use RalphJSmit\Filament\Components\Forms\Sidebar;
 use RalphJSmit\Filament\Components\Forms\Timestamps;
 
@@ -24,7 +24,7 @@ class LayoutResource extends Resource
     /**
      * Default HTML content.
      */
-    protected const DEFAULT_CONTENT = <<<HTML
+    protected const DEFAULT_CONTENT = <<<'HTML'
         <!doctype html>
             <html lang="en">
             <head>
@@ -96,7 +96,7 @@ class LayoutResource extends Resource
                     ->required()
                     ->autofocus()
                     // Disable field UI if the record exists and user can't unlock it
-                    ->disabled(fn (?Layout $record) => !is_null($record) && !static::can('unlock', $record))
+                    ->disabled(fn (?Layout $record) => ! is_null($record) && ! static::can('unlock', $record))
                     // Save the field if record does not exist or user can unlock it
                     ->dehydrated(fn (?Layout $record) => is_null($record) || static::can('unlock', $record)),
 
@@ -108,7 +108,7 @@ class LayoutResource extends Resource
                     ->columnSpan(2)
                     ->default(static::DEFAULT_CONTENT)
                     // Disable field UI if the record exists and user can't unlock it
-                    ->disabled(fn (?Layout $record) => !is_null($record) && !static::can('unlock', $record))
+                    ->disabled(fn (?Layout $record) => ! is_null($record) && ! static::can('unlock', $record))
                     // Save the field if record does not exist or user can unlock it
                     ->dehydrated(fn (?Layout $record) => is_null($record) || static::can('unlock', $record)),
             ]),
@@ -125,7 +125,7 @@ class LayoutResource extends Resource
                 Forms\Components\Toggle::make('is_locked')
                     ->inline(false)
                     // Disable field UI if the record exists and user can't unlock it
-                    ->disabled(fn (?Layout $record) => !is_null($record) && !static::can('unlock', $record))
+                    ->disabled(fn (?Layout $record) => ! is_null($record) && ! static::can('unlock', $record))
                     // Save the field if record does not exist or user can unlock it
                     ->dehydrated(fn (?Layout $record) => is_null($record) || static::can('unlock', $record)),
 
@@ -138,7 +138,7 @@ class LayoutResource extends Resource
                         ->content(fn (?Layout $record) => $record?->user?->getFilamentName() ?: '-'),
 
                     ...Timestamps::make(),
-                ])->when(fn (?Layout $record) => !is_null($record)),
+                ])->when(fn (?Layout $record) => ! is_null($record)),
             ]),
         ];
     }

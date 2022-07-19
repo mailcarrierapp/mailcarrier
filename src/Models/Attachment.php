@@ -2,12 +2,12 @@
 
 namespace MailCarrier\MailCarrier\Models;
 
-use MailCarrier\MailCarrier\Enums\AttachmentLogStrategy;
-use MailCarrier\MailCarrier\MailCarrier;
-use MailCarrier\MailCarrier\Models\Concerns\IsUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use MailCarrier\MailCarrier\Enums\AttachmentLogStrategy;
+use MailCarrier\MailCarrier\MailCarrier;
+use MailCarrier\MailCarrier\Models\Concerns\IsUuid;
 
 /**
  * @property string $log_id
@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $content
  * @property string|null $path
  * @property string|null $disk
- *
  * @property-read string $readableSize
  */
 class Attachment extends Model

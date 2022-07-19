@@ -2,11 +2,11 @@
 
 namespace MailCarrier\MailCarrier\Mail;
 
-use MailCarrier\MailCarrier\Dto\GenericMailDto;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
+use MailCarrier\MailCarrier\Dto\GenericMailDto;
 
 class GenericMail extends Mailable
 {

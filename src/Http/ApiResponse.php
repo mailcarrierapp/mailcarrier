@@ -46,7 +46,7 @@ class ApiResponse
             'application/octet-stream';
 
         $headers = [
-            'Content-type'        => $contentType,
+            'Content-type' => $contentType,
             'Content-Disposition' => sprintf('attachment; filename="%s"', $fileName),
         ];
 

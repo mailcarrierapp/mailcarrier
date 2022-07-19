@@ -2,10 +2,10 @@
 
 namespace MailCarrier\MailCarrier\Resources\TemplateResource\Pages;
 
-use MailCarrier\MailCarrier\Actions\Templates\GenerateSlug;
-use MailCarrier\MailCarrier\Resources\TemplateResource;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
+use MailCarrier\MailCarrier\Actions\Templates\GenerateSlug;
+use MailCarrier\MailCarrier\Resources\TemplateResource;
 
 class CreateTemplate extends CreateRecord
 {

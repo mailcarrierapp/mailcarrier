@@ -2,9 +2,9 @@
 
 namespace MailCarrier\MailCarrier\Actions\Templates;
 
+use Latte;
 use MailCarrier\MailCarrier\Actions\Action;
 use MailCarrier\MailCarrier\Models\Template;
-use Latte;
 
 class Render extends Action
 {
@@ -14,8 +14,8 @@ class Render extends Action
     public function run(Template $template, array $variables = []): string
     {
         $mainFileName = sprintf('main-%d.latte', $template->id);
-        $layoutFileName = !$template->layout_id ? null : sprintf('layout-%d.latte', $template->layout_id);
-        $mainFileContent = !$template->layout_id ? $template->content : sprintf(
+        $layoutFileName = ! $template->layout_id ? null : sprintf('layout-%d.latte', $template->layout_id);
+        $mainFileContent = ! $template->layout_id ? $template->content : sprintf(
             "{layout '%s'}{block content}%s{/block}",
             $layoutFileName,
             $template->content,

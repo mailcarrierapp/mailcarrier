@@ -2,10 +2,6 @@
 
 namespace MailCarrier\MailCarrier\Models;
 
-use MailCarrier\MailCarrier\Dto\ContactDto;
-use MailCarrier\MailCarrier\Dto\LogTemplateDto;
-use MailCarrier\MailCarrier\Enums\LogStatus;
-use MailCarrier\MailCarrier\Models\Concerns\IsUuid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Config;
+use MailCarrier\MailCarrier\Dto\ContactDto;
+use MailCarrier\MailCarrier\Dto\LogTemplateDto;
+use MailCarrier\MailCarrier\Enums\LogStatus;
+use MailCarrier\MailCarrier\Models\Concerns\IsUuid;
 
 /**
  * @property int|null $template_id
@@ -26,7 +26,6 @@ use Illuminate\Support\Facades\Config;
  * @property array<string, mixed>|null $variables
  * @property string|null $error
  * @property \Carbon\Carbon $created_at
- *
  * @property-read \MailCarrier\MailCarrier\Models\Template|null $template
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \MailCarrier\MailCarrier\Models\Attachment> $attachments
  */
@@ -113,8 +112,7 @@ class Log extends Model
         $prunablePeriod = Config::get('mailcarrier.logs.prunable_period');
 
         return static::query()
-            ->when($prunablePeriod, fn (EloquentBuilder $query, string $period) =>
-                $query->where('created_at', '<=', Carbon::now()->sub(...explode(' ', $period)))
+            ->when($prunablePeriod, fn (EloquentBuilder $query, string $period) => $query->where('created_at', '<=', Carbon::now()->sub(...explode(' ', $period)))
             );
     }
 }

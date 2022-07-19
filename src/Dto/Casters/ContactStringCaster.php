@@ -20,7 +20,7 @@ class ContactStringCaster implements Caster
             return $value;
         }
 
-        if (!is_array($value)) {
+        if (! is_array($value)) {
             $value = [
                 'email' => $value,
             ];

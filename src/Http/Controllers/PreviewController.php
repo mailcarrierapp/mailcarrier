@@ -2,8 +2,8 @@
 
 namespace MailCarrier\MailCarrier\Http\Controllers;
 
-use MailCarrier\MailCarrier\Models\Log;
 use Illuminate\Http\Response;
+use MailCarrier\MailCarrier\Models\Log;
 
 class PreviewController extends Controller
 {

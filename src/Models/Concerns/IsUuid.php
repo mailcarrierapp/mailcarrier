@@ -18,7 +18,7 @@ trait IsUuid
             /** @var string $primaryKey */
             $primaryKey = $model->getKeyName();
 
-            if (! $model->getAttributeValue($primaryKey)) {
+            if (!$model->getAttributeValue($primaryKey)) {
                 $model->setAttribute($primaryKey, (string) Str::uuid());
             }
         });

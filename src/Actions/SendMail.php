@@ -39,7 +39,7 @@ class SendMail extends Action
         $this->params = $params;
 
         // Fallback sender to app defaults
-        if (! $params->sender) {
+        if (!$params->sender) {
             $this->params->sender = new ContactDto(
                 name: Config::get('mail.from.name'),
                 email: Config::get('mail.from.address')
@@ -137,7 +137,7 @@ class SendMail extends Action
             error: $exception->getMessage(),
         );
 
-        $log = ! $this->shouldLog ? null : (new Logs\CreateFromGenericMail)->run($genericMailDto);
+        $log = !$this->shouldLog ? null : (new Logs\CreateFromGenericMail)->run($genericMailDto);
 
         if ($exception) {
             throw $exception;

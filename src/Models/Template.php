@@ -94,6 +94,6 @@ class Template extends Model
      */
     public function getHash(): string
     {
-        return md5($this->content.$this->layout?->content);
+        return md5($this->content . $this->layout?->content);
     }
 }

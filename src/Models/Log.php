@@ -112,7 +112,9 @@ class Log extends Model
         $prunablePeriod = Config::get('mailcarrier.logs.prunable_period');
 
         return static::query()
-            ->when($prunablePeriod, fn (EloquentBuilder $query, string $period) => $query->where('created_at', '<=', Carbon::now()->sub(...explode(' ', $period)))
+            ->when(
+                $prunablePeriod,
+                fn (EloquentBuilder $query, string $period) => $query->where('created_at', '<=', Carbon::now()->sub(...explode(' ', $period)))
             );
     }
 }

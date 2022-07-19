@@ -41,7 +41,8 @@ class CreateFromGenericMail extends Action
 
         $log->attachments()->createMany(
             array_map(
-                $this->buildAttachment(...), [
+                $this->buildAttachment(...),
+                [
                     ...$genericMailDto->attachments,
                     ...$genericMailDto->remoteAttachments,
                 ]

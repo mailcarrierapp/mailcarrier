@@ -27,7 +27,8 @@ class ApiResponse
         string $errorKey,
         string $message,
         int $httpStatus = JsonResponse::HTTP_BAD_REQUEST,
-        array $meta = []): JsonResponse
+        array $meta = []
+    ): JsonResponse
     {
         return new JsonResponse([
             'response' => 'error',

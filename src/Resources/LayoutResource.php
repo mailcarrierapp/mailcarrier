@@ -96,7 +96,7 @@ class LayoutResource extends Resource
                     ->required()
                     ->autofocus()
                     // Disable field UI if the record exists and user can't unlock it
-                    ->disabled(fn (?Layout $record) => ! is_null($record) && ! static::can('unlock', $record))
+                    ->disabled(fn (?Layout $record) => !is_null($record) && !static::can('unlock', $record))
                     // Save the field if record does not exist or user can unlock it
                     ->dehydrated(fn (?Layout $record) => is_null($record) || static::can('unlock', $record)),
 
@@ -108,7 +108,7 @@ class LayoutResource extends Resource
                     ->columnSpan(2)
                     ->default(static::DEFAULT_CONTENT)
                     // Disable field UI if the record exists and user can't unlock it
-                    ->disabled(fn (?Layout $record) => ! is_null($record) && ! static::can('unlock', $record))
+                    ->disabled(fn (?Layout $record) => !is_null($record) && !static::can('unlock', $record))
                     // Save the field if record does not exist or user can unlock it
                     ->dehydrated(fn (?Layout $record) => is_null($record) || static::can('unlock', $record)),
             ]),
@@ -125,7 +125,7 @@ class LayoutResource extends Resource
                 Forms\Components\Toggle::make('is_locked')
                     ->inline(false)
                     // Disable field UI if the record exists and user can't unlock it
-                    ->disabled(fn (?Layout $record) => ! is_null($record) && ! static::can('unlock', $record))
+                    ->disabled(fn (?Layout $record) => !is_null($record) && !static::can('unlock', $record))
                     // Save the field if record does not exist or user can unlock it
                     ->dehydrated(fn (?Layout $record) => is_null($record) || static::can('unlock', $record)),
 
@@ -138,7 +138,7 @@ class LayoutResource extends Resource
                         ->content(fn (?Layout $record) => $record?->user?->getFilamentName() ?: '-'),
 
                     ...Timestamps::make(),
-                ])->when(fn (?Layout $record) => ! is_null($record)),
+                ])->when(fn (?Layout $record) => !is_null($record)),
             ]),
         ];
     }

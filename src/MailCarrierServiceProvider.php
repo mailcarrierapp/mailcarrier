@@ -16,7 +16,7 @@ class MailCarrierServiceProvider extends PluginServiceProvider
     public static string $name = 'mailcarrier';
 
     protected array $scripts = [
-        'mailcarrier-scripts' => __DIR__.'/../dist/js/monaco.js',
+        'mailcarrier-scripts' => __DIR__ . '/../dist/js/monaco.js',
     ];
 
     protected array $resources = [

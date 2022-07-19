@@ -15,8 +15,6 @@ class GenericFile
 
     /**
      * Return the current file as array to download.
-     *
-     * @return array
      */
     public function forDownload(): array
     {

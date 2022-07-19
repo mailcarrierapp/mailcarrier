@@ -17,7 +17,7 @@ class SendMailRequest extends FormRequest
         $attachmentsMimeTypes = null;
 
         if ($allowedMimeTypes = Config::get('mailcarrier.attachments.mimetypes')) {
-            $attachmentsMimeTypes = 'mimetypes:'.implode(',', $allowedMimeTypes);
+            $attachmentsMimeTypes = 'mimetypes:' . implode(',', $allowedMimeTypes);
         }
 
         return [
@@ -34,7 +34,7 @@ class SendMailRequest extends FormRequest
             'attachments' => 'sometimes|array',
             'attachments.*' => array_filter([
                 'file',
-                'max:'.Config::get('mailcarrier.attachments.max_size'),
+                'max:' . Config::get('mailcarrier.attachments.max_size'),
                 $attachmentsMimeTypes,
             ]),
 
@@ -55,7 +55,7 @@ class SendMailRequest extends FormRequest
             'recipients' => 'required_without:recipient|prohibits:recipient|array|min:1',
             'recipients.*' => [
                 // Apply rule only when recipients is an array of objects
-                Rule::when($this->has('recipients') && ! is_array($this->json('recipients.0')), 'required|email'),
+                Rule::when($this->has('recipients') && !is_array($this->json('recipients.0')), 'required|email'),
             ],
             'recipients.*.recipient' => [
                 // Apply rule only when recipients is an array of objects
@@ -69,7 +69,7 @@ class SendMailRequest extends FormRequest
             'recipients.*.attachments' => 'sometimes|array',
             'recipients.*.attachments.*' => array_filter([
                 'file',
-                'max:'.Config::get('mailcarrier.attachments.max_size'),
+                'max:' . Config::get('mailcarrier.attachments.max_size'),
                 $attachmentsMimeTypes,
             ]),
 
@@ -97,14 +97,14 @@ class SendMailRequest extends FormRequest
 
         // Cast 'enqueue' from string to bool, e.g. for form-data
         $enqueue = $this->input('enqueue');
-        if (! is_null($enqueue) && ! is_bool($enqueue)) {
+        if (!is_null($enqueue) && !is_bool($enqueue)) {
             $this->merge([
                 'enqueue' => filter_var($enqueue, FILTER_VALIDATE_BOOL),
             ]);
         }
 
         // Wrap recipient array list into a structured data
-        if (is_array($this->input('recipients')) && ! is_array($this->json('recipients.0'))) {
+        if (is_array($this->input('recipients')) && !is_array($this->json('recipients.0'))) {
             $this->merge([
                 'recipients' => array_map(fn (string $recipient) => [
                     'recipient' => $recipient,
@@ -113,7 +113,7 @@ class SendMailRequest extends FormRequest
         }
 
         // Wrap remote attachments array list into a structured data
-        if (is_array($this->input('remoteAttachments')) && ! is_array($this->json('remoteAttachments.0'))) {
+        if (is_array($this->input('remoteAttachments')) && !is_array($this->json('remoteAttachments.0'))) {
             $this->merge([
                 'remoteAttachments' => array_map(fn (string $attachment) => [
                     'resource' => $attachment,

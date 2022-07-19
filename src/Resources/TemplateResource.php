@@ -67,8 +67,8 @@ class TemplateResource extends Resource
                     ->beforeReplicaSaved(function (Template $replica): void {
                         $replica->fill([
                             'user_id' => Auth::id(),
-                            'name' => $replica->name.' (Copy)',
-                            'slug' => (new GenerateSlug())->run($replica->name.' (Copy)'),
+                            'name' => $replica->name . ' (Copy)',
+                            'slug' => (new GenerateSlug())->run($replica->name . ' (Copy)'),
                         ]);
                     }),
             ])
@@ -98,7 +98,7 @@ class TemplateResource extends Resource
                     ->required()
                     ->autofocus()
                     // Disable field UI if the record exists and user can't unlock it
-                    ->disabled(fn (?Template $record) => ! is_null($record) && ! static::can('unlock', $record))
+                    ->disabled(fn (?Template $record) => !is_null($record) && !static::can('unlock', $record))
                     // Save the field if record does not exist or user can unlock it
                     ->dehydrated(fn (?Template $record) => is_null($record) || static::can('unlock', $record)),
 
@@ -109,9 +109,9 @@ class TemplateResource extends Resource
                     // Full width
                     ->columnSpan(2)
                     // Disable field UI if the record exists and user can't unlock it
-                    ->disabled(fn (?Template $record) => ! is_null($record) && ! static::can('unlock', $record))
+                    ->disabled(fn (?Template $record) => !is_null($record) && !static::can('unlock', $record))
                     // Save the field if record does not exist or user can unlock it
-                    ->dehydrated(fn (?Template $record) => is_null($record) || ! static::can('unlock', $record)),
+                    ->dehydrated(fn (?Template $record) => is_null($record) || !static::can('unlock', $record)),
             ]),
         ];
     }
@@ -126,14 +126,14 @@ class TemplateResource extends Resource
                 Forms\Components\Toggle::make('is_locked')
                     ->inline(false)
                     // Disable field UI if the record exists and user can't unlock it
-                    ->disabled(fn (?Template $record) => ! is_null($record) && ! static::can('unlock', $record))
+                    ->disabled(fn (?Template $record) => !is_null($record) && !static::can('unlock', $record))
                     // Save the field if record does not exist or user can unlock it
                     ->dehydrated(fn (?Template $record) => is_null($record) || static::can('unlock', $record)),
 
                 Forms\Components\Select::make('layoutId')
                     ->relationship('layout', 'name')
                     ->suffix(function (?Template $record): ?HtmlString {
-                        if (! $record?->layout_id) {
+                        if (!$record?->layout_id) {
                             return null;
                         }
 
@@ -161,7 +161,7 @@ class TemplateResource extends Resource
                         ->content(fn (Template $record) => $record->user?->getFilamentName() ?: '-'),
 
                     ...Timestamps::make(),
-                ])->when(fn (?Template $record) => ! is_null($record)),
+                ])->when(fn (?Template $record) => !is_null($record)),
             ]),
         ];
     }

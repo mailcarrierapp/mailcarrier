@@ -11,7 +11,7 @@ class Email implements Validator
 {
     public function validate(mixed $value): ValidationResult
     {
-        if (! filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
             return ValidationResult::invalid('Value must be a valid email address.');
         }
 

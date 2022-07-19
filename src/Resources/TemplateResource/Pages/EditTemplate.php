@@ -44,7 +44,7 @@ class EditTemplate extends EditRecord
                     Forms\Components\Checkbox::make('enqueue'),
                 ]),
             DeleteAction::make()
-                ->disabled($this->record->is_locked || ! TemplateResource::canDelete($this->record)),
+                ->disabled($this->record->is_locked || !TemplateResource::canDelete($this->record)),
         ];
     }
 
@@ -58,7 +58,7 @@ class EditTemplate extends EditRecord
             ->run(
                 new SendMailDto(
                     template: $this->getRecord()->slug, // @phpstan-ignore-line
-                    subject: 'Test from '.Config::get('app.name'),
+                    subject: 'Test from ' . Config::get('app.name'),
                     recipient: $data['email'],
                     enqueue: $data['enqueue'],
                     variables: Arr::undot($data['variables'] ?: []),

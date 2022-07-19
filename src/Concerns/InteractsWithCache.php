@@ -142,21 +142,21 @@ trait InteractsWithCache
     {
         $key = static::class;
 
-        if (! empty($this->cacheKeyArgs)) {
+        if (!empty($this->cacheKeyArgs)) {
             $sanitizedArgs = Collection::make($this->cacheKeyArgs)
                 // Exclude callables and closures from serialization
-                ->filter(fn (mixed $arg) => ! is_callable($arg))
+                ->filter(fn (mixed $arg) => !is_callable($arg))
                 ->map(function (mixed $arg): mixed {
                     // Get the primary key of the model
                     if ($arg instanceof Model) {
-                        return $arg::class.$arg->getKey();
+                        return $arg::class . $arg->getKey();
                     }
 
                     return $arg;
                 })
                 ->all();
 
-            $key .= '_'.md5(json_encode($sanitizedArgs));
+            $key .= '_' . md5(json_encode($sanitizedArgs));
         }
 
         return $key;

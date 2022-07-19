@@ -33,7 +33,8 @@ class LogResource extends Resource
                 Tables\Columns\TextColumn::make('recipient')
                     ->searchable()
                     ->limit(25)
-                    ->tooltip(fn (Tables\Columns\TextColumn $column): ?string => strlen($column->getState()) > $column->getLimit() ? $column->getState() : null
+                    ->tooltip(
+                        fn (Tables\Columns\TextColumn $column): ?string => strlen($column->getState()) > $column->getLimit() ? $column->getState() : null
                     ),
 
                 Tables\Columns\BadgeColumn::make('status')
@@ -47,31 +48,35 @@ class LogResource extends Resource
                 Tables\Columns\TextColumn::make('subject')
                     ->searchable()
                     ->limit(25)
-                    ->tooltip(fn (Tables\Columns\TextColumn $column): ?string => strlen($column->getState()) > $column->getLimit() ? $column->getState() : null
+                    ->tooltip(
+                        fn (Tables\Columns\TextColumn $column): ?string => strlen($column->getState()) > $column->getLimit() ? $column->getState() : null
                     ),
 
                 Tables\Columns\TextColumn::make('trigger'),
 
                 Tables\Columns\TagsColumn::make('attachments')
                     ->limit(2)
-                    ->getStateUsing(fn (Log $record): array => $record
+                    ->getStateUsing(
+                        fn (Log $record): array => $record
                             ->attachments
                             ->pluck('name')
                             ->all()
                     )
                     ->extraAttributes(fn (Log $record): array => [
-                        'wire:click' => $record->attachments->isNotEmpty() ? 'mountTableAction("attachments", "'.$record->getKey().'")' : '',
+                        'wire:click' => $record->attachments->isNotEmpty() ? 'mountTableAction("attachments", "' . $record->getKey() . '")' : '',
                         'class' => $record->attachments->isNotEmpty() ? 'cursor-pointer' : '',
                     ]),
 
                 Tables\Columns\TextColumn::make('template_frozen')
                     ->label('Template')
-                    ->url(fn (Log $record): ?string => is_null($record->template_id) ? null : URL::route('filament.resources.templates.edit', [
+                    ->url(
+                        fn (Log $record): ?string => is_null($record->template_id) ? null : URL::route('filament.resources.templates.edit', [
                         'record' => $record->template_id,
                     ])
                     )
                     ->openUrlInNewTab()
-                    ->formatStateUsing(fn (Log $record): HtmlString => static::getTemplateValue($record->template_frozen, $record->template)
+                    ->formatStateUsing(
+                        fn (Log $record): HtmlString => static::getTemplateValue($record->template_frozen, $record->template)
                     ),
 
                 Tables\Columns\TextColumn::make('created_at')
@@ -180,9 +185,9 @@ class LogResource extends Resource
         };
 
         return new HtmlString(
-            ($icon ? svg($icon, 'w-4 h-4 inline-block mr-1 '.$iconColor)->toHtml() : '').
-            $label.
-            ($subtitle ? '<p class="text-xs mt-1 text-slate-300">'.$subtitle.'</p>' : '')
+            ($icon ? svg($icon, 'w-4 h-4 inline-block mr-1 ' . $iconColor)->toHtml() : '') .
+            $label .
+            ($subtitle ? '<p class="text-xs mt-1 text-slate-300">' . $subtitle . '</p>' : '')
         );
     }
 }

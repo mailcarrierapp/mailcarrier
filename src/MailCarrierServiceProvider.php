@@ -10,6 +10,7 @@ use MailCarrier\MailCarrier\Observers\TemplateObserver;
 use MailCarrier\MailCarrier\Resources\LayoutResource;
 use MailCarrier\MailCarrier\Resources\LogResource;
 use MailCarrier\MailCarrier\Resources\TemplateResource;
+use Spatie\LaravelPackageTools\Package;
 
 class MailCarrierServiceProvider extends PluginServiceProvider
 {
@@ -24,6 +25,19 @@ class MailCarrierServiceProvider extends PluginServiceProvider
         TemplateResource::class,
         LogResource::class,
     ];
+
+    public function packageConfigured(Package $package): void
+    {
+        $package
+            ->hasMigrations([
+                '1_create_users_table',
+                '2_create_layouts_table',
+                '3_create_templates_table',
+                '4_create_logs_table',
+                '5_create_attachments_table',
+            ])
+            ->runsMigrations();
+    }
 
     public function packageBooted(): void
     {

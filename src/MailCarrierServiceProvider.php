@@ -2,9 +2,9 @@
 
 namespace MailCarrier\MailCarrier;
 
+use MailCarrier\MailCarrier\Commands\MailCarrierCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use MailCarrier\MailCarrier\Commands\MailCarrierCommand;
 
 class MailCarrierServiceProvider extends PackageServiceProvider
 {

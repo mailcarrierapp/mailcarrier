@@ -4,8 +4,8 @@ namespace MailCarrier\MailCarrier\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Config;
-use Orchestra\Testbench\TestCase as Orchestra;
 use MailCarrier\MailCarrier\MailCarrierServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
@@ -13,8 +13,7 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
-        Factory::guessFactoryNamesUsing(fn (string $modelName): string =>
-            'MailCarrier\\MailCarrier\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
+        Factory::guessFactoryNamesUsing(fn (string $modelName): string => 'MailCarrier\\MailCarrier\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 

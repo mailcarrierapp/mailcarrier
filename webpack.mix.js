@@ -13,13 +13,14 @@ const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 */
 
 mix
+  .setPublicPath('dist/')
   .webpackConfig({
     plugins: [
       new MonacoWebpackPlugin({
         languages: ['html', 'json'],
         features: ['!quickCommand'],
         globalAPI: true,
-        filename: 'dist/js/[name].worker.js'
+        filename: 'js/[name].worker.js'
       })
     ]
   })

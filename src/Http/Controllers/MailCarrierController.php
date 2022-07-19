@@ -2,6 +2,10 @@
 
 namespace MailCarrier\MailCarrier\Http\Controllers;
 
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Config;
 use MailCarrier\MailCarrier\Actions\Attachments\Download;
 use MailCarrier\MailCarrier\Actions\SendMail;
 use MailCarrier\MailCarrier\Dto\SendMailDto;
@@ -12,10 +16,6 @@ use MailCarrier\MailCarrier\Exceptions\MissingVariableException;
 use MailCarrier\MailCarrier\Http\ApiResponse;
 use MailCarrier\MailCarrier\Http\Requests\SendMailRequest;
 use MailCarrier\MailCarrier\Models\Attachment;
-use Exception;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Config;
 
 class MailCarrierController extends Controller
 {

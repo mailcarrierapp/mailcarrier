@@ -2,9 +2,9 @@
 
 namespace MailCarrier\MailCarrier\Actions\Logs;
 
+use Illuminate\Support\Facades\Cache;
 use MailCarrier\MailCarrier\Actions\Action;
 use MailCarrier\MailCarrier\Models\Log;
-use Illuminate\Support\Facades\Cache;
 
 class GetTriggers extends Action
 {

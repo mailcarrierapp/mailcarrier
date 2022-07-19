@@ -2,10 +2,10 @@
 
 namespace MailCarrier\MailCarrier\Resources\LogResource\Pages;
 
-use MailCarrier\MailCarrier\Resources\LogResource;
-use MailCarrier\MailCarrier\Models\Log;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use MailCarrier\MailCarrier\Models\Log;
+use MailCarrier\MailCarrier\Resources\LogResource;
 
 class ListLogs extends ListRecords
 {

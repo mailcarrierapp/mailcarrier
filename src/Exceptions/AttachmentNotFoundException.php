@@ -2,9 +2,9 @@
 
 namespace MailCarrier\MailCarrier\Exceptions;
 
+use Illuminate\Support\Facades\Config;
 use MailCarrier\MailCarrier\Enums\ApiErrorKey;
 use MailCarrier\MailCarrier\Models\Attachment;
-use Illuminate\Support\Facades\Config;
 
 class AttachmentNotFoundException extends \Exception
 {

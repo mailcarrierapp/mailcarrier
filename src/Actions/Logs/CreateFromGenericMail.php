@@ -2,6 +2,7 @@
 
 namespace MailCarrier\MailCarrier\Actions\Logs;
 
+use Illuminate\Support\Facades\Config;
 use MailCarrier\MailCarrier\Actions\Action;
 use MailCarrier\MailCarrier\Dto\AttachmentDto;
 use MailCarrier\MailCarrier\Dto\GenericMailDto;
@@ -11,7 +12,6 @@ use MailCarrier\MailCarrier\Enums\AttachmentLogStrategy;
 use MailCarrier\MailCarrier\Enums\LogStatus;
 use MailCarrier\MailCarrier\MailCarrier;
 use MailCarrier\MailCarrier\Models\Log;
-use Illuminate\Support\Facades\Config;
 
 class CreateFromGenericMail extends Action
 {

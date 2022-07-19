@@ -2,15 +2,15 @@
 
 namespace MailCarrier\MailCarrier\Resources\TemplateResource\Pages;
 
-use MailCarrier\MailCarrier\Actions\SendMail;
-use MailCarrier\MailCarrier\Dto\SendMailDto;
-use MailCarrier\MailCarrier\Resources\TemplateResource;
 use Filament\Forms;
 use Filament\Pages\Actions\Action;
 use Filament\Pages\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
+use MailCarrier\MailCarrier\Actions\SendMail;
+use MailCarrier\MailCarrier\Dto\SendMailDto;
+use MailCarrier\MailCarrier\Resources\TemplateResource;
 
 class EditTemplate extends EditRecord
 {
@@ -44,7 +44,7 @@ class EditTemplate extends EditRecord
                     Forms\Components\Checkbox::make('enqueue'),
                 ]),
             DeleteAction::make()
-                ->disabled($this->record->is_locked || !TemplateResource::canDelete($this->record)),
+                ->disabled($this->record->is_locked || ! TemplateResource::canDelete($this->record)),
         ];
     }
 
@@ -58,7 +58,7 @@ class EditTemplate extends EditRecord
             ->run(
                 new SendMailDto(
                     template: $this->getRecord()->slug, // @phpstan-ignore-line
-                    subject: 'Test from ' . Config::get('app.name'),
+                    subject: 'Test from '.Config::get('app.name'),
                     recipient: $data['email'],
                     enqueue: $data['enqueue'],
                     variables: Arr::undot($data['variables'] ?: []),

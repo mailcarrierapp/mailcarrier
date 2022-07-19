@@ -2,11 +2,11 @@
 
 namespace MailCarrier\MailCarrier\Http\Controllers;
 
-use MailCarrier\MailCarrier\Actions\Login;
 use Filament\Facades\Filament;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Socialite\Facades\Socialite;
+use MailCarrier\MailCarrier\Actions\Login;
 
 class AuthController extends Controller
 {

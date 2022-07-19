@@ -2,9 +2,9 @@
 
 namespace MailCarrier\MailCarrier\Rules;
 
-use MailCarrier\MailCarrier\Dto\ContactDto;
 use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Contracts\Validation\Rule;
+use MailCarrier\MailCarrier\Dto\ContactDto;
 
 class ContactRule implements Rule, ImplicitRule
 {

@@ -2,6 +2,10 @@
 
 namespace MailCarrier\MailCarrier\Actions;
 
+use Exception;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 use MailCarrier\MailCarrier\Dto\AttachmentDto;
 use MailCarrier\MailCarrier\Dto\ContactDto;
 use MailCarrier\MailCarrier\Dto\GenericMailDto;
@@ -10,10 +14,6 @@ use MailCarrier\MailCarrier\Dto\SendMailDto;
 use MailCarrier\MailCarrier\Exceptions\MissingVariableException;
 use MailCarrier\MailCarrier\Jobs\SendMailJob;
 use MailCarrier\MailCarrier\Models\Template;
-use Exception;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Config;
 
 class SendMail extends Action
 {
@@ -39,7 +39,7 @@ class SendMail extends Action
         $this->params = $params;
 
         // Fallback sender to app defaults
-        if (!$params->sender) {
+        if (! $params->sender) {
             $this->params->sender = new ContactDto(
                 name: Config::get('mail.from.name'),
                 email: Config::get('mail.from.address')
@@ -137,7 +137,7 @@ class SendMail extends Action
             error: $exception->getMessage(),
         );
 
-        $log = !$this->shouldLog ? null : (new Logs\CreateFromGenericMail)->run($genericMailDto);
+        $log = ! $this->shouldLog ? null : (new Logs\CreateFromGenericMail)->run($genericMailDto);
 
         if ($exception) {
             throw $exception;

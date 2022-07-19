@@ -2,9 +2,9 @@
 
 namespace MailCarrier\MailCarrier\Resources\LayoutResource\Pages;
 
-use MailCarrier\MailCarrier\Resources\LayoutResource;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
+use MailCarrier\MailCarrier\Resources\LayoutResource;
 
 class CreateLayout extends CreateRecord
 {

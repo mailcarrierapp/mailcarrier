@@ -14,7 +14,6 @@ use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
  * @property bool $is_locked
  * @property string $name
  * @property string $content
- *
  * @property-read \MailCarrier\MailCarrier\Models\User|null $user
  */
 class Layout extends Model

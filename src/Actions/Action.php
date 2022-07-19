@@ -2,8 +2,8 @@
 
 namespace MailCarrier\MailCarrier\Actions;
 
-use MailCarrier\MailCarrier\Concerns\Resolvable;
 use Illuminate\Support\Facades\App;
+use MailCarrier\MailCarrier\Concerns\Resolvable;
 use Mockery;
 use Mockery\Expectation;
 use Mockery\ExpectationInterface;

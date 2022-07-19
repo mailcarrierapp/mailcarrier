@@ -3,9 +3,9 @@
 namespace MailCarrier\MailCarrier;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 
 class MailCarrier
@@ -32,7 +32,7 @@ class MailCarrier
             base64_decode($content)
         );
 
-        if (!$uploadResponse) {
+        if (! $uploadResponse) {
             throw new UploadException();
         }
 
@@ -64,9 +64,9 @@ class MailCarrier
     {
         $extension = Str::afterLast($fileName, '.');
 
-        return Config::get('mailcarrier.attachments.path', '') .
-            md5($fileName . Str::random() . Str::uuid()->toString()) .
-            '.' .
+        return Config::get('mailcarrier.attachments.path', '').
+            md5($fileName.Str::random().Str::uuid()->toString()).
+            '.'.
             $extension;
     }
 
@@ -81,6 +81,6 @@ class MailCarrier
             $bytes /= 1024;
         }
 
-        return round($bytes, 2) . ' ' . $units[$i];
+        return round($bytes, 2).' '.$units[$i];
     }
 }

@@ -2,8 +2,8 @@
 
 namespace MailCarrier\MailCarrier\Dto;
 
-use MailCarrier\MailCarrier\Dto\Validators\Email;
 use JessArcher\CastableDataTransferObject\CastableDataTransferObject;
+use MailCarrier\MailCarrier\Dto\Validators\Email;
 use Spatie\DataTransferObject\Attributes\Strict;
 
 #[Strict]

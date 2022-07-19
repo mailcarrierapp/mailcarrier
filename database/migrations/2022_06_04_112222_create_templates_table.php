@@ -21,10 +21,10 @@ return new class extends Migration
                 ->nullOnDelete();
 
             $table->foreignId('layout_id')
-                  ->nullable()
-                  ->index()
-                  ->constrained()
-                  ->nullOnDelete();
+                ->nullable()
+                ->index()
+                ->constrained()
+                ->nullOnDelete();
 
             $table->boolean('is_locked')->default(false);
             $table->string('name');

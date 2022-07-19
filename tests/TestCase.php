@@ -3,12 +3,14 @@
 namespace MailCarrier\MailCarrier\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Config;
-use MailCarrier\MailCarrier\MailCarrierServiceProvider;
+use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use MailCarrier\MailCarrier\Models\User;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
+    use LazilyRefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -21,17 +23,26 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app): array
     {
         return [
-            MailCarrierServiceProvider::class,
+            \BladeUI\Heroicons\BladeHeroiconsServiceProvider::class,
+            \BladeUI\Icons\BladeIconsServiceProvider::class,
+            \Livewire\LivewireServiceProvider::class,
+            \Filament\FilamentServiceProvider::class,
+            \Filament\Support\SupportServiceProvider::class,
+            \Filament\Forms\FormsServiceProvider::class,
+            \Filament\Tables\TablesServiceProvider::class,
+            \MailCarrier\MailCarrier\MailCarrierServiceProvider::class,
         ];
     }
 
     public function getEnvironmentSetUp($app): void
     {
-        Config::set('database.default', 'testing');
+        $app['config']->set('auth.providers.users.model', User::class);
 
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_mailcarrier_table.php.stub';
-        $migration->up();
-        */
+        $app['config']->set('database.default', 'testbench');
+        $app['config']->set('database.connections.testbench', [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ]);
     }
 }

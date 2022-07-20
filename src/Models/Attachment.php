@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use MailCarrier\MailCarrier\Enums\AttachmentLogStrategy;
-use MailCarrier\MailCarrier\MailCarrier;
+use MailCarrier\MailCarrier\Facades\MailCarrier;
 use MailCarrier\MailCarrier\Models\Concerns\IsUuid;
 
 /**

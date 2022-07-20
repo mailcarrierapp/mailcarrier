@@ -7,6 +7,7 @@ use Filament\Facades\Filament;
 use Filament\Navigation\NavigationBuilder;
 use Filament\PluginServiceProvider;
 use Illuminate\Support\Facades\Event;
+use MailCarrier\MailCarrier\Facades\MailCarrier;
 use MailCarrier\MailCarrier\Models\Template;
 use MailCarrier\MailCarrier\Observers\TemplateObserver;
 use MailCarrier\MailCarrier\Resources\LayoutResource;
@@ -44,6 +45,13 @@ class MailCarrierServiceProvider extends PluginServiceProvider
                 '5_create_attachments_table',
             ])
             ->runsMigrations();
+    }
+
+    public function packageRegistered(): void
+    {
+        parent::packageRegistered();
+
+        $this->app->scoped('mailcarrier', fn (): MailCarrier => new MailCarrier());
     }
 
     public function servingFilament(): void

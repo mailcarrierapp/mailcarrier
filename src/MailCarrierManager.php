@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 
-class MailCarrier
+class MailCarrierManager
 {
     /**
      * Get the disk storage.
      */
-    public static function storage(?string $disk = null): Filesystem
+    public function storage(?string $disk = null): Filesystem
     {
         return Storage::disk($disk ?: Config::get('mailcarrier.attachments.disk'));
     }
@@ -23,11 +23,11 @@ class MailCarrier
      *
      * @return string The file path
      */
-    public static function upload(string $content, string $fileName): string
+    public function upload(string $content, string $fileName): string
     {
-        $filePath = static::hashFileName($fileName);
+        $filePath = $this->hashFileName($fileName);
 
-        $uploadResponse = static::storage()->put(
+        $uploadResponse = $this->storage()->put(
             $filePath,
             base64_decode($content)
         );
@@ -42,9 +42,9 @@ class MailCarrier
     /**
      * Download a file from the storage disk.
      */
-    public static function download(string $resource, ?string $disk = null): ?string
+    public function download(string $resource, ?string $disk = null): ?string
     {
-        $content = static::storage($disk)->get($resource);
+        $content = $this->storage($disk)->get($resource);
 
         return $content ? base64_encode($content) : null;
     }
@@ -52,15 +52,15 @@ class MailCarrier
     /**
      * Get the file size from the storage disk.
      */
-    public static function getFileSize(string $resource, ?string $disk = null): int
+    public function getFileSize(string $resource, ?string $disk = null): int
     {
-        return static::storage($disk)->size($resource);
+        return $this->storage($disk)->size($resource);
     }
 
     /**
      * Upload a file to the storage disk.
      */
-    public static function hashFileName(string $fileName): string
+    public function hashFileName(string $fileName): string
     {
         $extension = Str::afterLast($fileName, '.');
 
@@ -73,7 +73,7 @@ class MailCarrier
     /**
      * Convert bytes into human readable value.
      */
-    public static function humanBytes(int $bytes): string
+    public function humanBytes(int $bytes): string
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
 

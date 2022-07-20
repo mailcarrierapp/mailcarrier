@@ -10,7 +10,7 @@ use MailCarrier\MailCarrier\Dto\LogTemplateDto;
 use MailCarrier\MailCarrier\Dto\RemoteAttachmentDto;
 use MailCarrier\MailCarrier\Enums\AttachmentLogStrategy;
 use MailCarrier\MailCarrier\Enums\LogStatus;
-use MailCarrier\MailCarrier\MailCarrier;
+use MailCarrier\MailCarrier\Facades\MailCarrier;
 use MailCarrier\MailCarrier\Models\Log;
 
 class CreateFromGenericMail extends Action

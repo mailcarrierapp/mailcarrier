@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Forms\Components;
+namespace MailCarrier\Forms\Components;
 
 use Filament\Forms\Components\Field;
 

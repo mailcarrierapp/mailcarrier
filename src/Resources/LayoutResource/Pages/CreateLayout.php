@@ -1,10 +1,10 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Resources\LayoutResource\Pages;
+namespace MailCarrier\Resources\LayoutResource\Pages;
 
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
-use MailCarrier\MailCarrier\Resources\LayoutResource;
+use MailCarrier\Resources\LayoutResource;
 
 class CreateLayout extends CreateRecord
 {

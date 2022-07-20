@@ -1,10 +1,10 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Exceptions;
+namespace MailCarrier\Exceptions;
 
 use Illuminate\Support\Facades\Config;
-use MailCarrier\MailCarrier\Enums\ApiErrorKey;
-use MailCarrier\MailCarrier\Models\Attachment;
+use MailCarrier\Enums\ApiErrorKey;
+use MailCarrier\Models\Attachment;
 
 class AttachmentNotFoundException extends \Exception
 {

@@ -1,19 +1,19 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Actions;
+namespace MailCarrier\Actions;
 
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
-use MailCarrier\MailCarrier\Dto\AttachmentDto;
-use MailCarrier\MailCarrier\Dto\ContactDto;
-use MailCarrier\MailCarrier\Dto\GenericMailDto;
-use MailCarrier\MailCarrier\Dto\RecipientDto;
-use MailCarrier\MailCarrier\Dto\SendMailDto;
-use MailCarrier\MailCarrier\Exceptions\MissingVariableException;
-use MailCarrier\MailCarrier\Jobs\SendMailJob;
-use MailCarrier\MailCarrier\Models\Template;
+use MailCarrier\Dto\AttachmentDto;
+use MailCarrier\Dto\ContactDto;
+use MailCarrier\Dto\GenericMailDto;
+use MailCarrier\Dto\RecipientDto;
+use MailCarrier\Dto\SendMailDto;
+use MailCarrier\Exceptions\MissingVariableException;
+use MailCarrier\Jobs\SendMailJob;
+use MailCarrier\Models\Template;
 
 class SendMail extends Action
 {

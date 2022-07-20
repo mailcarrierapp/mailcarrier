@@ -1,9 +1,9 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Actions;
+namespace MailCarrier\Actions;
 
 use Illuminate\Support\Facades\App;
-use MailCarrier\MailCarrier\Concerns\Resolvable;
+use MailCarrier\Concerns\Resolvable;
 use Mockery;
 use Mockery\Expectation;
 use Mockery\ExpectationInterface;

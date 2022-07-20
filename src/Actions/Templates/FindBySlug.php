@@ -1,10 +1,10 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Actions\Templates;
+namespace MailCarrier\Actions\Templates;
 
-use MailCarrier\MailCarrier\Actions\Action;
-use MailCarrier\MailCarrier\Concerns\InteractsWithCache;
-use MailCarrier\MailCarrier\Models\Template;
+use MailCarrier\Actions\Action;
+use MailCarrier\Concerns\InteractsWithCache;
+use MailCarrier\Models\Template;
 
 class FindBySlug extends Action
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Actions\Logs;
+namespace MailCarrier\Actions\Logs;
 
 use Illuminate\Support\Facades\Cache;
-use MailCarrier\MailCarrier\Actions\Action;
-use MailCarrier\MailCarrier\Models\Log;
+use MailCarrier\Actions\Action;
+use MailCarrier\Models\Log;
 
 class GetTriggers extends Action
 {

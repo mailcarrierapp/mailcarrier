@@ -1,6 +1,6 @@
 <?php
 
-use MailCarrier\MailCarrier\Models\User;
+use MailCarrier\Models\User;
 use function Pest\Laravel\assertDatabaseCount;
 
 it('can fetch data', function () {

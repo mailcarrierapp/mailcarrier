@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use MailCarrier\MailCarrier\Models\Log;
+use MailCarrier\Models\Log;
 
 return new class extends Migration
 {

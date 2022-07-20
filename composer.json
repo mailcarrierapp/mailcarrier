@@ -1,8 +1,7 @@
 {
-    "name": "mailcarrier-dev/mailcarrier",
+    "name": "mailcarrier/mailcarrier",
     "description": "User-friendly, API-ready mail platform with templates and logs",
     "keywords": [
-        "mailcarrier-dev",
         "laravel",
         "mailcarrier"
     ],
@@ -42,13 +41,13 @@
     },
     "autoload": {
         "psr-4": {
-            "MailCarrier\\MailCarrier\\": "src",
-            "MailCarrier\\MailCarrier\\Database\\Factories\\": "database/factories"
+            "MailCarrier\\": "src",
+            "MailCarrier\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MailCarrier\\MailCarrier\\Tests\\": "tests"
+            "MailCarrier\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -67,12 +66,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "MailCarrier\\MailCarrier\\MailCarrierServiceProvider",
-                "Laravel\\Socialite\\SocialiteServiceProvider"
-            ],
-            "aliases": {
-                "MailCarrier": "MailCarrier\\MailCarrier\\Facades\\MailCarrier"
-            }
+                "MailCarrier\\MailCarrierServiceProvider"
+            ]
         }
     },
     "minimum-stability": "dev",

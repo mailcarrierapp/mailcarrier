@@ -1,8 +1,8 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Enums;
+namespace MailCarrier\Enums;
 
-use MailCarrier\MailCarrier\Concerns\EnumSerializable;
+use MailCarrier\Concerns\EnumSerializable;
 
 enum LogStatus: string
 {

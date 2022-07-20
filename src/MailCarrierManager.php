@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier;
+namespace MailCarrier;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Config;

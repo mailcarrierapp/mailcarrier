@@ -1,17 +1,17 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Actions\Logs;
+namespace MailCarrier\Actions\Logs;
 
 use Illuminate\Support\Facades\Config;
-use MailCarrier\MailCarrier\Actions\Action;
-use MailCarrier\MailCarrier\Dto\AttachmentDto;
-use MailCarrier\MailCarrier\Dto\GenericMailDto;
-use MailCarrier\MailCarrier\Dto\LogTemplateDto;
-use MailCarrier\MailCarrier\Dto\RemoteAttachmentDto;
-use MailCarrier\MailCarrier\Enums\AttachmentLogStrategy;
-use MailCarrier\MailCarrier\Enums\LogStatus;
-use MailCarrier\MailCarrier\Facades\MailCarrier;
-use MailCarrier\MailCarrier\Models\Log;
+use MailCarrier\Actions\Action;
+use MailCarrier\Dto\AttachmentDto;
+use MailCarrier\Dto\GenericMailDto;
+use MailCarrier\Dto\LogTemplateDto;
+use MailCarrier\Dto\RemoteAttachmentDto;
+use MailCarrier\Enums\AttachmentLogStrategy;
+use MailCarrier\Enums\LogStatus;
+use MailCarrier\Facades\MailCarrier;
+use MailCarrier\Models\Log;
 
 class CreateFromGenericMail extends Action
 {

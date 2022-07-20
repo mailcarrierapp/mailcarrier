@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Models;
+namespace MailCarrier\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Config;
-use MailCarrier\MailCarrier\Dto\ContactDto;
-use MailCarrier\MailCarrier\Dto\LogTemplateDto;
-use MailCarrier\MailCarrier\Enums\LogStatus;
-use MailCarrier\MailCarrier\Models\Concerns\IsUuid;
+use MailCarrier\Dto\ContactDto;
+use MailCarrier\Dto\LogTemplateDto;
+use MailCarrier\Enums\LogStatus;
+use MailCarrier\Models\Concerns\IsUuid;
 
 /**
  * @property int|null $template_id

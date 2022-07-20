@@ -1,10 +1,10 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Resources\LayoutResource\Pages;
+namespace MailCarrier\Resources\LayoutResource\Pages;
 
 use Filament\Pages\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
-use MailCarrier\MailCarrier\Resources\LayoutResource;
+use MailCarrier\Resources\LayoutResource;
 
 class EditLayout extends EditRecord
 {

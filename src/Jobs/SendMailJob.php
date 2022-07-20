@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Jobs;
+namespace MailCarrier\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -8,11 +8,11 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
-use MailCarrier\MailCarrier\Actions\Logs;
-use MailCarrier\MailCarrier\Dto\GenericMailDto;
-use MailCarrier\MailCarrier\Enums\LogStatus;
-use MailCarrier\MailCarrier\Mail\GenericMail;
-use MailCarrier\MailCarrier\Models\Log;
+use MailCarrier\Actions\Logs;
+use MailCarrier\Dto\GenericMailDto;
+use MailCarrier\Enums\LogStatus;
+use MailCarrier\Mail\GenericMail;
+use MailCarrier\Models\Log;
 
 class SendMailJob implements ShouldQueue
 {

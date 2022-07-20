@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Concerns;
+namespace MailCarrier\Concerns;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;

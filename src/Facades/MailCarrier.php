@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Facades;
+namespace MailCarrier\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

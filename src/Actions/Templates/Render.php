@@ -1,10 +1,10 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Actions\Templates;
+namespace MailCarrier\Actions\Templates;
 
 use Latte;
-use MailCarrier\MailCarrier\Actions\Action;
-use MailCarrier\MailCarrier\Models\Template;
+use MailCarrier\Actions\Action;
+use MailCarrier\Models\Template;
 
 class Render extends Action
 {

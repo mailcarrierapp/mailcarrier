@@ -1,12 +1,12 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Mail;
+namespace MailCarrier\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
-use MailCarrier\MailCarrier\Dto\GenericMailDto;
+use MailCarrier\Dto\GenericMailDto;
 
 class GenericMail extends Mailable
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Dto;
+namespace MailCarrier\Dto;
 
 use Illuminate\Http\UploadedFile;
 use Spatie\DataTransferObject\DataTransferObject;

@@ -1,9 +1,9 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Http\Controllers;
+namespace MailCarrier\Http\Controllers;
 
 use Illuminate\Http\Response;
-use MailCarrier\MailCarrier\Models\Log;
+use MailCarrier\Models\Log;
 
 class PreviewController extends Controller
 {

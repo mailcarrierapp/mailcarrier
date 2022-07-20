@@ -1,11 +1,11 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Http\Requests;
+namespace MailCarrier\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
-use MailCarrier\MailCarrier\Rules\ContactRule;
+use MailCarrier\Rules\ContactRule;
 
 class SendMailRequest extends FormRequest
 {

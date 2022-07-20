@@ -1,18 +1,18 @@
 <?php
 
-namespace MailCarrier\MailCarrier;
+namespace MailCarrier;
 
 use Filament\Events\ServingFilament;
 use Filament\Facades\Filament;
 use Filament\Navigation\NavigationBuilder;
 use Filament\PluginServiceProvider;
 use Illuminate\Support\Facades\Event;
-use MailCarrier\MailCarrier\Facades\MailCarrier;
-use MailCarrier\MailCarrier\Models\Template;
-use MailCarrier\MailCarrier\Observers\TemplateObserver;
-use MailCarrier\MailCarrier\Resources\LayoutResource;
-use MailCarrier\MailCarrier\Resources\LogResource;
-use MailCarrier\MailCarrier\Resources\TemplateResource;
+use MailCarrier\Facades\MailCarrier;
+use MailCarrier\Models\Template;
+use MailCarrier\Observers\TemplateObserver;
+use MailCarrier\Resources\LayoutResource;
+use MailCarrier\Resources\LogResource;
+use MailCarrier\Resources\TemplateResource;
 use Spatie\LaravelPackageTools\Package;
 
 class MailCarrierServiceProvider extends PluginServiceProvider
@@ -51,7 +51,7 @@ class MailCarrierServiceProvider extends PluginServiceProvider
     {
         parent::packageRegistered();
 
-        $this->app->scoped('mailcarrier', fn (): MailCarrier => new MailCarrier());
+        $this->app->scoped('mailcarrier', fn (): MailCarrierManager => new MailCarrierManager());
     }
 
     public function servingFilament(): void

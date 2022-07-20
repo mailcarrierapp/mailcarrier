@@ -1,8 +1,8 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Exceptions;
+namespace MailCarrier\Exceptions;
 
-use MailCarrier\MailCarrier\Enums\ApiErrorKey;
+use MailCarrier\Enums\ApiErrorKey;
 
 class MissingVariableException extends \Exception
 {

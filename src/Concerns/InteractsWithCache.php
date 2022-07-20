@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Concerns;
+namespace MailCarrier\Concerns;
 
 use Carbon\Carbon;
 use Illuminate\Cache\CacheManager;

@@ -1,6 +1,6 @@
 <?php
 
-use MailCarrier\MailCarrier\Enums\AttachmentLogStrategy;
+use MailCarrier\Enums\AttachmentLogStrategy;
 
 return [
     'api_endpoint' => [

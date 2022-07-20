@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Dto\Validators;
+namespace MailCarrier\Dto\Validators;
 
 use Attribute;
 use Spatie\DataTransferObject\Validation\ValidationResult;

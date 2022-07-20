@@ -1,10 +1,10 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Actions;
+namespace MailCarrier\Actions;
 
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\AbstractUser;
-use MailCarrier\MailCarrier\Models\User;
+use MailCarrier\Models\User;
 
 class Login extends Action
 {

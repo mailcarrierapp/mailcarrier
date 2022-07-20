@@ -1,9 +1,9 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Exceptions;
+namespace MailCarrier\Exceptions;
 
-use MailCarrier\MailCarrier\Enums\ApiErrorKey;
-use MailCarrier\MailCarrier\Models\Attachment;
+use MailCarrier\Enums\ApiErrorKey;
+use MailCarrier\Models\Attachment;
 
 class AttachmentNotDownloadableException extends \Exception
 {

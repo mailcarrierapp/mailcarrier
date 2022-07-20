@@ -1,10 +1,10 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Tests;
+namespace MailCarrier\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
-use MailCarrier\MailCarrier\Models\User;
+use MailCarrier\Models\User;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra

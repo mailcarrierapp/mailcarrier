@@ -1,14 +1,14 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Actions\Attachments;
+namespace MailCarrier\Actions\Attachments;
 
-use MailCarrier\MailCarrier\Actions\Action;
-use MailCarrier\MailCarrier\Enums\AttachmentLogStrategy;
-use MailCarrier\MailCarrier\Exceptions\AttachmentNotDownloadableException;
-use MailCarrier\MailCarrier\Exceptions\AttachmentNotFoundException;
-use MailCarrier\MailCarrier\Http\GenericFile;
-use MailCarrier\MailCarrier\Facades\MailCarrier;
-use MailCarrier\MailCarrier\Models\Attachment;
+use MailCarrier\Actions\Action;
+use MailCarrier\Enums\AttachmentLogStrategy;
+use MailCarrier\Exceptions\AttachmentNotDownloadableException;
+use MailCarrier\Exceptions\AttachmentNotFoundException;
+use MailCarrier\Http\GenericFile;
+use MailCarrier\Facades\MailCarrier;
+use MailCarrier\Models\Attachment;
 
 class Download extends Action
 {

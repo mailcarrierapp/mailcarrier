@@ -1,8 +1,8 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Dto;
+namespace MailCarrier\Dto;
 
-use MailCarrier\MailCarrier\Dto\Casters\ContactStringCaster;
+use MailCarrier\Dto\Casters\ContactStringCaster;
 use Spatie\DataTransferObject\Attributes\CastWith;
 use Spatie\DataTransferObject\Casters\ArrayCaster;
 use Spatie\DataTransferObject\DataTransferObject;

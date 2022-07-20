@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Enums;
+namespace MailCarrier\Enums;
 
 enum Role: string
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Resources;
+namespace MailCarrier\Resources;
 
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -10,12 +10,12 @@ use Illuminate\Contracts\View\View as ContractView;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
-use MailCarrier\MailCarrier\Actions\Logs\GetTriggers;
-use MailCarrier\MailCarrier\Dto\LogTemplateDto;
-use MailCarrier\MailCarrier\Enums\LogStatus;
-use MailCarrier\MailCarrier\Models\Log;
-use MailCarrier\MailCarrier\Models\Template;
-use MailCarrier\MailCarrier\Resources\LogResource\Pages;
+use MailCarrier\Actions\Logs\GetTriggers;
+use MailCarrier\Dto\LogTemplateDto;
+use MailCarrier\Enums\LogStatus;
+use MailCarrier\Models\Log;
+use MailCarrier\Models\Template;
+use MailCarrier\Resources\LogResource\Pages;
 
 class LogResource extends Resource
 {

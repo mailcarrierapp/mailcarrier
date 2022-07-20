@@ -1,9 +1,9 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Dto;
+namespace MailCarrier\Dto;
 
 use JessArcher\CastableDataTransferObject\CastableDataTransferObject;
-use MailCarrier\MailCarrier\Dto\Validators\Email;
+use MailCarrier\Dto\Validators\Email;
 use Spatie\DataTransferObject\Attributes\Strict;
 
 #[Strict]

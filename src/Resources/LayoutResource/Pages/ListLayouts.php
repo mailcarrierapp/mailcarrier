@@ -1,13 +1,13 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Resources\LayoutResource\Pages;
+namespace MailCarrier\Resources\LayoutResource\Pages;
 
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Facades\URL;
-use MailCarrier\MailCarrier\Models\Layout;
-use MailCarrier\MailCarrier\Resources\LayoutResource;
+use MailCarrier\Models\Layout;
+use MailCarrier\Resources\LayoutResource;
 
 class ListLayouts extends ListRecords
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Http;
+namespace MailCarrier\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;

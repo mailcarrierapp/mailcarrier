@@ -1,9 +1,9 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Actions\Logs;
+namespace MailCarrier\Actions\Logs;
 
-use MailCarrier\MailCarrier\Actions\Action;
-use MailCarrier\MailCarrier\Models\Log;
+use MailCarrier\Actions\Action;
+use MailCarrier\Models\Log;
 
 class Update extends Action
 {

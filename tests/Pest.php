@@ -1,5 +1,5 @@
 <?php
 
-use MailCarrier\MailCarrier\Tests\TestCase;
+use MailCarrier\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Commands;
+namespace MailCarrier\Commands;
 
 use Illuminate\Console\Command;
 

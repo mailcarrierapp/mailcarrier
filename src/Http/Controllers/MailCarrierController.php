@@ -1,21 +1,21 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Http\Controllers;
+namespace MailCarrier\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
-use MailCarrier\MailCarrier\Actions\Attachments\Download;
-use MailCarrier\MailCarrier\Actions\SendMail;
-use MailCarrier\MailCarrier\Dto\SendMailDto;
-use MailCarrier\MailCarrier\Enums\ApiErrorKey;
-use MailCarrier\MailCarrier\Exceptions\AttachmentNotDownloadableException;
-use MailCarrier\MailCarrier\Exceptions\AttachmentNotFoundException;
-use MailCarrier\MailCarrier\Exceptions\MissingVariableException;
-use MailCarrier\MailCarrier\Http\ApiResponse;
-use MailCarrier\MailCarrier\Http\Requests\SendMailRequest;
-use MailCarrier\MailCarrier\Models\Attachment;
+use MailCarrier\Actions\Attachments\Download;
+use MailCarrier\Actions\SendMail;
+use MailCarrier\Dto\SendMailDto;
+use MailCarrier\Enums\ApiErrorKey;
+use MailCarrier\Exceptions\AttachmentNotDownloadableException;
+use MailCarrier\Exceptions\AttachmentNotFoundException;
+use MailCarrier\Exceptions\MissingVariableException;
+use MailCarrier\Http\ApiResponse;
+use MailCarrier\Http\Requests\SendMailRequest;
+use MailCarrier\Models\Attachment;
 
 class MailCarrierController extends Controller
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Models;
+namespace MailCarrier\Models;
 
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use MailCarrier\MailCarrier\Enums\Role;
+use MailCarrier\Enums\Role;
 
 /**
  * @property int $id

@@ -1,9 +1,9 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Observers;
+namespace MailCarrier\Observers;
 
-use MailCarrier\MailCarrier\Actions\Templates;
-use MailCarrier\MailCarrier\Models\Template;
+use MailCarrier\Actions\Templates;
+use MailCarrier\Models\Template;
 
 class TemplateObserver
 {

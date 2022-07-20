@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Resources\TemplateResource\Pages;
+namespace MailCarrier\Resources\TemplateResource\Pages;
 
 use Filament\Forms;
 use Filament\Pages\Actions\Action;
@@ -8,9 +8,9 @@ use Filament\Pages\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
-use MailCarrier\MailCarrier\Actions\SendMail;
-use MailCarrier\MailCarrier\Dto\SendMailDto;
-use MailCarrier\MailCarrier\Resources\TemplateResource;
+use MailCarrier\Actions\SendMail;
+use MailCarrier\Dto\SendMailDto;
+use MailCarrier\Resources\TemplateResource;
 
 class EditTemplate extends EditRecord
 {

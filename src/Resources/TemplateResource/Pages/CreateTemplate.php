@@ -1,11 +1,11 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Resources\TemplateResource\Pages;
+namespace MailCarrier\Resources\TemplateResource\Pages;
 
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
-use MailCarrier\MailCarrier\Actions\Templates\GenerateSlug;
-use MailCarrier\MailCarrier\Resources\TemplateResource;
+use MailCarrier\Actions\Templates\GenerateSlug;
+use MailCarrier\Resources\TemplateResource;
 
 class CreateTemplate extends CreateRecord
 {

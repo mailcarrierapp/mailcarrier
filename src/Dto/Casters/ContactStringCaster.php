@@ -1,8 +1,8 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Dto\Casters;
+namespace MailCarrier\Dto\Casters;
 
-use MailCarrier\MailCarrier\Dto\ContactDto;
+use MailCarrier\Dto\ContactDto;
 use Spatie\DataTransferObject\Caster;
 
 class ContactStringCaster implements Caster

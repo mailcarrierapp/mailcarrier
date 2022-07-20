@@ -1,10 +1,10 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Rules;
+namespace MailCarrier\Rules;
 
 use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Contracts\Validation\Rule;
-use MailCarrier\MailCarrier\Dto\ContactDto;
+use MailCarrier\Dto\ContactDto;
 
 class ContactRule implements Rule, ImplicitRule
 {

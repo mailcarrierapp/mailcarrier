@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Resources;
+namespace MailCarrier\Resources;
 
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -8,10 +8,10 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Support\HtmlString;
-use MailCarrier\MailCarrier\Forms\Components\MonacoEditor;
-use MailCarrier\MailCarrier\Models\Layout;
-use MailCarrier\MailCarrier\Models\User;
-use MailCarrier\MailCarrier\Resources\LayoutResource\Pages;
+use MailCarrier\Forms\Components\MonacoEditor;
+use MailCarrier\Models\Layout;
+use MailCarrier\Models\User;
+use MailCarrier\Resources\LayoutResource\Pages;
 use RalphJSmit\Filament\Components\Forms\Sidebar;
 use RalphJSmit\Filament\Components\Forms\Timestamps;
 

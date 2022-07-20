@@ -1,13 +1,13 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Resources\TemplateResource\Pages;
+namespace MailCarrier\Resources\TemplateResource\Pages;
 
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Facades\URL;
-use MailCarrier\MailCarrier\Models\Template;
-use MailCarrier\MailCarrier\Resources\TemplateResource;
+use MailCarrier\Models\Template;
+use MailCarrier\Resources\TemplateResource;
 
 class ListTemplates extends ListRecords
 {

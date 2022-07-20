@@ -1,9 +1,9 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Dto;
+namespace MailCarrier\Dto;
 
-use MailCarrier\MailCarrier\Dto\Casters\ContactStringCaster;
-use MailCarrier\MailCarrier\Dto\Validators\Email;
+use MailCarrier\Dto\Casters\ContactStringCaster;
+use MailCarrier\Dto\Validators\Email;
 use Spatie\DataTransferObject\Attributes\CastWith;
 use Spatie\DataTransferObject\Casters\ArrayCaster;
 use Spatie\DataTransferObject\DataTransferObject;

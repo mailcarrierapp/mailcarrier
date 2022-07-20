@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\MailCarrier\Models;
+namespace MailCarrier\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

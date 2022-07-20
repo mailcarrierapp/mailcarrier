@@ -30,11 +30,17 @@ class MailCarrierServiceProvider extends PluginServiceProvider
         LogResource::class,
     ];
 
+    /**
+     * The package is being configured.
+     */
     public function packageConfiguring(Package $package): void
     {
         Event::listen(ServingFilament::class, $this->servingFilament(...));
     }
 
+    /**
+     * The package has been configured.
+     */
     public function packageConfigured(Package $package): void
     {
         $package
@@ -51,6 +57,9 @@ class MailCarrierServiceProvider extends PluginServiceProvider
             ->runsMigrations();
     }
 
+    /**
+     * The package has been registered.
+     */
     public function packageRegistered(): void
     {
         parent::packageRegistered();
@@ -63,6 +72,19 @@ class MailCarrierServiceProvider extends PluginServiceProvider
         $this->app->scoped('mailcarrier', fn (): MailCarrierManager => new MailCarrierManager());
     }
 
+    /**
+     * The package has been booted.
+     */
+    public function packageBooted(): void
+    {
+        parent::packageBooted();
+
+        Template::observe(TemplateObserver::class);
+    }
+
+    /**
+     * Register Filament settings.
+     */
     public function servingFilament(): void
     {
         Filament::registerTheme(mix('css/app.css'));
@@ -76,12 +98,5 @@ class MailCarrierServiceProvider extends PluginServiceProvider
                     ...TemplateResource::getNavigationItems(),
                 ])
         );
-    }
-
-    public function packageBooted(): void
-    {
-        parent::packageBooted();
-
-        Template::observe(TemplateObserver::class);
     }
 }

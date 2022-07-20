@@ -1,10 +1,9 @@
-name: PHPStan
+name: PHP-CS-Fixer
 
 on: [push, pull_request]
 
 jobs:
-  phpstan:
-    name: phpstan
+  pint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -16,8 +15,8 @@ jobs:
           php-version: '8.1'
           coverage: none
 
-      - name: Install composer dependencies
-        uses: ramsey/composer-install@v1
+      - name: Install dependencies
+        run: composer install --no-interaction
 
-      - name: Run PHPStan
-        run: ./vendor/bin/phpstan --error-format=github
+      - name: Run Pint
+        run: ./vendor/bin/pint --test

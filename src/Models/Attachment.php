@@ -21,7 +21,8 @@ use MailCarrier\MailCarrier\Models\Concerns\IsUuid;
  */
 class Attachment extends Model
 {
-    use HasFactory, IsUuid;
+    use HasFactory;
+    use IsUuid;
 
     /**
      * Indicates if the IDs are auto-incrementing.

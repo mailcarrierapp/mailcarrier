@@ -31,7 +31,9 @@ use MailCarrier\MailCarrier\Models\Concerns\IsUuid;
  */
 class Log extends Model
 {
-    use HasFactory, MassPrunable, IsUuid;
+    use HasFactory;
+    use MassPrunable;
+    use IsUuid;
 
     /**
      * Indicates if the IDs are auto-incrementing.

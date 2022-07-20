@@ -71,8 +71,8 @@ class LogResource extends Resource
                     ->label('Template')
                     ->url(
                         fn (Log $record): ?string => is_null($record->template_id) ? null : URL::route('filament.resources.templates.edit', [
-                        'record' => $record->template_id,
-                    ])
+                            'record' => $record->template_id,
+                        ])
                     )
                     ->openUrlInNewTab()
                     ->formatStateUsing(

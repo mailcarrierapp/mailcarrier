@@ -8,11 +8,10 @@ return [
     | Social Auth
     |--------------------------------------------------------------------------
     |
-    | Determine if MailCarrier should use Social Authentication.
-    | When true, OAuth endpoint will be available to sign in.
+    | Determine what Socialite driver should be used for Social Auth.
     |
     */
-    'social_auth' => env('MAILCARRIER_SOCIAL_AUTH', false),
+    'social_auth_driver' => env('MAILCARRIER_SOCIAL_AUTH_DRIVER'),
 
     'api_endpoint' => [
         /*

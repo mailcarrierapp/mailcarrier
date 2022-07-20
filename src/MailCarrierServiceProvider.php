@@ -2,9 +2,11 @@
 
 namespace MailCarrier\MailCarrier;
 
+use Filament\Events\ServingFilament;
 use Filament\Facades\Filament;
 use Filament\Navigation\NavigationBuilder;
 use Filament\PluginServiceProvider;
+use Illuminate\Support\Facades\Event;
 use MailCarrier\MailCarrier\Models\Template;
 use MailCarrier\MailCarrier\Observers\TemplateObserver;
 use MailCarrier\MailCarrier\Resources\LayoutResource;
@@ -26,6 +28,11 @@ class MailCarrierServiceProvider extends PluginServiceProvider
         LogResource::class,
     ];
 
+    public function packageConfiguring(Package $package): void
+    {
+        Event::listen(ServingFilament::class, $this->servingFilament(...));
+    }
+
     public function packageConfigured(Package $package): void
     {
         $package
@@ -39,14 +46,9 @@ class MailCarrierServiceProvider extends PluginServiceProvider
             ->runsMigrations();
     }
 
-    public function packageBooted(): void
+    public function servingFilament(): void
     {
-        parent::packageBooted();
-
-        // Register the theme
-        Filament::serving(function () {
-            Filament::registerTheme(mix('css/app.css'));
-        });
+        Filament::registerTheme(mix('css/app.css'));
 
         // Edit the navigation
         Filament::navigation(
@@ -57,6 +59,11 @@ class MailCarrierServiceProvider extends PluginServiceProvider
                     ...TemplateResource::getNavigationItems(),
                 ])
         );
+    }
+
+    public function packageBooted(): void
+    {
+        parent::packageBooted();
 
         // Observe models
         Template::observe(TemplateObserver::class);

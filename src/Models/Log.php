@@ -21,6 +21,8 @@ use MailCarrier\MailCarrier\Models\Concerns\IsUuid;
  * @property string|null $trigger
  * @property string|null $subject
  * @property \MailCarrier\MailCarrier\Dto\ContactDto $sender
+ * @property \MailCarrier\MailCarrier\Dto\ContactDto $cc
+ * @property \MailCarrier\MailCarrier\Dto\ContactDto $bcc
  * @property string $recipient
  * @property \MailCarrier\MailCarrier\Dto\LogTemplateDto $template_frozen
  * @property array<string, mixed>|null $variables

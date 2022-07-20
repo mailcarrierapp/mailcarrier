@@ -62,7 +62,7 @@ class MailCarrierController extends Controller
     /**
      * Download an attachment.
      */
-    public function downloadAttachment(Attachment $attachment, Download $download): Response
+    public function downloadAttachment(Attachment $attachment, Download $download): Response|JsonResponse
     {
         try {
             return $download

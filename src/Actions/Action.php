@@ -76,7 +76,7 @@ abstract class Action
 
     public static function isFake(): bool
     {
-        return App::make(static::class) instanceof MockInterface;
+        return App::make(static::class) instanceof MockInterface; // @phpstan-ignore-line
     }
 
     protected static function setFakeResolvedInstance(MockInterface $fake): MockInterface

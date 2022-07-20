@@ -21,6 +21,7 @@
         "illuminate/contracts": "^9.0",
         "illuminate/database": "^9.0",
         "jessarcher/laravel-castable-data-transfer-object": "^2.2",
+        "laravel/socialite": "^5.5",
         "latte/latte": "^3.0",
         "livewire/livewire": "^2.10",
         "ralphjsmit/laravel-filament-components": "^1.1",
@@ -54,7 +55,7 @@
         "analyse": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
-        "format": "vendor/bin/php-cs-fixer fix -v"
+        "format": "vendor/bin/pint -v"
     },
     "config": {
         "sort-packages": true,
@@ -66,7 +67,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "MailCarrier\\MailCarrier\\MailCarrierServiceProvider"
+                "MailCarrier\\MailCarrier\\MailCarrierServiceProvider",
+                "Laravel\\Socialite\\SocialiteServiceProvider"
             ],
             "aliases": {
                 "MailCarrier": "MailCarrier\\MailCarrier\\Facades\\MailCarrier"

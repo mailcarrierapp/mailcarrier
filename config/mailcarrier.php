@@ -3,6 +3,17 @@
 use MailCarrier\Enums\AttachmentLogStrategy;
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | Social Auth
+    |--------------------------------------------------------------------------
+    |
+    | Determine if MailCarrier should use Social Authentication.
+    | When true, OAuth endpoint will be available to sign in.
+    |
+    */
+    'social_auth' => env('MAILCARRIER_SOCIAL_AUTH', false),
+
     'api_endpoint' => [
         /*
         |--------------------------------------------------------------------------

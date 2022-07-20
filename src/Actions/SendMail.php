@@ -21,7 +21,7 @@ class SendMail extends Action
 
     protected Template $template;
 
-    /** @var \MailCarrier\MailCarrier\Dto\RecipientDto[] */
+    /** @var \MailCarrier\Dto\RecipientDto[] */
     protected array $recipients;
 
     /** @var array<string, string> */

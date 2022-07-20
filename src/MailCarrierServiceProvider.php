@@ -7,6 +7,7 @@ use Filament\Facades\Filament;
 use Filament\Navigation\NavigationBuilder;
 use Filament\PluginServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use MailCarrier\Commands\InstallCommand;
 use MailCarrier\Models\Template;
 use MailCarrier\Observers\TemplateObserver;
@@ -54,6 +55,11 @@ class MailCarrierServiceProvider extends PluginServiceProvider
     {
         parent::packageRegistered();
 
+        // Register dependencies
+        $this->app->register(\Livewire\LivewireServiceProvider::class);
+        $this->app->register(\Filament\FilamentServiceProvider::class);
+        $this->app->register(\Laravel\Socialite\SocialiteServiceProvider::class);
+
         $this->app->scoped('mailcarrier', fn (): MailCarrierManager => new MailCarrierManager());
     }
 
@@ -76,14 +82,6 @@ class MailCarrierServiceProvider extends PluginServiceProvider
     {
         parent::packageBooted();
 
-        // Observe models
         Template::observe(TemplateObserver::class);
-
-        // Register the "login" gate for Social auth
-        $userPolicyClassName = 'App\\Policies\\UserPolicy';
-
-        if (class_exists($userPolicyClassName) && method_exists($userPolicyClassName, 'login')) {
-            Gate::define('login', [$userPolicyClassName, 'login']);
-        }
     }
 }

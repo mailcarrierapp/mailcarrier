@@ -11,7 +11,7 @@ use MailCarrier\Models\Concerns\IsUuid;
 
 /**
  * @property string $log_id
- * @property \MailCarrier\MailCarrier\Enums\AttachmentLogStrategy $strategy
+ * @property \MailCarrier\Enums\AttachmentLogStrategy $strategy
  * @property string $name
  * @property int $size
  * @property string|null $content

@@ -29,10 +29,10 @@ class GenericMailDto extends DataTransferObject
 
     public array $variables = [];
 
-    /** @var \MailCarrier\MailCarrier\Dto\AttachmentDto[] */
+    /** @var \MailCarrier\Dto\AttachmentDto[] */
     public array $attachments = [];
 
-    /** @var \MailCarrier\MailCarrier\Dto\RemoteAttachmentDto[] */
+    /** @var \MailCarrier\Dto\RemoteAttachmentDto[] */
     #[CastWith(ArrayCaster::class, itemType: RemoteAttachmentDto::class)]
     public array $remoteAttachments = [];
 }

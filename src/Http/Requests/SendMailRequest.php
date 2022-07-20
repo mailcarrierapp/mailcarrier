@@ -22,7 +22,7 @@ class SendMailRequest extends FormRequest
 
         return [
             'enqueue' => 'required|boolean',
-            'template' => 'required|exists:\MailCarrier\MailCarrier\Models\Template,slug',
+            'template' => 'required|exists:\MailCarrier\Models\Template,slug',
             'trigger' => 'sometimes|string|max:255',
             'subject' => 'required|string|max:255',
             'sender' => ['sometimes', new ContactRule()],

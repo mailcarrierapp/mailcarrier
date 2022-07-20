@@ -30,7 +30,7 @@ class TestCase extends Orchestra
             \Filament\Support\SupportServiceProvider::class,
             \Filament\Forms\FormsServiceProvider::class,
             \Filament\Tables\TablesServiceProvider::class,
-            \MailCarrier\MailCarrier\MailCarrierServiceProvider::class,
+            \MailCarrier\MailCarrierServiceProvider::class,
         ];
     }
 

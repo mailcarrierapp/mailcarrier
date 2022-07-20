@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static int downloadgetFileSize(string $resource, ?string $disk = null)
  * @method static string humanBytes(int $bytes)
  *
- * @see \MailCarrier\MailCarrier\MailCarrierManager
+ * @see \MailCarrier\MailCarrierManager
  */
 class MailCarrier extends Facade
 {

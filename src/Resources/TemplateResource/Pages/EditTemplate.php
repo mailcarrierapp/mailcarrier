@@ -16,7 +16,7 @@ class EditTemplate extends EditRecord
 {
     protected static string $resource = TemplateResource::class;
 
-    /** @var \MailCarrier\MailCarrier\Models\Template */
+    /** @var \MailCarrier\Models\Template */
     public $record;
 
     /**

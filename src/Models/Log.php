@@ -17,19 +17,19 @@ use MailCarrier\Models\Concerns\IsUuid;
 
 /**
  * @property int|null $template_id
- * @property \MailCarrier\MailCarrier\Enums\LogStatus $status
+ * @property \MailCarrier\Enums\LogStatus $status
  * @property string|null $trigger
  * @property string|null $subject
- * @property \MailCarrier\MailCarrier\Dto\ContactDto $sender
- * @property \MailCarrier\MailCarrier\Dto\ContactDto $cc
- * @property \MailCarrier\MailCarrier\Dto\ContactDto $bcc
+ * @property \MailCarrier\Dto\ContactDto $sender
+ * @property \MailCarrier\Dto\ContactDto $cc
+ * @property \MailCarrier\Dto\ContactDto $bcc
  * @property string $recipient
- * @property \MailCarrier\MailCarrier\Dto\LogTemplateDto $template_frozen
+ * @property \MailCarrier\Dto\LogTemplateDto $template_frozen
  * @property array<string, mixed>|null $variables
  * @property string|null $error
  * @property \Carbon\Carbon $created_at
- * @property-read \MailCarrier\MailCarrier\Models\Template|null $template
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \MailCarrier\MailCarrier\Models\Attachment> $attachments
+ * @property-read \MailCarrier\Models\Template|null $template
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \MailCarrier\Models\Attachment> $attachments
  */
 class Log extends Model
 {

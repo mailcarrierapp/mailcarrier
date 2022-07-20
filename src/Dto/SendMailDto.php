@@ -29,7 +29,7 @@ class SendMailDto extends DataTransferObject
     /** @var array<string, mixed> */
     public array $variables = [];
 
-    /** @var \MailCarrier\MailCarrier\Dto\RecipientDto[]|null */
+    /** @var \MailCarrier\Dto\RecipientDto[]|null */
     #[CastWith(ArrayCaster::class, itemType: RecipientDto::class)]
     public ?array $recipients;
 
@@ -38,7 +38,7 @@ class SendMailDto extends DataTransferObject
     /** @var \Illuminate\Http\UploadedFile[] */
     public array $attachments = [];
 
-    /** @var \MailCarrier\MailCarrier\Dto\RemoteAttachmentDto[] */
+    /** @var \MailCarrier\Dto\RemoteAttachmentDto[] */
     #[CastWith(ArrayCaster::class, itemType: RemoteAttachmentDto::class)]
     public array $remoteAttachments = [];
 }

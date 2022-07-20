@@ -15,8 +15,8 @@ class Download extends Action
     /**
      * Download an attachment.
      *
-     * @throws \MailCarrier\MailCarrier\Exceptions\AttachmentNotFoundException
-     * @throws \MailCarrier\MailCarrier\Exceptions\AttachmentNotDownloadableException
+     * @throws \MailCarrier\Exceptions\AttachmentNotFoundException
+     * @throws \MailCarrier\Exceptions\AttachmentNotDownloadableException
      */
     public function run(Attachment $attachment): ?GenericFile
     {

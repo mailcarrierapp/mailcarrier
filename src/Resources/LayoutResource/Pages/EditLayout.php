@@ -10,7 +10,7 @@ class EditLayout extends EditRecord
 {
     protected static string $resource = LayoutResource::class;
 
-    /** @var \MailCarrier\MailCarrier\Models\Layout */
+    /** @var \MailCarrier\Models\Layout */
     public $record;
 
     /**

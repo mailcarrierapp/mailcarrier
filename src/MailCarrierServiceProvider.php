@@ -7,7 +7,6 @@ use Filament\Facades\Filament;
 use Filament\Navigation\NavigationBuilder;
 use Filament\PluginServiceProvider;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Gate;
 use MailCarrier\Commands\InstallCommand;
 use MailCarrier\Models\Template;
 use MailCarrier\Observers\TemplateObserver;

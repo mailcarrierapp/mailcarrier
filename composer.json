@@ -23,9 +23,9 @@
         "laravel/socialite": "^5.5",
         "latte/latte": "^3.0",
         "livewire/livewire": "^2.10",
+        "nunomaduro/termwind": "^1.13",
         "ralphjsmit/laravel-filament-components": "^1.1",
-        "spatie/data-transfer-object": "^3.8",
-        "spatie/laravel-package-tools": "^1.9.2"
+        "spatie/data-transfer-object": "^3.8"
     },
     "require-dev": {
         "laravel/pint": "^1.0",

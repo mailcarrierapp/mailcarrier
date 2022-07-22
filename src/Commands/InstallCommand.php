@@ -2,7 +2,11 @@
 
 namespace MailCarrier\Commands;
 
+use Composer\Semver\Comparator;
 use Illuminate\Console\Command;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
 
 use function Termwind\render;
 
@@ -14,8 +18,13 @@ class InstallCommand extends Command
 
     public function handle(): int
     {
-        $this->taskSucceeded('Test.');
-        dd(getcwd(), __DIR__);
+        if ($error = $this->databaseConnectionFails()) {
+            $this->components->error('Database connection refused. ' . $error);
+
+            return self::FAILURE;
+        }
+
+        $this->newLine();
 
         $this->deleteDefaultMigrations();
         $this->deleteDefaultModels();
@@ -23,9 +32,23 @@ class InstallCommand extends Command
         $this->publishVendor();
         $this->migrate();
 
-        $this->info('MailCarrier installed correctly. Enjoy!');
+        $this->greenAlert('MailCarrier installed correctly. Enjoy!');
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Ensure the database connection works.
+     */
+    protected function databaseConnectionFails(): ?string
+    {
+        try {
+            Schema::hasTable('migrations');
+        } catch (QueryException $e) {
+            return $e->getMessage();
+        }
+
+        return null;
     }
 
     /**
@@ -33,10 +56,10 @@ class InstallCommand extends Command
      */
     protected function deleteDefaultMigrations(): void
     {
-        unlink(__DIR__ . '/database/migrations/2014_10_12_000000_create_users_table.php');
-        unlink(__DIR__ . '/database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php');
+        @unlink(getcwd() . '/database/migrations/2014_10_12_000000_create_users_table.php');
+        @unlink(getcwd() . '/database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php');
 
-        $this->taskSucceeded('Database migrations cleanup.');
+        $this->success('Database migrations cleanup.');
     }
 
     /**
@@ -44,9 +67,9 @@ class InstallCommand extends Command
      */
     protected function deleteDefaultModels(): void
     {
-        unlink(__DIR__ . '/app/Models/User.php');
+        @unlink(getcwd() . '/app/Models/User.php');
 
-        $this->taskSucceeded('Models cleanup.');
+        $this->success('Models cleanup.');
     }
 
     /**
@@ -54,17 +77,46 @@ class InstallCommand extends Command
      */
     protected function updateComposerJson(): void
     {
-        $composerJson = file_get_contents(__DIR__ . '/composer.json');
+        $composerJson = file_get_contents(getcwd() . '/composer.json');
+
+        // Set minimum PHP version
+        $currentMinimumPhp = Str::match('/"php": "(.*)"/', $composerJson);
+
+        if (Comparator::lessThan($currentMinimumPhp, '^8.1')) {
+            $composerJson = str_replace(
+                sprintf('"php": "%s"', $currentMinimumPhp),
+                '"php": "^8.1"',
+                $composerJson
+            );
+        }
+
+        // Install hook to update MailCarrier
+        if (!str_contains($composerJson, '"@php artisan mailcarrier:upgrade"')) {
+            $composerJson = str_replace(
+                '"@php artisan vendor:publish --tag=laravel-assets --ansi --force"',
+                '"@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+                "@php artisan mailcarrier:upgrade"',
+                $composerJson
+            );
+        }
+
+        // Rename meta data
         $composerJson = str_replace(
-            '"@php artisan vendor:publish --tag=laravel-assets --ansi --force"',
-            '"@php artisan vendor:publish --tag=laravel-assets --ansi --force",
-                            "@php artisan mailcarrier:upgrade"',
+            ['laravel/laravel', 'The Laravel Framework'],
+            ['mailcarrier/app', 'Mailing platform powered by templates'],
             $composerJson
         );
 
-        file_put_contents(__DIR__ . '/composer.json', $composerJson);
+        $composerJson = str_replace(
+            '"keywords": ["framework", "laravel"],
+    ',
+            '',
+            $composerJson
+        );
 
-        $this->taskSucceeded('Composer hooks installed.');
+        file_put_contents(getcwd() . '/composer.json', $composerJson);
+
+        $this->success('Composer dependencies fixed.');
     }
 
     /**
@@ -72,11 +124,11 @@ class InstallCommand extends Command
      */
     protected function publishVendor(): void
     {
-        $this->call('vendor:publish', [
+        $this->callSilently('vendor:publish', [
             '--tag' => 'mailcarrier-config',
         ]);
 
-        $this->taskSucceeded('Configuration file copied.');
+        $this->success('Configuration file copied.');
     }
 
     /**
@@ -86,18 +138,30 @@ class InstallCommand extends Command
     {
         $this->call('migrate');
 
-        $this->taskSucceeded('Database migrated.');
+        $this->success('Database migrated.');
     }
 
     /**
      * Show a success message for a task.
      */
-    protected function taskSucceeded(string $label): void
+    protected function success(string $label): void
     {
         render(<<<HTML
-            <div class="flex items-center">
-                <div class="px-4 py-1.5 bg-green-400 text-slate-700 mr-2">DONE</div>
-                <div class="text-slate-50">$label</div>
+            <div class="mx-2 mb-1">
+                <span class="px-1 bg-green-400 text-slate-600">DONE</span>
+                <span class="ml-1">$label</span>
+            </div>
+        HTML);
+    }
+
+    /**
+     * Show a success message for a task.
+     */
+    protected function greenAlert(string $label): void
+    {
+        render(<<<HTML
+            <div class="w-full mx-2 py-1 mt-1 bg-green-400 text-slate-800 text-center">
+                $label
             </div>
         HTML);
     }

@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
+use Symfony\Component\Process\Process;
 
 use function Termwind\render;
 
@@ -29,6 +30,7 @@ class InstallCommand extends Command
         $this->deleteDefaultMigrations();
         $this->deleteDefaultModels();
         $this->updateComposerJson();
+        $this->installFilament();
         $this->publishVendor();
         $this->migrate();
 
@@ -77,7 +79,8 @@ class InstallCommand extends Command
      */
     protected function updateComposerJson(): void
     {
-        $composerJson = file_get_contents(getcwd() . '/composer.json');
+        $composerJsonPath = getcwd() . '/composer.json';
+        $composerJson = file_get_contents($composerJsonPath);
 
         // Set minimum PHP version
         $currentMinimumPhp = Str::match('/"php": "(.*)"/', $composerJson);
@@ -114,9 +117,37 @@ class InstallCommand extends Command
             $composerJson
         );
 
-        file_put_contents(getcwd() . '/composer.json', $composerJson);
+        file_put_contents($composerJsonPath, $composerJson);
 
         $this->success('Composer dependencies fixed.');
+    }
+
+    /**
+     * Install Filament and make the necessary edits.
+     */
+    protected function installFilament(): void
+    {
+        (new Process(['composer', 'require', 'filament/filament']))
+            ->mustRun();
+
+        // Publish filament config
+        $this->callSilently('vendor:publish', [
+            '--tag' => 'filament-config',
+        ]);
+
+        // Replace config values
+        $filamentConfigPath = getcwd() . '/config/filament.php';
+        $filamentConfig = file_get_contents($filamentConfigPath);
+
+        $filamentConfig = str_replace(
+            ["'path' => env('FILAMENT_PATH', 'admin')", "'brand' => env('APP_NAME')"],
+            ["'path' => '/'", "'brand' => 'MailCarrier'"],
+            $filamentConfig
+        );
+
+        file_put_contents($filamentConfigPath, $filamentConfig);
+
+        $this->success('Dashboard configured.');
     }
 
     /**

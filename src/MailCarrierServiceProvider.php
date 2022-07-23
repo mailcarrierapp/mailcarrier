@@ -21,7 +21,7 @@ class MailCarrierServiceProvider extends PluginServiceProvider
     public static string $name = 'mailcarrier';
 
     protected array $scripts = [
-        'mailcarrier-scripts' => __DIR__ . '/../dist/js/monaco.js',
+        'mailcarrier' => __DIR__ . '/../dist/js/monaco.js',
     ];
 
     protected array $resources = [
@@ -44,7 +44,6 @@ class MailCarrierServiceProvider extends PluginServiceProvider
     public function packageConfigured(Package $package): void
     {
         $package
-            ->hasAssets()
             ->hasCommands([
                 InstallCommand::class,
                 UpgradeCommand::class,
@@ -57,6 +56,11 @@ class MailCarrierServiceProvider extends PluginServiceProvider
                 '5_create_attachments_table',
             ])
             ->runsMigrations();
+
+        // We use this over standard `->hasAssets()` to publish them inside the public vendor directly
+        $this->publishes([
+            $this->package->basePath('/../dist') => public_path(),
+        ], "{$this->package->shortName()}-assets");
     }
 
     /**
@@ -89,7 +93,7 @@ class MailCarrierServiceProvider extends PluginServiceProvider
      */
     public function servingFilament(): void
     {
-        Filament::registerTheme(mix('css/app.css', 'vendor/mailcarrier'));
+        Filament::registerTheme(mix('css/app.css'));
 
         // Edit the navigation
         Filament::navigation(

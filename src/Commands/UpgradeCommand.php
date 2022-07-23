@@ -14,6 +14,7 @@ class UpgradeCommand extends Command
     public function handle(): int
     {
         $this->upgradeFilament();
+        $this->publishAssets();
 
         return self::SUCCESS;
     }
@@ -25,5 +26,16 @@ class UpgradeCommand extends Command
     {
         (new Process(['php', 'artisan', 'filament:upgrade']))
             ->mustRun();
+    }
+
+    /**
+     * Publish fresh MailCarrier assets.
+     */
+    protected function publishAssets(): void
+    {
+        $this->call('vendor:publish', [
+            '--tag' => 'mailcarrier-assets',
+            '--force' => true,
+        ]);
     }
 }

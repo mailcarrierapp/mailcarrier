@@ -8,7 +8,6 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
 use Symfony\Component\Process\Process;
-
 use function Termwind\render;
 
 class InstallCommand extends Command
@@ -29,10 +28,14 @@ class InstallCommand extends Command
 
         $this->deleteDefaultMigrations();
         $this->deleteDefaultModels();
+        $this->deleteDefaultRoutes();
         $this->updateComposerJson();
         $this->installFilament();
         $this->publishVendor();
         $this->migrate();
+        $this->autoload();
+
+        $this->setupSocialAuth();
 
         $this->greenAlert('MailCarrier installed correctly. Enjoy!');
 
@@ -61,7 +64,7 @@ class InstallCommand extends Command
         @unlink(getcwd() . '/database/migrations/2014_10_12_000000_create_users_table.php');
         @unlink(getcwd() . '/database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php');
 
-        $this->success('Database migrations cleanup.');
+        $this->labeledLine('Database migrations cleanup.');
     }
 
     /**
@@ -71,7 +74,33 @@ class InstallCommand extends Command
     {
         @unlink(getcwd() . '/app/Models/User.php');
 
-        $this->success('Models cleanup.');
+        $this->labeledLine('Models cleanup.');
+    }
+
+    /**
+     * Delete the default Laravel routes.
+     */
+    protected function deleteDefaultRoutes(): void
+    {
+        $kernelPath = getcwd() . '/app/Console/Kernel.php';
+        $kernel = file_get_contents($kernelPath);
+
+        $kernel = str_replace(
+            "require base_path('routes/console.php');
+    ",
+            '',
+            $kernel
+        );
+
+        file_put_contents($kernelPath, $kernel);
+
+        @unlink(getcwd() . '/routes/channels.php');
+        @unlink(getcwd() . '/routes/console.php');
+
+        copy(__DIR__ . '/../../routes/api.php.stub', getcwd() . '/routes/api.php');
+        copy(__DIR__ . '/../../routes/web.php.stub', getcwd() . '/routes/web.php');
+
+        $this->labeledLine('Routes cleanup.');
     }
 
     /**
@@ -83,14 +112,8 @@ class InstallCommand extends Command
         $composerJson = file_get_contents($composerJsonPath);
 
         // Set minimum PHP version
-        $currentMinimumPhp = Str::match('/"php": "(.*)"/', $composerJson);
-
-        if (Comparator::lessThan($currentMinimumPhp, '^8.1')) {
-            $composerJson = str_replace(
-                sprintf('"php": "%s"', $currentMinimumPhp),
-                '"php": "^8.1"',
-                $composerJson
-            );
+        if (Comparator::lessThan($this->getComposerValue($composerJson, 'php'), '^8.1')) {
+            $composerJson = $this->setComposerValue($composerJson, 'php', '^8.1');
         }
 
         // Install hook to update MailCarrier
@@ -98,20 +121,19 @@ class InstallCommand extends Command
             $composerJson = str_replace(
                 '"@php artisan vendor:publish --tag=laravel-assets --ansi --force"',
                 '"@php artisan vendor:publish --tag=laravel-assets --ansi --force",
-                "@php artisan mailcarrier:upgrade"',
+            "@php artisan mailcarrier:upgrade"',
                 $composerJson
             );
         }
 
         // Rename meta data
-        $composerJson = str_replace(
-            ['laravel/laravel', 'The Laravel Framework'],
-            ['mailcarrier/app', 'Mailing platform powered by templates'],
-            $composerJson
-        );
+        $composerJson = $this->setComposerValue($composerJson, 'name', 'mailcarrier/app');
+        $composerJson = $this->setComposerValue($composerJson, 'description', 'Mailing platform with templates and logs included');
 
+        // Remove keywords
+        $currentKeywords = Str::match('/"keywords": (.*),/', $composerJson);
         $composerJson = str_replace(
-            '"keywords": ["framework", "laravel"],
+            '"keywords": ' . $currentKeywords . ',
     ',
             '',
             $composerJson
@@ -119,7 +141,7 @@ class InstallCommand extends Command
 
         file_put_contents($composerJsonPath, $composerJson);
 
-        $this->success('Composer dependencies fixed.');
+        $this->labeledLine('Composer updated.');
     }
 
     /**
@@ -127,6 +149,8 @@ class InstallCommand extends Command
      */
     protected function installFilament(): void
     {
+        $this->labeledLine('Installing dashboard...', 'DOING', 'blue-400');
+
         (new Process(['composer', 'require', 'filament/filament']))
             ->mustRun();
 
@@ -147,7 +171,7 @@ class InstallCommand extends Command
 
         file_put_contents($filamentConfigPath, $filamentConfig);
 
-        $this->success('Dashboard configured.');
+        $this->labeledLine('Dashboard configured.');
     }
 
     /**
@@ -159,7 +183,7 @@ class InstallCommand extends Command
             '--tag' => 'mailcarrier-config',
         ]);
 
-        $this->success('Configuration file copied.');
+        $this->labeledLine('Configuration file copied.');
     }
 
     /**
@@ -169,18 +193,61 @@ class InstallCommand extends Command
     {
         $this->call('migrate');
 
-        $this->success('Database migrated.');
+        $this->newLine();
+        $this->labeledLine('Database migrated.');
+    }
+
+    /**
+     * Refresh composer autoload to reflect changed files.
+     */
+    protected function autoload(): void
+    {
+        (new Process(['composer', 'dump-autoload']))
+            ->mustRun();
+    }
+
+    /**
+     * Setup Social Auth.
+     */
+    protected function setupSocialAuth(): void
+    {
+        if ($this->confirm('Do you want to setup Social Auth instead of regular one?')) {
+            $this->call('mailcarrier:social');
+        } else {
+            $this->line('If you change your mind later you still setup it by running:');
+            $this->comment('php artisan mailcarrier:social');
+        }
+    }
+
+    /**
+     * Get a value from the composer.json file.
+     */
+    protected function getComposerValue(string $composerJson, string $name): string
+    {
+        return Str::match('/"' . $name . '": "(.*)"/', $composerJson);
+    }
+
+    /**
+     * Get a value from the composer.json file.
+     */
+    protected function setComposerValue(string $composerJson, string $name, string $value): string
+    {
+        return str_replace(
+            sprintf('"%s": "%s"', $name, $this->getComposerValue($composerJson, $name)),
+            sprintf('"%s": "%s"', $name, $value),
+            $composerJson
+        );
     }
 
     /**
      * Show a success message for a task.
      */
-    protected function success(string $label): void
+    protected function labeledLine(string $line, string $label = 'DONE', string $bgColor = 'green-400', string $textColor = 'slate-600'): void
     {
         render(<<<HTML
             <div class="mx-2 mb-1">
-                <span class="px-1 bg-green-400 text-slate-600">DONE</span>
-                <span class="ml-1">$label</span>
+                <span class="px-1 bg-$bgColor text-$textColor">$label</span>
+                <span class="ml-1">$line</span>
             </div>
         HTML);
     }

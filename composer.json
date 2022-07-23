@@ -1,6 +1,6 @@
 {
     "name": "mailcarrier/mailcarrier",
-    "description": "User-friendly, API-ready mail platform with templates and logs",
+    "description": "Mailing platform with templates and logs included",
     "keywords": [
         "laravel",
         "mailcarrier"

@@ -72,7 +72,7 @@ class InstallCommand extends Command
      */
     protected function deleteDefaultModels(): void
     {
-        @unlink(getcwd() . '/app/Models/User.php');
+        copy(__DIR__ . '/../../src/Models/stubs/User.php.stub', getcwd() . '/app/Models/User.php');
 
         $this->labeledLine('Models cleanup.');
     }
@@ -154,8 +154,7 @@ class InstallCommand extends Command
         (new Process(['composer', 'require', 'filament/filament']))
             ->mustRun();
 
-        // Publish filament config
-        $this->callSilently('vendor:publish', [
+        $this->call('vendor:publish', [
             '--tag' => 'filament-config',
         ]);
 
@@ -164,8 +163,16 @@ class InstallCommand extends Command
         $filamentConfig = file_get_contents($filamentConfigPath);
 
         $filamentConfig = str_replace(
-            ["'path' => env('FILAMENT_PATH', 'admin')", "'brand' => env('APP_NAME')"],
-            ["'path' => '/'", "'brand' => 'MailCarrier'"],
+            [
+                "'path' => env('FILAMENT_PATH', 'admin')",
+                "'brand' => env('APP_NAME')",
+                "'dark_mode' => false",
+            ],
+            [
+                "'path' => '/'",
+                "'brand' => 'MailCarrier'",
+                "'dark_mode' => true",
+            ],
             $filamentConfig
         );
 
@@ -179,11 +186,12 @@ class InstallCommand extends Command
      */
     protected function publishVendor(): void
     {
-        $this->callSilently('vendor:publish', [
+        $this->call('vendor:publish', [
             '--tag' => 'mailcarrier-config',
+            '--tag' => 'mailcarrier-assets',
         ]);
 
-        $this->labeledLine('Configuration file copied.');
+        $this->labeledLine('Configuration files and assets copied.');
     }
 
     /**

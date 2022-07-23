@@ -7,7 +7,6 @@ use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use MailCarrier\Enums\Role;
 
 /**
  * @property int $id
@@ -29,8 +28,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
     protected $fillable = [
         'oauth_id',
         'name',
-        'last_name',
         'email',
+        'password',
         'picture_url',
         'roles',
     ];
@@ -40,7 +39,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
      *
      * @var array<int, string>
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'password',
+    ];
 
     /**
      * The attributes that should be cast.
@@ -65,7 +66,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
      */
     public function canAccessFilament(): bool
     {
-        return $this->isUser();
+        return true;
     }
 
     /**
@@ -82,21 +83,5 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
     public function getFilamentAvatarUrl(): ?string
     {
         return $this->picture_url;
-    }
-
-    /**
-     * Check if user is an admin.
-     */
-    public function isUser(): bool
-    {
-        return is_array($this->roles) && in_array(Role::User->value, $this->roles);
-    }
-
-    /**
-     * Check if user is an admin.
-     */
-    public function isAdmin(): bool
-    {
-        return is_array($this->roles) && in_array(Role::Admin->value, $this->roles);
     }
 }

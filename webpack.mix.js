@@ -13,7 +13,7 @@ const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 */
 
 mix
-  .setPublicPath('dist/')
+  .setPublicPath('resources/dist/')
   .webpackConfig({
     plugins: [
       new MonacoWebpackPlugin({

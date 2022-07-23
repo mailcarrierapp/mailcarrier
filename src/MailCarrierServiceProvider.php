@@ -44,6 +44,7 @@ class MailCarrierServiceProvider extends PluginServiceProvider
     public function packageConfigured(Package $package): void
     {
         $package
+            ->hasAssets()
             ->hasCommands([
                 InstallCommand::class,
                 UpgradeCommand::class,
@@ -88,7 +89,7 @@ class MailCarrierServiceProvider extends PluginServiceProvider
      */
     public function servingFilament(): void
     {
-        Filament::registerTheme(mix('css/app.css'));
+        Filament::registerTheme(mix('css/app.css', 'vendor/mailcarrier'));
 
         // Edit the navigation
         Filament::navigation(

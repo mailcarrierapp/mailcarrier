@@ -9,6 +9,7 @@ use Filament\PluginServiceProvider;
 use Illuminate\Support\Facades\Event;
 use MailCarrier\Commands\InstallCommand;
 use MailCarrier\Commands\UpgradeCommand;
+use MailCarrier\Commands\UserCommand;
 use MailCarrier\Models\Template;
 use MailCarrier\Observers\TemplateObserver;
 use MailCarrier\Resources\LayoutResource;
@@ -48,6 +49,7 @@ class MailCarrierServiceProvider extends PluginServiceProvider
             ->hasCommands([
                 InstallCommand::class,
                 UpgradeCommand::class,
+                UserCommand::class,
             ])
             ->hasMigrations([
                 '1_create_users_table',

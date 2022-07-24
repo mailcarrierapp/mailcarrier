@@ -3,12 +3,10 @@
 namespace MailCarrier\Commands;
 
 use Composer\Semver\Comparator;
-use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
 use Symfony\Component\Process\Process;
-use function Termwind\render;
 
 class InstallCommand extends Command
 {
@@ -245,30 +243,5 @@ class InstallCommand extends Command
             sprintf('"%s": "%s"', $name, $value),
             $composerJson
         );
-    }
-
-    /**
-     * Show a success message for a task.
-     */
-    protected function labeledLine(string $line, string $label = 'DONE', string $bgColor = 'green-400', string $textColor = 'slate-600'): void
-    {
-        render(<<<HTML
-            <div class="mx-2 mb-1">
-                <span class="px-1 bg-$bgColor text-$textColor">$label</span>
-                <span class="ml-1">$line</span>
-            </div>
-        HTML);
-    }
-
-    /**
-     * Show a success message for a task.
-     */
-    protected function greenAlert(string $label): void
-    {
-        render(<<<HTML
-            <div class="w-full mx-2 py-1 mt-1 bg-green-400 text-slate-800 text-center">
-                $label
-            </div>
-        HTML);
     }
 }

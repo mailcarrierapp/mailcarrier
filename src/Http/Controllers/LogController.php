@@ -5,12 +5,12 @@ namespace MailCarrier\Http\Controllers;
 use Illuminate\Http\Response;
 use MailCarrier\Models\Log;
 
-class PreviewController extends Controller
+class LogController extends Controller
 {
     /**
      * Preview a log.
      */
-    public function log(Log $log): Response
+    public function preview(Log $log): Response
     {
         return new Response(
             $log->template_frozen->render

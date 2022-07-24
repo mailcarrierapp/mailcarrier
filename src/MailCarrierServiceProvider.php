@@ -44,6 +44,7 @@ class MailCarrierServiceProvider extends PluginServiceProvider
     public function packageConfigured(Package $package): void
     {
         $package
+            ->hasRoutes(['api', 'web'])
             ->hasCommands([
                 InstallCommand::class,
                 UpgradeCommand::class,

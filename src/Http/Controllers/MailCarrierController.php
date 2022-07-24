@@ -26,7 +26,9 @@ class MailCarrierController extends Controller
             Config::get('mailcarrier.api_endpoint.auth_guard'),
         ];
 
-        $this->middleware(array_filter(array_unique($middleware)));
+        $this
+            ->middleware(array_filter(array_unique($middleware)))
+            ->only('send');
     }
 
     /**

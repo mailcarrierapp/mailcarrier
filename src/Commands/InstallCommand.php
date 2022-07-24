@@ -6,6 +6,7 @@ use Composer\Semver\Comparator;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
+use MailCarrier\Actions\Auth\EnsureAuthManagerExists;
 use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
@@ -230,6 +231,8 @@ class InstallCommand extends Command
         if ($this->confirm('Do you want to setup Social Auth instead of regular one?')) {
             $this->call('mailcarrier:social');
         } else {
+            (new EnsureAuthManagerExists)->run();
+
             $this->line('If you change your mind you can still setup it by running:');
             $this->comment('php artisan mailcarrier:social');
 

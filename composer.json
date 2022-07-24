@@ -21,6 +21,7 @@
         "illuminate/contracts": "^9.0",
         "illuminate/database": "^9.0",
         "jessarcher/laravel-castable-data-transfer-object": "^2.2",
+        "laravel/sanctum": "^2.15",
         "laravel/socialite": "^5.5",
         "latte/latte": "^3.0",
         "livewire/livewire": "^2.10",

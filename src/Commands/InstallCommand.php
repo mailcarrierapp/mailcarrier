@@ -97,8 +97,8 @@ class InstallCommand extends Command
         @unlink(getcwd() . '/routes/channels.php');
         @unlink(getcwd() . '/routes/console.php');
 
-        copy(__DIR__ . '/../../routes/api.php.stub', getcwd() . '/routes/api.php');
-        copy(__DIR__ . '/../../routes/web.php.stub', getcwd() . '/routes/web.php');
+        copy(__DIR__ . '/../../routes/stubs/api.php.stub', getcwd() . '/routes/api.php');
+        copy(__DIR__ . '/../../routes/stubs/web.php.stub', getcwd() . '/routes/web.php');
 
         $this->labeledLine('Routes cleanup.');
     }

@@ -4,10 +4,10 @@ namespace MailCarrier\Exceptions;
 
 use MailCarrier\Enums\ApiErrorKey;
 
-class MissingVariableException extends SendingFailedException
+class TemplateRenderException extends SendingFailedException
 {
     public function getErrorKey(): ApiErrorKey
     {
-        return ApiErrorKey::MissingVariable;
+        return ApiErrorKey::TemplateRender;
     }
 }

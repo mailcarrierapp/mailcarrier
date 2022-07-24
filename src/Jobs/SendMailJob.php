@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use MailCarrier\Actions\Logs;
 use MailCarrier\Dto\GenericMailDto;
 use MailCarrier\Enums\LogStatus;
+use MailCarrier\Exceptions\SendingFailedException;
 use MailCarrier\Mail\GenericMail;
 use MailCarrier\Models\Log;
 
@@ -47,6 +48,15 @@ class SendMailJob implements ShouldQueue
                 'status' => $error ? LogStatus::Failed : LogStatus::Sent,
                 'error' => $error,
             ]);
+        }
+
+        if ($error) {
+            $exception = new SendingFailedException($error);
+            $exception->setLog($this->log);
+
+            report($exception);
+
+            $this->fail($exception);
         }
     }
 }

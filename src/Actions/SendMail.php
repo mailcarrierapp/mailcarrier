@@ -12,6 +12,7 @@ use MailCarrier\Dto\GenericMailDto;
 use MailCarrier\Dto\RecipientDto;
 use MailCarrier\Dto\SendMailDto;
 use MailCarrier\Exceptions\MissingVariableException;
+use MailCarrier\Exceptions\TemplateRenderException;
 use MailCarrier\Jobs\SendMailJob;
 use MailCarrier\Models\Template;
 
@@ -105,7 +106,7 @@ class SendMail extends Action
         try {
             $templateRender = (new Templates\Render)->run($this->template, $recipient->variables);
         } catch (Exception $e) {
-            $exception = new Exception($e->getMessage());
+            $exception = new TemplateRenderException($e->getMessage());
 
             if (str_contains($e->getMessage(), 'Undefined variable')) {
                 $missingVariableName = Str::match('/Undefined variable \$([\w\d_]+)/i', $e->getMessage());
@@ -140,7 +141,7 @@ class SendMail extends Action
         $log = !$this->shouldLog ? null : (new Logs\CreateFromGenericMail)->run($genericMailDto);
 
         if ($exception) {
-            throw $exception;
+            throw $exception->setLog($log);
         }
 
         if ($shouldBeQueued) {

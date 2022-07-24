@@ -149,6 +149,12 @@ class InstallCommand extends Command
     {
         $this->labeledLine('Installing dashboard...', 'DOING', 'blue-400');
 
+        if (\Composer\InstalledVersions::isInstalled('filament/filament')) {
+            $this->labeledLine('Dashboard already installed.');
+
+            return;
+        }
+
         (new Process(['composer', 'require', 'filament/filament']))
             ->mustRun();
 
@@ -176,7 +182,7 @@ class InstallCommand extends Command
 
         file_put_contents($filamentConfigPath, $filamentConfig);
 
-        $this->labeledLine('Dashboard configured.');
+        $this->labeledLine('Dashboard installed.');
     }
 
     /**
@@ -208,8 +214,12 @@ class InstallCommand extends Command
      */
     protected function autoload(): void
     {
+        $this->labeledLine('Refreshing composer...', 'DOING', 'blue-400');
+
         (new Process(['composer', 'dump-autoload']))
             ->mustRun();
+
+        $this->labeledLine('Composer fresh and clean.');
     }
 
     /**
@@ -220,8 +230,23 @@ class InstallCommand extends Command
         if ($this->confirm('Do you want to setup Social Auth instead of regular one?')) {
             $this->call('mailcarrier:social');
         } else {
-            $this->line('If you change your mind later you still setup it by running:');
+            $this->line('If you change your mind you can still setup it by running:');
             $this->comment('php artisan mailcarrier:social');
+
+            $this->createFirstUser();
+        }
+    }
+
+    /**
+     * Create the first user.
+     */
+    protected function createFirstUser(): void
+    {
+        if ($this->confirm('Do you want to create a user?')) {
+            $this->call('mailcarrier:user');
+        } else {
+            $this->line('You can create as many users as you want later on by running:');
+            $this->comment('php artisan mailcarrier:user');
         }
     }
 

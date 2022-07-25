@@ -25,15 +25,12 @@ class InstallCommand extends Command
 
         $this->newLine();
 
-        $this->deleteDefaultMigrations();
-        $this->deleteDefaultModels();
-        $this->deleteDefaultRoutes();
+        $this->cleanupLaravel();
         $this->updateComposerJson();
         $this->installFilament();
         $this->publishVendor();
         $this->migrate();
         $this->autoload();
-
         $this->setupSocialAuth();
 
         $this->greenAlert('MailCarrier installed correctly. Enjoy!');
@@ -56,14 +53,25 @@ class InstallCommand extends Command
     }
 
     /**
+     * Cleanup the default Laravel project.
+     */
+    protected function cleanupLaravel(): void
+    {
+        $this->deleteDefaultMigrations();
+        $this->deleteDefaultModels();
+        $this->deleteDefaultRoutes();
+        $this->deleteDefaultViews();
+
+        $this->labeledLine('Project cleaned up.');
+    }
+
+    /**
      * Delete the default Laravel migration.
      */
     protected function deleteDefaultMigrations(): void
     {
         @unlink(getcwd() . '/database/migrations/2014_10_12_000000_create_users_table.php');
         @unlink(getcwd() . '/database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php');
-
-        $this->labeledLine('Database migrations cleanup.');
     }
 
     /**
@@ -72,8 +80,6 @@ class InstallCommand extends Command
     protected function deleteDefaultModels(): void
     {
         copy(__DIR__ . '/../../src/Models/stubs/User.php.stub', getcwd() . '/app/Models/User.php');
-
-        $this->labeledLine('Models cleanup.');
     }
 
     /**
@@ -98,8 +104,14 @@ class InstallCommand extends Command
 
         copy(__DIR__ . '/../../routes/stubs/api.php.stub', getcwd() . '/routes/api.php');
         copy(__DIR__ . '/../../routes/stubs/web.php.stub', getcwd() . '/routes/web.php');
+    }
 
-        $this->labeledLine('Routes cleanup.');
+    /**
+     * Delete the default Laravel migration.
+     */
+    protected function deleteDefaultViews(): void
+    {
+        @unlink(getcwd() . '/resources/views/welcome.blade.php');
     }
 
     /**
@@ -150,16 +162,10 @@ class InstallCommand extends Command
     {
         $this->labeledLine('Installing dashboard...', 'DOING', 'blue-400');
 
-        if (\Composer\InstalledVersions::isInstalled('filament/filament')) {
-            $this->labeledLine('Dashboard already installed.');
-
-            return;
-        }
-
         (new Process(['composer', 'require', 'filament/filament']))
             ->mustRun();
 
-        $this->call('vendor:publish', [
+        $this->callSilently('vendor:publish', [
             '--tag' => 'filament-config',
         ]);
 
@@ -191,8 +197,11 @@ class InstallCommand extends Command
      */
     protected function publishVendor(): void
     {
-        $this->call('vendor:publish', [
+        $this->callSilently('vendor:publish', [
             '--tag' => 'mailcarrier-config',
+        ]);
+
+        $this->callSilently('vendor:publish', [
             '--tag' => 'mailcarrier-assets',
         ]);
 
@@ -245,7 +254,7 @@ class InstallCommand extends Command
      */
     protected function createFirstUser(): void
     {
-        if ($this->confirm('Do you want to create a user?')) {
+        if ($this->confirm('Do you want to create a user?', true)) {
             $this->call('mailcarrier:user');
         } else {
             $this->line('You can create as many users as you want later on by running:');

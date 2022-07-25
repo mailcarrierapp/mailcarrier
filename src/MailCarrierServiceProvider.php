@@ -8,6 +8,7 @@ use Filament\Navigation\NavigationBuilder;
 use Filament\PluginServiceProvider;
 use Illuminate\Support\Facades\Event;
 use MailCarrier\Commands\InstallCommand;
+use MailCarrier\Commands\SocialCommand;
 use MailCarrier\Commands\TokenCommand;
 use MailCarrier\Commands\UpgradeCommand;
 use MailCarrier\Commands\UserCommand;
@@ -50,6 +51,7 @@ class MailCarrierServiceProvider extends PluginServiceProvider
             ->hasCommands([
                 InstallCommand::class,
                 UpgradeCommand::class,
+                SocialCommand::class,
                 UserCommand::class,
                 TokenCommand::class,
             ])

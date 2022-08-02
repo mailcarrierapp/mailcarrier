@@ -1,0 +1,11 @@
+<p class="mt-10">Welcome to <strong>MailCarrier</strong>!</p>
+<p class="mt-2 mb-6">To continue to the dashboard please sign in.</p>
+
+<a href="{{ route('auth.redirect') }}">
+    <x-filament::button class="w-full">
+        Sign In
+    </x-filament::button>
+</a>
+
+{{-- Hide the page title --}}
+<style>h2{display:none}</style>

@@ -1,0 +1,3 @@
+<x-filament::layouts.card title="Unauthorized">
+    Your account is not authorized to perform this action.
+</x-filament::layouts.card>

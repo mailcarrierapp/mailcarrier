@@ -1,0 +1,78 @@
+{
+    "name": "mailcarrier/mailcarrier",
+    "description": "Mailing platform with templates and logs included",
+    "keywords": [
+        "laravel",
+        "mailcarrier"
+    ],
+    "homepage": "https://github.com/mailcarrierapp/mailcarrier",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Danilo Polani",
+            "email": "hello@mailcarrier.dev",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "composer/semver": "^3.3",
+        "filament/filament": "^2.14",
+        "illuminate/contracts": "^9.0",
+        "illuminate/database": "^9.0",
+        "jessarcher/laravel-castable-data-transfer-object": "^2.2",
+        "laravel/sanctum": "^2.15",
+        "laravel/socialite": "^5.5",
+        "latte/latte": "^3.0",
+        "livewire/livewire": "^2.10",
+        "nunomaduro/termwind": "^1.13",
+        "ralphjsmit/laravel-filament-components": "^1.1",
+        "socialiteproviders/manager": "^4.1",
+        "spatie/data-transfer-object": "^3.8"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.0",
+        "nunomaduro/collision": "^6.0",
+        "nunomaduro/larastan": "^2.0.1",
+        "orchestra/testbench": "^7.0",
+        "pestphp/pest": "^1.21",
+        "pestphp/pest-plugin-laravel": "^1.1",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "MailCarrier\\": "src",
+            "MailCarrier\\Database\\Factories\\": "database/factories"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MailCarrier\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint -v"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MailCarrier\\MailCarrierServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

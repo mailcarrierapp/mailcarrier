@@ -40,7 +40,9 @@ class MailCarrierServiceProvider extends PluginServiceProvider
      */
     public function packageConfiguring(Package $package): void
     {
-        Filament::registerTheme(mix('css/app.css'));
+        if (!$this->app->runningInConsole()) {
+            Filament::registerTheme(mix('css/app.css'));
+        }
 
         Event::listen(ServingFilament::class, $this->servingFilament(...));
     }
@@ -82,9 +84,11 @@ class MailCarrierServiceProvider extends PluginServiceProvider
         parent::packageRegistered();
 
         // Register dependencies
-        $this->app->register(\Livewire\LivewireServiceProvider::class);
-        $this->app->register(\Filament\FilamentServiceProvider::class);
-        $this->app->register(\Laravel\Socialite\SocialiteServiceProvider::class);
+        if ($this->app->runningInConsole()) {
+            $this->app->register(\Livewire\LivewireServiceProvider::class);
+            $this->app->register(\Filament\FilamentServiceProvider::class);
+            $this->app->register(\Laravel\Socialite\SocialiteServiceProvider::class);
+        }
 
         $this->app->scoped('mailcarrier', fn (): MailCarrierManager => new MailCarrierManager());
     }

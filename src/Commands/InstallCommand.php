@@ -4,8 +4,8 @@ namespace MailCarrier\Commands;
 
 use Composer\Semver\Comparator;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use MailCarrier\Actions\Auth\EnsureAuthManagerExists;
 use Symfony\Component\Process\Process;
 

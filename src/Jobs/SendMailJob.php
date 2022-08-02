@@ -61,8 +61,8 @@ class SendMailJob implements ShouldQueue
     }
 
     /**
-    * Calculate the number of seconds to wait before retrying the job.
-    */
+     * Calculate the number of seconds to wait before retrying the job.
+     */
     public function backoff(): array
     {
         return [

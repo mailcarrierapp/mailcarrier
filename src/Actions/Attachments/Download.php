@@ -6,8 +6,8 @@ use MailCarrier\Actions\Action;
 use MailCarrier\Enums\AttachmentLogStrategy;
 use MailCarrier\Exceptions\AttachmentNotDownloadableException;
 use MailCarrier\Exceptions\AttachmentNotFoundException;
-use MailCarrier\Http\GenericFile;
 use MailCarrier\Facades\MailCarrier;
+use MailCarrier\Http\GenericFile;
 use MailCarrier\Models\Attachment;
 
 class Download extends Action

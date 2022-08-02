@@ -3,7 +3,6 @@
 namespace MailCarrier\Commands;
 
 use Illuminate\Support\Facades\Validator;
-
 use function Termwind\render;
 
 abstract class Command extends \Illuminate\Console\Command

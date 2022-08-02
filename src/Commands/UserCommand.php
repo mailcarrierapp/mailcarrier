@@ -2,9 +2,9 @@
 
 namespace MailCarrier\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use MailCarrier\Models\User;
 
 class UserCommand extends Command

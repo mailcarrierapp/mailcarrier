@@ -52,17 +52,17 @@ class SocialiteProviders
     public static function getAdditionalConfig(string $driver): string
     {
         return match ($driver) {
-            'Auth0' => <<<PHP
+            'Auth0' => <<<'PHP'
             'base_url' => env('AUTH0_BASE_URL'),
             PHP,
-            'Okta' => <<<PHP
+            'Okta' => <<<'PHP'
             'base_url' => env('OKTA_BASE_URL'),
             PHP,
-            'Cognito' => <<<PHP
+            'Cognito' => <<<'PHP'
             'scope' => explode(",", env('COGNITO_LOGIN_SCOPE')),
             'logout_uri' => env('COGNITO_SIGN_OUT_URL'),
             PHP,
-            'Keycloak' => <<<PHP
+            'Keycloak' => <<<'PHP'
             'base_url' => env('KEYCLOAK_BASE_URL'),
             'realms' => env('KEYCLOAK_REALM'),
             PHP,
@@ -76,17 +76,17 @@ class SocialiteProviders
     public static function getAdditionalEnv(string $driver): string
     {
         return match ($driver) {
-            'Auth0' => <<<ENV
+            'Auth0' => <<<'ENV'
             AUTH0_BASE_URL=
             ENV,
-            'Okta' => <<<ENV
+            'Okta' => <<<'ENV'
             OKTA_BASE_URL=
             ENV,
-            'Cognito' => <<<ENV
+            'Cognito' => <<<'ENV'
             COGNITO_LOGIN_SCOPE=
             COGNITO_SIGN_OUT_URL=
             ENV,
-            'Keycloak' => <<<ENV
+            'Keycloak' => <<<'ENV'
             KEYCLOAK_BASE_URL=
             KEYCLOAK_REALM=
             ENV,

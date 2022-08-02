@@ -2,8 +2,8 @@
 
 namespace MailCarrier\Actions\Auth;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use MailCarrier\Actions\Action;
 use MailCarrier\Enums\Auth as AuthEnum;
 use MailCarrier\Models\User;

@@ -20,7 +20,7 @@ class SocialCommand extends Command
         $this->chosenDriver = $this->choice(
             'Select your Social Auth driver',
             [
-            ...SocialiteProviders::getNativeSocialiteProviders(),
+                ...SocialiteProviders::getNativeSocialiteProviders(),
                 ...SocialiteProviders::getProvidersMap(),
                 self::DRIVER_OTHER,
             ],
@@ -168,7 +168,7 @@ class SocialCommand extends Command
         $this->info('The following <comment>environment variables</comment> have been added to your .env file and should be reviewed:');
         $this->newLine();
 
-        foreach(preg_split("/((\r?\n)|(\r\n?))/", $this->buildEnvs()) as $line) {
+        foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->buildEnvs()) as $line) {
             if (!empty($line)) {
                 $this->line('    • ' . str_replace('=', '', $line));
             }

@@ -126,7 +126,7 @@ class InstallCommand extends Command
         $errorsTargetDir = getcwd() . '/resources/views/errors';
 
         @mkdir($errorsTargetDir, recursive: true);
-        copy(__DIR__ . '/../../resources/views/stubs/401.php.stub', $errorsTargetDir . '/401.blade.php');
+        copy(__DIR__ . '/../../resources/views/stubs/401.blade.php.stub', $errorsTargetDir . '/401.blade.php');
     }
 
     /**

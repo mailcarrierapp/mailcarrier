@@ -40,10 +40,6 @@ class MailCarrierServiceProvider extends PluginServiceProvider
      */
     public function packageConfiguring(Package $package): void
     {
-        if (!$this->app->runningInConsole()) {
-            Filament::registerTheme(mix('css/app.css'));
-        }
-
         Event::listen(ServingFilament::class, $this->servingFilament(...));
     }
 
@@ -111,6 +107,8 @@ class MailCarrierServiceProvider extends PluginServiceProvider
      */
     public function servingFilament(): void
     {
+        Filament::registerTheme(mix('css/app.css'));
+
         // Edit the navigation
         Filament::navigation(
             fn (NavigationBuilder $builder): NavigationBuilder => $builder

@@ -28,7 +28,8 @@
         "nunomaduro/termwind": "^1.13",
         "ralphjsmit/laravel-filament-components": "^1.1",
         "socialiteproviders/manager": "^4.1",
-        "spatie/data-transfer-object": "^3.8"
+        "spatie/data-transfer-object": "^3.8",
+        "thecodingmachine/safe": "2.0.0"
     },
     "require-dev": {
         "laravel/pint": "^1.0",

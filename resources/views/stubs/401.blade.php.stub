@@ -1,7 +1,7 @@
 @php
     Filament\Facades\Filament::registerRenderHook(
         'styles.end',
-        fn () => new '<link href="' . mix('css/app.css') . '" rel="stylesheet" />',
+        fn () => '<link href="' . mix('css/app.css') . '" rel="stylesheet" />',
     );
 @endphp
 

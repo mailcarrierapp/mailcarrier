@@ -64,7 +64,7 @@ class CreateFromGenericMail extends Action
         $isInline = $attachmentStrategy === AttachmentLogStrategy::Inline;
         $shouldBeUploaded = $attachmentStrategy === AttachmentLogStrategy::Upload;
 
-        $name = $attachment instanceof AttachmentDto ? $attachment->name : $attachment->resource;
+        $name = $attachment instanceof AttachmentDto ? $attachment->name : ($attachment->name ?: $attachment->resource);
         $size = $attachment instanceof AttachmentDto ? $attachment->size : MailCarrier::getFileSize($attachment->resource, $attachment->disk);
         $content = $attachment instanceof AttachmentDto ? $attachment->content : null;
         $path = $attachment instanceof AttachmentDto ? null : $attachment->resource;

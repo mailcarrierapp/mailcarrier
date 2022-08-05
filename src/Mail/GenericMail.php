@@ -39,6 +39,7 @@ class GenericMail extends Mailable
             $this->attachFromStorageDisk(
                 $attachment->disk ?: Config::get('mailcarrier.attachments.disk'),
                 $attachment->resource,
+                $attachment->name,
             );
         }
 

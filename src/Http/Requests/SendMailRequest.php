@@ -41,6 +41,7 @@ class SendMailRequest extends FormRequest
             // Remote attachments from disks
             'remoteAttachments' => 'sometimes|array',
             'remoteAttachments.*.resource' => 'required',
+            'remoteAttachments.*.name' => 'sometimes|string',
             'remoteAttachments.*.disk' => [
                 'sometimes',
                 Rule::in(array_unique([

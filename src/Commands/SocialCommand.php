@@ -91,21 +91,21 @@ class SocialCommand extends Command
      */
     protected function addEnvs(string $envFile): void
     {
-        if ($this->chosenDriver === self::DRIVER_OTHER) {
+        // Do not add the entry if already exists
+        if (str_contains($envFile, 'MAILCARRIER_SOCIAL_AUTH_DRIVER=')) {
             return;
         }
 
         $envPath = getcwd() . '/' . $envFile;
         $envFile = file_get_contents($envPath);
 
-        // Do not add the entry if already exists
-        if (str_contains($envFile, 'MAILCARRIER_SOCIAL_AUTH_DRIVER=')) {
-            return;
+        if ($this->chosenDriver === self::DRIVER_OTHER) {
+            $envFile .= 'MAILCARRIER_SOCIAL_AUTH_DRIVER=' . PHP_EOL;
+        } else {
+            $envFile .= 'MAILCARRIER_SOCIAL_AUTH_DRIVER=' . strtolower($this->chosenDriver) .
+                PHP_EOL .
+                $this->buildEnvs();
         }
-
-        $envFile .= 'MAILCARRIER_SOCIAL_AUTH_DRIVER=' . strtolower($this->chosenDriver) .
-            PHP_EOL .
-            $this->buildEnvs();
 
         file_put_contents($envPath, $envFile);
     }

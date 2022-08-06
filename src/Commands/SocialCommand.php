@@ -18,7 +18,7 @@ class SocialCommand extends Command
     public function handle(): int
     {
         $this->chosenDriver = $this->choice(
-            'Select your Social Auth driver',
+            'Select your social auth provider',
             [
                 ...SocialiteProviders::getNativeSocialiteProviders(),
                 ...SocialiteProviders::getProvidersMap(),

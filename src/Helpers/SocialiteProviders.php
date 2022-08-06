@@ -28,6 +28,7 @@ class SocialiteProviders
             'Apple',
             'Auth0',
             'Cognito',
+            'FusionAuth',
             'Keycloak',
             'Microsoft',
             'Okta',
@@ -62,6 +63,10 @@ class SocialiteProviders
             'scope' => explode(",", env('COGNITO_LOGIN_SCOPE')),
             'logout_uri' => env('COGNITO_SIGN_OUT_URL'),
             PHP,
+            'FusionAuth' => <<<'PHP'
+            'base_url' => env('FUSIONAUTH_BASE_URL'),
+            'tenant_id' => env('FUSIONAUTH_TENANT_ID'),
+            PHP,
             'Keycloak' => <<<'PHP'
             'base_url' => env('KEYCLOAK_BASE_URL'),
             'realms' => env('KEYCLOAK_REALM'),
@@ -85,6 +90,10 @@ class SocialiteProviders
             'Cognito' => <<<'ENV'
             COGNITO_LOGIN_SCOPE=
             COGNITO_SIGN_OUT_URL=
+            ENV,
+            'FusionAuth' => <<<'ENV'
+            FUSIONAUTH_BASE_URL=
+            FUSIONAUTH_REALM=
             ENV,
             'Keycloak' => <<<'ENV'
             KEYCLOAK_BASE_URL=

@@ -19,7 +19,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        MailCarrier::authorizeSocialAuth(function (\Laravel\Socialite\AbstractUser $user) {
+        MailCarrier::authorizeSocialAuth(function (\Laravel\Socialite\AbstractUser $user): bool {
             return false;
         });
     }

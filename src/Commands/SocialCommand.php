@@ -2,6 +2,7 @@
 
 namespace MailCarrier\Commands;
 
+use Illuminate\Support\Str;
 use MailCarrier\Helpers\SocialiteProviders;
 use Symfony\Component\Process\Process;
 
@@ -151,7 +152,7 @@ class SocialCommand extends Command
         return <<<PHP
         {$envPrefix}_CLIENT_ID=
         {$envPrefix}_CLIENT_SECRET=
-        {$envPrefix}_REDIRECT_URI=
+        {$envPrefix}_REDIRECT_URI="\${APP_URL}/auth/callback"
         {$driverAdditionalEnv}
         PHP;
     }
@@ -170,7 +171,7 @@ class SocialCommand extends Command
 
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->buildEnvs()) as $line) {
             if (!empty($line)) {
-                $this->line('    • ' . str_replace('=', '', $line));
+                $this->line('    • ' . Str::before($line, '='));
             }
         }
     }

@@ -13,7 +13,7 @@ class TokenCommand extends Command
     public function handle(): int
     {
         $name = $this->validateInput(
-            fn () => $this->ask('What\'s the name of the token? It should be a unique name to identify who is making the request', 'Unnamed'),
+            fn () => $this->ask('What\'s the name of the token?', 'Unnamed'),
             'name',
             ['required']
         );

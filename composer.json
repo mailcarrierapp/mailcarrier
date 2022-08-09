@@ -20,7 +20,7 @@
         "filament/filament": "^2.14",
         "illuminate/contracts": "^9.0",
         "illuminate/database": "^9.0",
-        "jessarcher/laravel-castable-data-transfer-object": "^2.2",
+        "jessarcher/laravel-castable-data-transfer-object": "^2.2.1",
         "laravel/sanctum": "^3.0",
         "laravel/socialite": "^5.5",
         "latte/latte": "^3.0",
@@ -28,8 +28,7 @@
         "nunomaduro/termwind": "^1.13",
         "ralphjsmit/laravel-filament-components": "^1.1",
         "socialiteproviders/manager": "^4.1",
-        "spatie/data-transfer-object": "^3.8",
-        "thecodingmachine/safe": "2.0.0"
+        "spatie/data-transfer-object": "^3.8"
     },
     "require-dev": {
         "laravel/pint": "^1.0",

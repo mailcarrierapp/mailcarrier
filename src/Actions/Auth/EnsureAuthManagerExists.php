@@ -2,8 +2,6 @@
 
 namespace MailCarrier\Actions\Auth;
 
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use MailCarrier\Actions\Action;
 use MailCarrier\Enums\Auth as AuthEnum;
 use MailCarrier\Models\User;
@@ -19,7 +17,7 @@ class EnsureAuthManagerExists extends Action
             'email' => AuthEnum::AuthManagerEmail,
         ], [
             'name' => 'Auth Manager',
-            'password' => Hash::make(Str::uuid()->toString()),
+            'password' => null,
         ]);
     }
 }

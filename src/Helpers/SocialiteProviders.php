@@ -93,7 +93,7 @@ class SocialiteProviders
             ENV,
             'FusionAuth' => <<<'ENV'
             FUSIONAUTH_BASE_URL=
-            FUSIONAUTH_REALM=
+            FUSIONAUTH_TENANT_ID=
             ENV,
             'Keycloak' => <<<'ENV'
             KEYCLOAK_BASE_URL=

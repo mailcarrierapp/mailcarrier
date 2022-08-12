@@ -19,14 +19,4 @@ class CreateLayout extends CreateRecord
             'user_id' => Auth::id(),
         ];
     }
-
-    /**
-     * Get resource top-right actions.
-     */
-    protected function getActions(): array
-    {
-        return [
-            $this->getSubmitFormAction(),
-        ];
-    }
 }

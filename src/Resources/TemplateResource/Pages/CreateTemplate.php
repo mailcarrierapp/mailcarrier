@@ -21,14 +21,4 @@ class CreateTemplate extends CreateRecord
             'slug' => (new GenerateSlug())->run($this->data['name']),
         ];
     }
-
-    /**
-     * Get resource top-right actions.
-     */
-    protected function getActions(): array
-    {
-        return [
-            $this->getSubmitFormAction(),
-        ];
-    }
 }

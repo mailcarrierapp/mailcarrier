@@ -111,7 +111,7 @@ class TemplateResource extends Resource
                     // Disable field UI if the record exists and user can't unlock it
                     ->disabled(fn (?Template $record) => !is_null($record) && !static::can('unlock', $record))
                     // Save the field if record does not exist or user can unlock it
-                    ->dehydrated(fn (?Template $record) => is_null($record) || !static::can('unlock', $record)),
+                    ->dehydrated(fn (?Template $record) => is_null($record) || static::can('unlock', $record)),
             ]),
         ];
     }

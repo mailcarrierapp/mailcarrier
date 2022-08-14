@@ -6,13 +6,14 @@ use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
+use Laravel\SerializableClosure\SerializableClosure;
 use MailCarrier\Dto\AttachmentDto;
-use MailCarrier\Dto\ContactDto;
 use MailCarrier\Dto\GenericMailDto;
 use MailCarrier\Dto\RecipientDto;
 use MailCarrier\Dto\SendMailDto;
 use MailCarrier\Exceptions\MissingVariableException;
 use MailCarrier\Exceptions\TemplateRenderException;
+use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Jobs\SendMailJob;
 use MailCarrier\Models\Template;
 
@@ -146,12 +147,20 @@ class SendMail extends Action
             return;
         }
 
+        if ($sendingMiddleware = MailCarrier::getSendingMiddleware()) {
+            $sendingMiddleware = serialize(new SerializableClosure($sendingMiddleware));
+        }
+
+        $job = new SendMailJob($genericMailDto, $log, $sendingMiddleware);
+
         if ($shouldBeQueued) {
-            SendMailJob::dispatch($genericMailDto, $log)
-                ->onQueue(Config::get('mailcarrier.queue.name'))
-                ->onConnection(Config::get('mailcarrier.queue.connection'));
+            dispatch(
+                $job
+                    ->onQueue(Config::get('mailcarrier.queue.name'))
+                    ->onConnection(Config::get('mailcarrier.queue.connection'))
+            );
         } else {
-            SendMailJob::dispatchSync($genericMailDto, $log);
+            dispatch_sync($job);
         }
     }
 }

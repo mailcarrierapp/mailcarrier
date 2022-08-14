@@ -12,7 +12,6 @@ use MailCarrier\Actions\Logs;
 use MailCarrier\Dto\GenericMailDto;
 use MailCarrier\Enums\LogStatus;
 use MailCarrier\Exceptions\SendingFailedException;
-use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Mail\GenericMail;
 use MailCarrier\Models\Log;
 
@@ -31,8 +30,11 @@ class SendMailJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected GenericMailDto $genericMailDto, protected ?Log $log = null)
-    {
+    public function __construct(
+        protected GenericMailDto $genericMailDto,
+        protected ?Log $log = null,
+        protected ?string $sendingMiddleware = null
+    ) {
         //
     }
 
@@ -68,7 +70,8 @@ class SendMailJob implements ShouldQueue
     {
         $sendMail = fn () => Mail::send(new GenericMail($this->genericMailDto));
 
-        if ($middleware = MailCarrier::getSendingMiddleware()) {
+        if ($this->sendingMiddleware) {
+            $middleware = unserialize($this->sendingMiddleware)->getClosure();
             $middleware($this->genericMailDto, $sendMail);
         } else {
             $sendMail();

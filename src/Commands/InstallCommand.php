@@ -112,6 +112,7 @@ class InstallCommand extends Command
      */
     public function overrideDefaultProviders(): void
     {
+        copy(__DIR__ . '/../Providers/stubs/AppServiceProvider.php.stub', getcwd() . '/app/Providers/AppServiceProvider.php');
         copy(__DIR__ . '/../Providers/stubs/AuthServiceProvider.php.stub', getcwd() . '/app/Providers/AuthServiceProvider.php');
         copy(__DIR__ . '/../Providers/stubs/EventServiceProvider.php.stub', getcwd() . '/app/Providers/EventServiceProvider.php');
     }

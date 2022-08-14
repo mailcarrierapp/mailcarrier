@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Laravel\Socialite\AbstractUser as User;
 use MailCarrier\Facades\MailCarrier;
 
 class AuthServiceProvider extends ServiceProvider
@@ -19,7 +20,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        MailCarrier::authorizeSocialAuth(function (\Laravel\Socialite\AbstractUser $user): bool {
+        MailCarrier::authorizeSocialAuth(function (User $user): bool {
             return false;
         });
     }

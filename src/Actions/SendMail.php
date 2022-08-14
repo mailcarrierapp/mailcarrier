@@ -39,14 +39,6 @@ class SendMail extends Action
     {
         $this->params = $params;
 
-        // Fallback sender to app defaults
-        if (!$params->sender) {
-            $this->params->sender = new ContactDto(
-                name: Config::get('mail.from.name'),
-                email: Config::get('mail.from.address')
-            );
-        }
-
         $this->template = (new Templates\FindBySlug)->run($params->template);
         $this->recipients = $params->recipients ?: [
             new RecipientDto(

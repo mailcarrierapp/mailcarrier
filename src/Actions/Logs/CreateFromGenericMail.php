@@ -5,6 +5,7 @@ namespace MailCarrier\Actions\Logs;
 use Illuminate\Support\Facades\Config;
 use MailCarrier\Actions\Action;
 use MailCarrier\Dto\AttachmentDto;
+use MailCarrier\Dto\ContactDto;
 use MailCarrier\Dto\GenericMailDto;
 use MailCarrier\Dto\LogTemplateDto;
 use MailCarrier\Dto\RemoteAttachmentDto;
@@ -26,7 +27,10 @@ class CreateFromGenericMail extends Action
             'status' => $genericMailDto->error ? LogStatus::Failed : LogStatus::Pending,
             'trigger' => $genericMailDto->trigger,
             'subject' => $genericMailDto->subject,
-            'sender' => $genericMailDto->sender,
+            'sender' => $genericMailDto->sender ?: new ContactDto(
+                name: Config::get('mail.from.name'),
+                email: Config::get('mail.from.address')
+            ),
             'recipient' => $genericMailDto->recipient,
             'cc' => $genericMailDto->cc,
             'bcc' => $genericMailDto->bcc,

@@ -48,7 +48,8 @@ class GenericMail extends Mailable
             ->html($this->params->content)
             ->when(
                 $this->params->sender,
-                fn (GenericMail $mail) => $mail->from($this->params->sender->email, $this->params->sender->name)
+                callback: fn (GenericMail $mail) => $mail->from($this->params->sender->email, $this->params->sender->name),
+                default: fn (GenericMail $mail) => $mail->from(Config::get('mail.from.address'), Config::get('mail.from.name'))
             )
             ->when(
                 $this->params->subject,

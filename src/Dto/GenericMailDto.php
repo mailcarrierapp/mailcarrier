@@ -19,7 +19,7 @@ class GenericMailDto extends DataTransferObject
 
     public string $recipient;
 
-    public ContactDto $sender;
+    public ?ContactDto $sender;
 
     public ?ContactDto $cc;
 

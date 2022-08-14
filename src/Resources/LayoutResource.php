@@ -96,9 +96,9 @@ class LayoutResource extends Resource
                     ->required()
                     ->autofocus()
                     // Disable field UI if the record exists and user can't unlock it
-                    ->disabled(fn (?Layout $record) => !is_null($record) && !static::can('unlock', $record))
+                    ->disabled(fn (?Layout $record) => !is_null($record) && $record->is_locked)
                     // Save the field if record does not exist or user can unlock it
-                    ->dehydrated(fn (?Layout $record) => is_null($record) || static::can('unlock', $record)),
+                    ->dehydrated(fn (?Layout $record) => is_null($record) || !$record->is_locked),
 
                 MonacoEditor::make('content')
                     ->required()
@@ -108,9 +108,9 @@ class LayoutResource extends Resource
                     ->columnSpan(2)
                     ->default(static::DEFAULT_CONTENT)
                     // Disable field UI if the record exists and user can't unlock it
-                    ->disabled(fn (?Layout $record) => !is_null($record) && !static::can('unlock', $record))
+                    ->disabled(fn (?Layout $record) => !is_null($record) && $record->is_locked)
                     // Save the field if record does not exist or user can unlock it
-                    ->dehydrated(fn (?Layout $record) => is_null($record) || static::can('unlock', $record)),
+                    ->dehydrated(fn (?Layout $record) => is_null($record) || !$record->is_locked),
             ]),
         ];
     }

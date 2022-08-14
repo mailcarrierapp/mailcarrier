@@ -117,9 +117,9 @@ class LogResource extends Resource
     protected static function getTableActions(): array
     {
         return [
-            Tables\Actions\Action::make('inspect')
+            Tables\Actions\Action::make('details')
                 ->action(fn () => null)
-                ->modalContent(fn (Log $record): ContractView => View::make('mailcarrier::modals.inspect', [
+                ->modalContent(fn (Log $record): ContractView => View::make('mailcarrier::modals.details', [
                     'log' => $record,
                     'variables' => str_replace( // Fix double quotes inside strings
                         '\"',

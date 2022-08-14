@@ -12,6 +12,7 @@ use MailCarrier\Actions\Logs;
 use MailCarrier\Dto\GenericMailDto;
 use MailCarrier\Enums\LogStatus;
 use MailCarrier\Exceptions\SendingFailedException;
+use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Mail\GenericMail;
 use MailCarrier\Models\Log;
 
@@ -25,7 +26,7 @@ class SendMailJob implements ShouldQueue
     /**
      * The number of times the job may be attempted.
      */
-    public int $tries = 5;
+    public int $tries = 6;
 
     /**
      * Create a new job instance.
@@ -43,7 +44,7 @@ class SendMailJob implements ShouldQueue
         $error = null;
 
         try {
-            Mail::send(new GenericMail($this->genericMailDto));
+            $this->send();
         } catch (\Exception $e) {
             $error = $e->getMessage();
         }
@@ -61,6 +62,20 @@ class SendMailJob implements ShouldQueue
     }
 
     /**
+     * Send the email by processing it into the optional user-defined middleware.
+     */
+    protected function send(): void
+    {
+        $sendMail = fn () => Mail::send(new GenericMail($this->genericMailDto));
+
+        if ($middleware = MailCarrier::getSendingMiddleware()) {
+            $middleware($this->genericMailDto, $sendMail);
+        } else {
+            $sendMail();
+        }
+    }
+
+    /**
      * Calculate the number of seconds to wait before retrying the job.
      */
     public function backoff(): array
@@ -71,6 +86,7 @@ class SendMailJob implements ShouldQueue
             60, // 1min
             60 * 5, // 5min
             60 * 30, // 30min
+            60 * 60, // 1h
         ];
     }
 }

@@ -13,7 +13,19 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class MailCarrierManager
 {
+    protected ?Closure $sendingMiddleware = null;
+
     protected ?Closure $socialAuthGate = null;
+
+    /**
+     * Intercept a mail ready to be sent and write a middleware around it.
+     *
+     * @param Closure(\MailCarrier\Dto\GenericMailDto $mail, \Closure $next): void $callback
+     */
+    public function sending(Closure $callback): void
+    {
+        $this->sendingMiddleware = $callback;
+    }
 
     /**
      * Define the gate to authorize a user via social authentication.
@@ -37,6 +49,14 @@ class MailCarrierManager
         if (is_null($socialAuthGate) || !$socialAuthGate($user)) {
             throw new UnauthorizedHttpException('OAuth');
         }
+    }
+
+    /**
+     * Get the sending middleware callback.
+     */
+    public function getSendingMiddleware(): ?Closure
+    {
+        return $this->sendingMiddleware;
     }
 
     /**

@@ -15,7 +15,7 @@ class SendingFailedException extends MailCarrierException
         parent::__construct($message);
     }
 
-    public function setLog(Log $log): static
+    public function setLog(?Log $log): static
     {
         $this->log = $log;
 

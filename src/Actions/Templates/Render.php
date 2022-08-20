@@ -25,8 +25,8 @@ class Render extends Action
 
         $latte = new Latte\Engine();
         $latte->setLoader(new Latte\Loaders\StringLoader([
-            $mainFileName => $mainFileContent,
-            $layoutFileName => $template->layout?->content,
+            $mainFileName => $this->parse($mainFileContent),
+            $layoutFileName => $this->parse($template->layout?->content ?: ''),
         ]));
 
         return $latte->renderToString($mainFileName, $variables);

@@ -15,7 +15,7 @@ class Render extends Action
         $mainFileName = sprintf('main-%d.html', $template->id);
         $layoutFileName = !$template->layout_id ? null : sprintf('layout-%d.html', $template->layout_id);
         $mainFileContent = !$template->layout_id ? $template->content : sprintf(
-            '{% extends "%s" %}{% block content %}%s{% endblock %}',
+            '{%% extends "%s" %%}{%% block content %%}%s{%% endblock %%}',
             $layoutFileName,
             $template->content,
         );

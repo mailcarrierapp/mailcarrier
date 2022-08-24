@@ -25,6 +25,9 @@ class Render extends Action
             $layoutFileName => $template->layout?->content,
         ]);
 
-        return (new \Twig\Environment($loader))->render($mainFileName, $variables);
+        $twig = new \Twig\Environment($loader);
+        $twig->enableStrictVariables();
+
+        return $twig->render($mainFileName, $variables);
     }
 }

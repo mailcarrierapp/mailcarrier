@@ -12,7 +12,7 @@ Design global layouts, compose your template, preview your emails and send them 
 
 ### Features
 
-- 🎨 **Beautiful syntax**: Explore a beautiful, expressive template syntax similar to the most popular JS frameworks thanks to [Twig by Symfony](https://twig.symfony.com).
+- 🎨 **Beautiful syntax**: Explore a beautiful, expressive template syntax similar to JS thanks to [Twig by Symfony](https://twig.symfony.com).
 - 🧩 **Provider aware**: Bring your desired provider to send email, such as Amazon SES, MailGun, SendGrid etc.  
 - ✨ **Friendly APIs**: Use a friendly and well documented API endpoint to send your emails.
 - 🔐 **Secure by default**: Both authentication and API endpoint are always secure: use one of the pre-built auth system or bring your own.

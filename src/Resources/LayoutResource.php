@@ -32,7 +32,7 @@ class LayoutResource extends Resource
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
             </head>
             <body>
-                {include content}
+                {% block content %}{% endblock %}
             </body>
         </html>
         HTML;

@@ -102,7 +102,7 @@ class LayoutResource extends Resource
 
                 MonacoEditor::make('content')
                     ->required()
-                    ->hint('<a href="https://latte.nette.org/en/syntax" class="underline text-primary-500 cursor-help" target="_blank" tabindex="-1">Help with template Syntax</a>')
+                    ->hint('<a href="https://twig.symfony.com/doc/3.x/templates.html" class="underline text-primary-500 cursor-help" target="_blank" tabindex="-1">Help with template Syntax</a>')
                     ->hintIcon('heroicon-o-code')
                     // Full width
                     ->columnSpan(2)

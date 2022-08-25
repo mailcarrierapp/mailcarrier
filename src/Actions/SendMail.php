@@ -98,11 +98,10 @@ class SendMail extends Action
 
         try {
             $templateRender = (new Templates\Render)->run($this->template, $recipient->variables);
-        } catch (Exception $e) {
-            $exception = new TemplateRenderException($e->getMessage());
+        } catch (\Twig\Error\RuntimeError $e) {
+            $exception = new TemplateRenderException($e->getRawMessage());
 
-            if (str_contains($e->getMessage(), 'Undefined variable')) {
-                $missingVariableName = Str::match('/Undefined variable \$([\w\d_]+)/i', $e->getMessage());
+            if ($missingVariableName = Str::match('/Variable "(.*)" does not exist/i', $e->getRawMessage())) {
                 $exception = new MissingVariableException(
                     sprintf(
                         'Missing variable "%s" for template "%s"',

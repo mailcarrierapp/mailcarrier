@@ -3,6 +3,7 @@
 namespace MailCarrier\Resources\TemplateResource\Pages;
 
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Pages\Actions\Action;
 use Filament\Pages\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
@@ -65,6 +66,10 @@ class EditTemplate extends EditRecord
                 )
             );
 
-        $this->notify('success', 'Test email sent correctly.');
+        Notification::make()
+            ->title('Test email sent correctly')
+            ->icon('heroicon-o-mail')
+            ->iconColor('success')
+            ->send();
     }
 }

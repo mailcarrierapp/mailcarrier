@@ -17,7 +17,7 @@ mix
   .webpackConfig({
     plugins: [
       new MonacoWebpackPlugin({
-        languages: ['html', 'json'],
+        languages: ['twig', 'json'],
         features: ['!quickCommand'],
         globalAPI: true,
         filename: 'js/[name].worker.js'

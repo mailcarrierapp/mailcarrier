@@ -17,7 +17,7 @@
                 document.addEventListener('DOMContentLoaded', () => {
                     const editor = monaco.editor.create($el, {
                         value: state,
-                        language: 'html',
+                        language: 'twig',
                         automaticLayout: true,
                         scrollBeyondLastLine: false,
                         theme: 'vs-dark',

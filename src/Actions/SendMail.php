@@ -2,7 +2,6 @@
 
 namespace MailCarrier\Actions;
 
-use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
@@ -144,6 +143,10 @@ class SendMail extends Action
             report($exception);
 
             return;
+        }
+
+        if ($beforeSendingMiddleware = MailCarrier::getBeforeSendingMiddleware()) {
+            $beforeSendingMiddleware($genericMailDto);
         }
 
         if ($sendingMiddleware = MailCarrier::getSendingMiddleware()) {

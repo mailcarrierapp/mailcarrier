@@ -15,6 +15,8 @@ class MailCarrierManager
 {
     protected ?Closure $sendingMiddleware = null;
 
+    protected ?Closure $beforeSendingMiddleware = null;
+
     protected ?Closure $socialAuthGate = null;
 
     /**
@@ -25,6 +27,16 @@ class MailCarrierManager
     public function sending(Closure $callback): void
     {
         $this->sendingMiddleware = $callback;
+    }
+
+    /**
+     * Invoke a custom callback before a sending a mail (sync).
+     *
+     * @param Closure(\MailCarrier\Dto\GenericMailDto $mail): void $callback
+     */
+    public function beforeSending(Closure $callback): void
+    {
+        $this->beforeSendingMiddleware = $callback;
     }
 
     /**
@@ -57,6 +69,14 @@ class MailCarrierManager
     public function getSendingMiddleware(): ?Closure
     {
         return $this->sendingMiddleware;
+    }
+
+    /**
+     * Get the sending middleware callback.
+     */
+    public function getBeforeSendingMiddleware(): ?Closure
+    {
+        return $this->beforeSendingMiddleware;
     }
 
     /**

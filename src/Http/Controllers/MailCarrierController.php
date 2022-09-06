@@ -16,6 +16,7 @@ use MailCarrier\Exceptions\MissingVariableException;
 use MailCarrier\Http\ApiResponse;
 use MailCarrier\Http\Requests\SendMailRequest;
 use MailCarrier\Models\Attachment;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class MailCarrierController extends Controller
 {
@@ -54,7 +55,7 @@ class MailCarrierController extends Controller
             return ApiResponse::error(
                 ApiErrorKey::UnexpectedError->value,
                 $e->getMessage(),
-                JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+                $e instanceof HttpException ? $e->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
 

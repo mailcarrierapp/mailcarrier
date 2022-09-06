@@ -13,6 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        MailCarrier::beforeSending(function (GenericMailDto $mail): void {
+            return;
+        });
+
         MailCarrier::sending(function (GenericMailDto $mail, \Closure $next): void {
             $next();
         });

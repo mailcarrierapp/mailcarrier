@@ -8,7 +8,29 @@ use Illuminate\Support\Str;
 trait EnumSerializable
 {
     /**
-     * Get the array of enum's values.
+     * Get an array with only the names of the enum.
+     */
+    public static function toNames(): array
+    {
+        return array_map(
+            fn (self $case) => $case->name,
+            self::cases()
+        );
+    }
+
+    /**
+     * Get an array with only the values of the enum.
+     */
+    public static function toValues(): array
+    {
+        return array_map(
+            fn (self $case) => $case->value,
+            self::cases()
+        );
+    }
+
+    /**
+     * Get a pair of name => value.
      */
     public static function toEntries(): array
     {

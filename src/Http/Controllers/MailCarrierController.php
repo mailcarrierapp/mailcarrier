@@ -59,7 +59,7 @@ class MailCarrierController extends Controller
             );
         }
 
-        return ApiResponse::success(httpStatus: JsonResponse::HTTP_NO_CONTENT);
+        return ApiResponse::success();
     }
 
     /**

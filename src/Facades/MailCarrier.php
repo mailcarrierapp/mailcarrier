@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static void sending(\Closure $callback)
+ * @method static void beforeSending(\Closure $callback)
  * @method static \Closure|null getSendingMiddleware()
+ * @method static \Closure|null getBeforeSendingMiddleware()
  * @method static void authorizeSocialAuth(\Closure $callback)
  * @method static void validateSocialAuth(\Laravel\Socialite\AbstractUser $user)
  * @method static string|null getSocialAuthDriver()

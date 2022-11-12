@@ -60,8 +60,9 @@ class InstallCommand extends Command
         $this->overrideMigrations();
         $this->overrideModels();
         $this->overrideRoutes();
-        $this->overrideViews();
         $this->overrideProviders();
+        $this->overrideViews();
+        $this->overrideHandler();
         $this->overrideReadme();
 
         $this->labeledLine('Project cleaned up.');
@@ -136,6 +137,14 @@ class InstallCommand extends Command
 
         @mkdir($targetDir, recursive: true);
         copy(__DIR__ . '/../../resources/views/stubs/brand.blade.php.stub', $targetDir . '/brand.blade.php');
+    }
+
+    /**
+     * Override the default models.
+     */
+    protected function overrideHandler(): void
+    {
+        copy(__DIR__ . '/../../src/Exceptions/stubs/Handler.php.stub', getcwd() . '/app/Exceptions/Handler.php');
     }
 
     /**

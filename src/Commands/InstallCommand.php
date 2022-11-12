@@ -57,11 +57,12 @@ class InstallCommand extends Command
      */
     protected function cleanupLaravel(): void
     {
-        $this->overrideDefaultMigrations();
-        $this->overrideDefaultModels();
-        $this->overrideDefaultRoutes();
-        $this->overrideDefaultViews();
-        $this->overrideDefaultProviders();
+        $this->overrideMigrations();
+        $this->overrideModels();
+        $this->overrideRoutes();
+        $this->overrideViews();
+        $this->overrideProviders();
+        $this->overrideReadme();
 
         $this->labeledLine('Project cleaned up.');
     }
@@ -69,7 +70,7 @@ class InstallCommand extends Command
     /**
      * Override the default migrations.
      */
-    protected function overrideDefaultMigrations(): void
+    protected function overrideMigrations(): void
     {
         @unlink(getcwd() . '/database/migrations/2014_10_12_000000_create_users_table.php');
         @unlink(getcwd() . '/database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php');
@@ -78,7 +79,7 @@ class InstallCommand extends Command
     /**
      * Override the default models.
      */
-    protected function overrideDefaultModels(): void
+    protected function overrideModels(): void
     {
         copy(__DIR__ . '/../../src/Models/stubs/User.php.stub', getcwd() . '/app/Models/User.php');
     }
@@ -86,7 +87,7 @@ class InstallCommand extends Command
     /**
      * Override the default routes.
      */
-    protected function overrideDefaultRoutes(): void
+    protected function overrideRoutes(): void
     {
         $kernelPath = getcwd() . '/app/Console/Kernel.php';
         $kernel = file_get_contents($kernelPath);
@@ -110,7 +111,7 @@ class InstallCommand extends Command
     /**
      * Override the default Service Provider files.
      */
-    public function overrideDefaultProviders(): void
+    public function overrideProviders(): void
     {
         copy(__DIR__ . '/../Providers/stubs/AppServiceProvider.php.stub', getcwd() . '/app/Providers/AppServiceProvider.php');
         copy(__DIR__ . '/../Providers/stubs/AuthServiceProvider.php.stub', getcwd() . '/app/Providers/AuthServiceProvider.php');
@@ -120,7 +121,7 @@ class InstallCommand extends Command
     /**
      * Override the default views.
      */
-    protected function overrideDefaultViews(): void
+    protected function overrideViews(): void
     {
         @unlink(getcwd() . '/resources/views/welcome.blade.php');
 
@@ -128,6 +129,14 @@ class InstallCommand extends Command
 
         @mkdir($errorsTargetDir, recursive: true);
         copy(__DIR__ . '/../../resources/views/stubs/401.blade.php.stub', $errorsTargetDir . '/401.blade.php');
+    }
+
+    /**
+     * Override the default readme.
+     */
+    protected function overrideReadme(): void
+    {
+        copy(__DIR__ . '/../../README.md', getcwd() . '/README.md');
     }
 
     /**

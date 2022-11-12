@@ -59,6 +59,6 @@
             width: breakpoints[size].width,
             height: breakpoints[size].height,
         }">
-        <iframe src="{{ route('logs.preview', ['log' => $id]) }}" class="border-0 w-full h-full"></iframe>
+        <iframe src="{{ route('logs.preview', ['log' => $id], false) }}" class="border-0 w-full h-full"></iframe>
     </div>
 </div>

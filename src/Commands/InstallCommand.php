@@ -129,6 +129,13 @@ class InstallCommand extends Command
 
         @mkdir($errorsTargetDir, recursive: true);
         copy(__DIR__ . '/../../resources/views/stubs/401.blade.php.stub', $errorsTargetDir . '/401.blade.php');
+        copy(__DIR__ . '/../../resources/views/stubs/401.blade.php.stub', $errorsTargetDir . '/401.blade.php');
+
+        // Filament
+        $targetDir = getcwd() . '/resources/views/vendor/filament/components';
+
+        @mkdir($targetDir, recursive: true);
+        copy(__DIR__ . '/../../resources/views/stubs/brand.blade.php.stub', $targetDir . '/brand.blade.php');
     }
 
     /**
@@ -203,11 +210,13 @@ class InstallCommand extends Command
                 "'path' => env('FILAMENT_PATH', 'admin')",
                 "'brand' => env('APP_NAME')",
                 "'dark_mode' => false",
+                "'favicon' => null,"
             ],
             [
                 "'path' => '/'",
                 "'brand' => 'MailCarrier'",
                 "'dark_mode' => true",
+                "'favicon' => '/images/favicon.ico',"
             ],
             $filamentConfig
         );

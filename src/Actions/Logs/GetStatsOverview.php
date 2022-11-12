@@ -2,7 +2,8 @@
 
 namespace MailCarrier\Actions\Logs;
 
-use Carbon\Carbon;
+use Flowframe\Trend\Trend;
+use Illuminate\Support\Carbon;
 use MailCarrier\Actions\Action;
 use MailCarrier\Concerns\InteractsWithCache;
 use MailCarrier\Dto\Dashboard\StatsOverviewDto;
@@ -34,13 +35,13 @@ class GetStatsOverview extends Action
             ->where('status', LogStatus::Sent)
             ->count('id');
 
-        $sentLastWeek = Log::query()
-            ->toBase()
-            ->selectRaw('COUNT(id) as count, DATE(created_at) as date')
-            ->where('status', LogStatus::Sent)
-            ->whereDate('created_at', '>', Carbon::now()->subWeek()->toDateString())
-            ->groupByRaw('DATE(created_at)')
-            ->get();
+        $sentLastWeek = Trend::query(Log::query()->where('status', LogStatus::Sent))
+            ->between(
+                start: Carbon::today()->subDays(6),
+                end: Carbon::today()->endOfDay(),
+            )
+            ->perDay()
+            ->count();
 
         $pending = Log::query()
             ->where('status', LogStatus::Pending)
@@ -50,42 +51,23 @@ class GetStatsOverview extends Action
             ->where('status', LogStatus::Failed)
             ->count('id');
 
-        $failedLastWeek = Log::query()
-            ->toBase()
-            ->selectRaw('COUNT(id) as count, DATE(created_at) as date')
-            ->where('status', LogStatus::Failed)
-            ->whereDate('created_at', '>', Carbon::now()->subWeek()->toDateString())
-            ->groupByRaw('DATE(created_at)')
-            ->get();
+        $failedLastWeek = Trend::query(Log::query()->where('status', LogStatus::Failed))
+            ->between(
+                start: Carbon::today()->subDays(6),
+                end: Carbon::today()->endOfDay(),
+            )
+            ->perDay()
+            ->count();
 
-        $failurePercentage = $failed === 0 || $totalNotPending === 0 ? 0 : number_format($failed * 100 / $totalNotPending);
-
-        // Fill last week data when missing
-        $lastWeekRange = Carbon::today()->subDays(6)->daysUntil(Carbon::today());
-
-        foreach ($lastWeekRange as $day) {
-            if (!$sentLastWeek->firstWhere('date', $day->toDateString())) {
-                $sentLastWeek->push([
-                    'count' => 0,
-                    'date' => $day->toDateString(),
-                ]);
-            }
-
-            if (!$failedLastWeek->firstWhere('date', $day->toDateString())) {
-                $failedLastWeek->push([
-                    'count' => 0,
-                    'date' => $day->toDateString(),
-                ]);
-            }
-        }
+        $failurePercentage = rescue(fn () => number_format($failed * 100 / $totalNotPending), rescue: 0, report: false);
 
         return new StatsOverviewDto(
             sent: $sent,
             pending: $pending,
             failed: $failed,
             failurePercentage: $failurePercentage,
-            sentLastWeek: $sentLastWeek->sortBy('date')->pluck('count')->all(),
-            failedLastWeek: $failedLastWeek->sortBy('date')->pluck('count')->all(),
+            sentLastWeek: $sentLastWeek->pluck('aggregate')->all(),
+            failedLastWeek: $failedLastWeek->pluck('aggregate')->all(),
         );
     }
 }

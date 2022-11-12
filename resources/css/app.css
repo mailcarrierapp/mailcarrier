@@ -8,3 +8,11 @@
   transform: rotate(35deg);
   margin-left: 0;
 }
+
+.filament-login-page h2 {
+    display: none;
+}
+
+.filament-login-page img.brand-logo {
+    @apply mb-3;
+}

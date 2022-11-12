@@ -6,13 +6,13 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class StatsOverviewDto extends DataTransferObject
 {
-    public readonly int $sent;
+    public int $sent;
 
-    public readonly int $pending;
+    public int $pending;
 
-    public readonly int $failed;
+    public int $failed;
 
-    public readonly int $failurePercentage;
+    public int $failurePercentage;
 
     public array $sentLastWeek;
 

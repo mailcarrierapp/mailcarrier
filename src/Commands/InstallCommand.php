@@ -64,6 +64,7 @@ class InstallCommand extends Command
         $this->overrideViews();
         $this->overrideHandler();
         $this->overrideReadme();
+        $this->deleteFiles();
 
         $this->labeledLine('Project cleaned up.');
     }
@@ -153,6 +154,15 @@ class InstallCommand extends Command
     protected function overrideReadme(): void
     {
         copy(__DIR__ . '/../../README.md', getcwd() . '/README.md');
+    }
+
+    /**
+     * Delete not needed files.
+     */
+    protected function deleteFiles(): void
+    {
+        @unlink(getcwd() . '/vite.config.js');
+        @unlink(getcwd() . '/package.json');
     }
 
     /**

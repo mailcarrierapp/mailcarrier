@@ -10,6 +10,9 @@ class StatsOverviewWidget extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
 
+    /**
+     * Get widget cards.
+     */
     protected function getCards(): array
     {
         $data = Logs\GetStatsOverview::resolve()->run();

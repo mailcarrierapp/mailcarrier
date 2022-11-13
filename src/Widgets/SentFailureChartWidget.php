@@ -13,12 +13,17 @@ class SentFailureChartWidget extends LineChartWidget
 
     public ?string $filter = 'today';
 
-
+    /**
+     * Get widget title.
+     */
     protected function getHeading(): string
     {
         return 'Sent and failure over time';
     }
 
+    /**
+     * Get chart filters.
+     */
     protected function getFilters(): ?array
     {
         return [
@@ -29,6 +34,9 @@ class SentFailureChartWidget extends LineChartWidget
         ];
     }
 
+    /**
+     * Get chart data.
+     */
     protected function getData(): array
     {
         $filter = SentFailureChartFilter::from($this->filter);

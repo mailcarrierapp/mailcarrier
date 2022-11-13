@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\Actions\Logs;
+namespace MailCarrier\Actions\Logs\Widgets;
 
 use Flowframe\Trend\Trend;
 use Illuminate\Support\Carbon;

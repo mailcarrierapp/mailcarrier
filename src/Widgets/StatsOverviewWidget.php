@@ -4,7 +4,7 @@ namespace MailCarrier\Widgets;
 
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
-use MailCarrier\Actions\Logs;
+use MailCarrier\Actions\Logs\Widgets\GetStatsOverview;
 
 class StatsOverviewWidget extends BaseWidget
 {
@@ -15,7 +15,7 @@ class StatsOverviewWidget extends BaseWidget
      */
     protected function getCards(): array
     {
-        $data = Logs\GetStatsOverview::resolve()->run();
+        $data = GetStatsOverview::resolve()->run();
 
         return [
             Card::make('Total sent', $data->sent)

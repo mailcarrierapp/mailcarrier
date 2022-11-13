@@ -20,7 +20,7 @@ class StatsOverviewWidget extends BaseWidget
         return [
             Card::make('Total sent', $data->sent)
                 ->icon('heroicon-s-sparkles')
-                ->chart($data->sentLastWeek)
+                ->chart($data->sent === 0 ? null : $data->sentLastWeek)
                 ->color('success'),
 
             Card::make('Pending', $data->pending)
@@ -28,9 +28,9 @@ class StatsOverviewWidget extends BaseWidget
                 ->color('warning'),
 
             Card::make('Total errors', $data->failed)
-                ->description($data->failurePercentage . '% of total emails')
+                ->description($data->failed === 0 ? null : $data->failurePercentage . '% of total emails')
                 ->icon('heroicon-s-thumb-down')
-                ->chart($data->failedLastWeek)
+                ->chart($data->failed === 0 ? null : $data->failedLastWeek)
                 ->color('danger'),
         ];
     }

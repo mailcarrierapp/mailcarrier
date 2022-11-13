@@ -227,8 +227,7 @@ class InstallCommand extends Command
                 "'brand' => 'MailCarrier'",
                 "'dark_mode' => true",
                 "'favicon' => '/images/favicon.ico',",
-                "MailCarrier\Widgets\StatsOverviewWidget::class,
-            MailCarrier\Widgets\SentFailureChartWidget::class,",
+                "",
             ],
             $filamentConfig
         );

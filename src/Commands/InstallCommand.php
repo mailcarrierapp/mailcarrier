@@ -220,14 +220,18 @@ class InstallCommand extends Command
                 "'brand' => env('APP_NAME')",
                 "'dark_mode' => false",
                 "'favicon' => null,",
-                "Widgets\FilamentInfoWidget::class,",
+                'Widgets\AccountWidget::class,',
+                'Widgets\FilamentInfoWidget::class,',
+                'Pages\Dashboard::class,',
             ],
             [
                 "'path' => '/'",
                 "'brand' => 'MailCarrier'",
                 "'dark_mode' => true",
                 "'favicon' => '/images/favicon.ico',",
-                "",
+                '',
+                '',
+                'MailCarrier\Pages\Dashboard::class,',
             ],
             $filamentConfig
         );

@@ -11,6 +11,8 @@ class SentFailureChartWidget extends LineChartWidget
 {
     protected static ?string $pollingInterval = null;
 
+    protected int | string | array $columnSpan = 2;
+
     public ?string $filter = 'today';
 
     /**

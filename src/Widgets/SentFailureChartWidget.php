@@ -59,7 +59,7 @@ class SentFailureChartWidget extends LineChartWidget
             'labels' => $data
                 ->sent
                 ->pluck('date')
-                ->map(fn (string $date) => Carbon::create($date)->format($labelFormat)),
+                ->map(fn (string $date) => Carbon::parse($date)->format($labelFormat)),
         ];
     }
 }

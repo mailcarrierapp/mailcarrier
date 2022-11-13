@@ -7,9 +7,9 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class SentFailureChartDto extends DataTransferObject
 {
-    /** @var \Illuminate\Support\Collection<int, Flowframe\Trend\TrendValue> */
+    /** @var \Illuminate\Support\Collection<int, \Flowframe\Trend\TrendValue> */
     public Collection $sent;
 
-    /** @var \Illuminate\Support\Collection<int, Flowframe\Trend\TrendValue> */
+    /** @var \Illuminate\Support\Collection<int, \Flowframe\Trend\TrendValue> */
     public Collection $failure;
 }

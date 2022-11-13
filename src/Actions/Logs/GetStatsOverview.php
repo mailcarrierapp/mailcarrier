@@ -25,7 +25,7 @@ class GetStatsOverview extends Action
     /**
      * Flush the template cache by its slug.
      */
-    public static function getData(): StatsOverviewDto
+    protected function getData(): StatsOverviewDto
     {
         $totalNotPending = Log::query()
             ->whereNot('status', LogStatus::Pending)

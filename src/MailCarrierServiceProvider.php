@@ -23,6 +23,7 @@ use MailCarrier\Resources\LogResource;
 use MailCarrier\Resources\TemplateResource;
 use MailCarrier\Widgets\SentFailureChartWidget;
 use MailCarrier\Widgets\StatsOverviewWidget;
+use MailCarrier\Widgets\TopTriggersWidget;
 use Spatie\LaravelPackageTools\Package;
 
 class MailCarrierServiceProvider extends PluginServiceProvider
@@ -42,6 +43,7 @@ class MailCarrierServiceProvider extends PluginServiceProvider
     protected array $widgets = [
         StatsOverviewWidget::class,
         SentFailureChartWidget::class,
+        TopTriggersWidget::class,
     ];
 
     /**

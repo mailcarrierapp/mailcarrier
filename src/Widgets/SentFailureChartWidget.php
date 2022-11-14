@@ -5,7 +5,7 @@ namespace MailCarrier\Widgets;
 use Carbon\Carbon;
 use Filament\Widgets\LineChartWidget;
 use MailCarrier\Actions\Logs\Widgets\GetSentFailureStats;
-use MailCarrier\Enums\SentFailureChartFilter;
+use MailCarrier\Enums\Dashboard\SentFailureChartFilter;
 
 class SentFailureChartWidget extends LineChartWidget
 {

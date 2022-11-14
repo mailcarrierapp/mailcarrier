@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\Enums;
+namespace MailCarrier\Enums\Dashboard;
 
 enum SentFailureChartFilter: string
 {

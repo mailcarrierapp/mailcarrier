@@ -9,7 +9,7 @@ use MailCarrier\Actions\Action;
 use MailCarrier\Concerns\InteractsWithCache;
 use MailCarrier\Dto\Dashboard\SentFailureChartDto;
 use MailCarrier\Enums\LogStatus;
-use MailCarrier\Enums\SentFailureChartFilter;
+use MailCarrier\Enums\Dashboard\SentFailureChartFilter;
 use MailCarrier\Models\Log;
 
 class GetSentFailureStats extends Action

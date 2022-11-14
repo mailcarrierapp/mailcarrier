@@ -20,8 +20,8 @@ class FindBySlug extends Action
             ->withCacheArgs(func_get_args())
             ->cached(
                 fn () => Template::query()
-                        ->where('slug', $slug)
-                        ->firstOrFail()
+                    ->where('slug', $slug)
+                    ->firstOrFail()
             );
     }
 
@@ -34,5 +34,16 @@ class FindBySlug extends Action
             ->usingCacheTags(Template::class)
             ->withCacheArgs(func_get_args())
             ->forget();
+    }
+
+    /**
+     * Flush the templates cache.
+     */
+    public static function flushAll(): void
+    {
+        static::resolve()
+            ->usingCacheTags(Template::class)
+            ->getCacheInstance()
+            ->clear();
     }
 }

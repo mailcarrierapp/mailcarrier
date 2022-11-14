@@ -6,6 +6,3 @@
         Sign In
     </x-filament::button>
 </a>
-
-{{-- Hide the page title --}}
-<style>h2{display:none}</style>

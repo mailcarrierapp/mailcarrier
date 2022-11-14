@@ -14,11 +14,16 @@ use MailCarrier\Commands\UpgradeCommand;
 use MailCarrier\Commands\UserCommand;
 use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Helpers\SocialiteProviders;
+use MailCarrier\Models\Layout;
 use MailCarrier\Models\Template;
+use MailCarrier\Observers\LayoutObserver;
 use MailCarrier\Observers\TemplateObserver;
 use MailCarrier\Resources\LayoutResource;
 use MailCarrier\Resources\LogResource;
 use MailCarrier\Resources\TemplateResource;
+use MailCarrier\Widgets\SentFailureChartWidget;
+use MailCarrier\Widgets\StatsOverviewWidget;
+use MailCarrier\Widgets\TopTriggersWidget;
 use Spatie\LaravelPackageTools\Package;
 
 class MailCarrierServiceProvider extends PluginServiceProvider
@@ -33,6 +38,12 @@ class MailCarrierServiceProvider extends PluginServiceProvider
         LayoutResource::class,
         TemplateResource::class,
         LogResource::class,
+    ];
+
+    protected array $widgets = [
+        StatsOverviewWidget::class,
+        SentFailureChartWidget::class,
+        TopTriggersWidget::class,
     ];
 
     /**
@@ -97,6 +108,7 @@ class MailCarrierServiceProvider extends PluginServiceProvider
         parent::packageBooted();
 
         Template::observe(TemplateObserver::class);
+        Layout::observe(LayoutObserver::class);
 
         // Register Social Auth event listener
         $this->listenSocialiteEvents();

@@ -57,11 +57,14 @@ class InstallCommand extends Command
      */
     protected function cleanupLaravel(): void
     {
-        $this->overrideDefaultMigrations();
-        $this->overrideDefaultModels();
-        $this->overrideDefaultRoutes();
-        $this->overrideDefaultViews();
-        $this->overrideDefaultProviders();
+        $this->overrideMigrations();
+        $this->overrideModels();
+        $this->overrideRoutes();
+        $this->overrideProviders();
+        $this->overrideViews();
+        $this->overrideHandler();
+        $this->overrideReadme();
+        $this->deleteFiles();
 
         $this->labeledLine('Project cleaned up.');
     }
@@ -69,7 +72,7 @@ class InstallCommand extends Command
     /**
      * Override the default migrations.
      */
-    protected function overrideDefaultMigrations(): void
+    protected function overrideMigrations(): void
     {
         @unlink(getcwd() . '/database/migrations/2014_10_12_000000_create_users_table.php');
         @unlink(getcwd() . '/database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php');
@@ -78,7 +81,7 @@ class InstallCommand extends Command
     /**
      * Override the default models.
      */
-    protected function overrideDefaultModels(): void
+    protected function overrideModels(): void
     {
         copy(__DIR__ . '/../../src/Models/stubs/User.php.stub', getcwd() . '/app/Models/User.php');
     }
@@ -86,7 +89,7 @@ class InstallCommand extends Command
     /**
      * Override the default routes.
      */
-    protected function overrideDefaultRoutes(): void
+    protected function overrideRoutes(): void
     {
         $kernelPath = getcwd() . '/app/Console/Kernel.php';
         $kernel = file_get_contents($kernelPath);
@@ -110,7 +113,7 @@ class InstallCommand extends Command
     /**
      * Override the default Service Provider files.
      */
-    public function overrideDefaultProviders(): void
+    public function overrideProviders(): void
     {
         copy(__DIR__ . '/../Providers/stubs/AppServiceProvider.php.stub', getcwd() . '/app/Providers/AppServiceProvider.php');
         copy(__DIR__ . '/../Providers/stubs/AuthServiceProvider.php.stub', getcwd() . '/app/Providers/AuthServiceProvider.php');
@@ -120,7 +123,7 @@ class InstallCommand extends Command
     /**
      * Override the default views.
      */
-    protected function overrideDefaultViews(): void
+    protected function overrideViews(): void
     {
         @unlink(getcwd() . '/resources/views/welcome.blade.php');
 
@@ -128,6 +131,37 @@ class InstallCommand extends Command
 
         @mkdir($errorsTargetDir, recursive: true);
         copy(__DIR__ . '/../../resources/views/stubs/401.blade.php.stub', $errorsTargetDir . '/401.blade.php');
+
+        // Filament
+        $targetDir = getcwd() . '/resources/views/vendor/filament/components';
+
+        @mkdir($targetDir, recursive: true);
+        copy(__DIR__ . '/../../resources/views/stubs/brand.blade.php.stub', $targetDir . '/brand.blade.php');
+    }
+
+    /**
+     * Override the default models.
+     */
+    protected function overrideHandler(): void
+    {
+        copy(__DIR__ . '/../../src/Exceptions/stubs/Handler.php.stub', getcwd() . '/app/Exceptions/Handler.php');
+    }
+
+    /**
+     * Override the default readme.
+     */
+    protected function overrideReadme(): void
+    {
+        copy(__DIR__ . '/../../README.md', getcwd() . '/README.md');
+    }
+
+    /**
+     * Delete not needed files.
+     */
+    protected function deleteFiles(): void
+    {
+        @unlink(getcwd() . '/vite.config.js');
+        @unlink(getcwd() . '/package.json');
     }
 
     /**
@@ -194,11 +228,19 @@ class InstallCommand extends Command
                 "'path' => env('FILAMENT_PATH', 'admin')",
                 "'brand' => env('APP_NAME')",
                 "'dark_mode' => false",
+                "'favicon' => null,",
+                'Widgets\AccountWidget::class,',
+                'Widgets\FilamentInfoWidget::class,',
+                'Pages\Dashboard::class,',
             ],
             [
                 "'path' => '/'",
                 "'brand' => 'MailCarrier'",
                 "'dark_mode' => true",
+                "'favicon' => '/images/favicon.ico',",
+                '',
+                '',
+                'MailCarrier\Pages\Dashboard::class,',
             ],
             $filamentConfig
         );

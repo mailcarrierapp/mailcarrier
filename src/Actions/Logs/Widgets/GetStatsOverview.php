@@ -41,7 +41,7 @@ class GetStatsOverview extends Action
                 end: Carbon::today()->endOfDay(),
             )
             ->perDay()
-            ->count();
+            ->count('id');
 
         $pending = Log::query()
             ->where('status', LogStatus::Pending)
@@ -57,7 +57,7 @@ class GetStatsOverview extends Action
                 end: Carbon::today()->endOfDay(),
             )
             ->perDay()
-            ->count();
+            ->count('id');
 
         $failurePercentage = rescue(fn () => number_format($failed * 100 / $totalNotPending), rescue: 0, report: false);
 

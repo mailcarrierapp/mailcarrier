@@ -37,7 +37,7 @@ class GetSentFailureStats extends Action
     {
         $start = match ($this->filter) {
             SentFailureChartFilter::Today => Carbon::today(),
-            SentFailureChartFilter::Week => Carbon::today()->subWeek()->addDay(),
+            SentFailureChartFilter::Week => Carbon::today()->subDays(6),
             SentFailureChartFilter::Month => Carbon::today()->subMonth(),
             SentFailureChartFilter::Year => Carbon::today()->startOfYear(),
         };
@@ -53,19 +53,19 @@ class GetSentFailureStats extends Action
      */
     protected function getStatusData(LogStatus $status, Carbon $start): Collection
     {
-        $sent = Trend::query(Log::query()->where('status', $status))
+        $data = Trend::query(Log::query()->where('status', $status))
             ->between(
                 start: $start,
                 end: Carbon::today()->endOfDay(),
             );
 
-        $sent = match ($this->filter) {
-            SentFailureChartFilter::Today => $sent->perHour(),
-            SentFailureChartFilter::Week => $sent->perDay(),
-            SentFailureChartFilter::Month => $sent->perDay(),
-            SentFailureChartFilter::Year => $sent->perMonth(),
+        $data = match ($this->filter) {
+            SentFailureChartFilter::Today => $data->perHour(),
+            SentFailureChartFilter::Week => $data->perDay(),
+            SentFailureChartFilter::Month => $data->perDay(),
+            SentFailureChartFilter::Year => $data->perMonth(),
         };
 
-        return $sent->count();
+        return $data->count('id');
     }
 }

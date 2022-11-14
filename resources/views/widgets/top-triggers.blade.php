@@ -1,4 +1,4 @@
-<x-filament::widget class="filament-widgets-table-widget">
+<x-filament::widget class="filament-widgets-top-triggers-widget">
     <x-filament::card>
         <div class="flex items-center justify-between gap-8 py-1">
             <x-filament::card.heading>

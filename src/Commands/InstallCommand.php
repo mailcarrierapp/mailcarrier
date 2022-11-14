@@ -131,7 +131,6 @@ class InstallCommand extends Command
 
         @mkdir($errorsTargetDir, recursive: true);
         copy(__DIR__ . '/../../resources/views/stubs/401.blade.php.stub', $errorsTargetDir . '/401.blade.php');
-        copy(__DIR__ . '/../../resources/views/stubs/401.blade.php.stub', $errorsTargetDir . '/401.blade.php');
 
         // Filament
         $targetDir = getcwd() . '/resources/views/vendor/filament/components';

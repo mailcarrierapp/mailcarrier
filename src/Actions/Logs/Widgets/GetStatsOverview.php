@@ -59,7 +59,12 @@ class GetStatsOverview extends Action
             ->perDay()
             ->count('id');
 
-        $failurePercentage = rescue(fn () => number_format($failed * 100 / $totalNotPending), rescue: 0, report: false);
+        /** @var int */
+        $failurePercentage = rescue(
+            fn () => (int) round($failed * 100 / $totalNotPending),
+            rescue: 0,
+            report: false
+        );
 
         return new StatsOverviewDto(
             sent: $sent,

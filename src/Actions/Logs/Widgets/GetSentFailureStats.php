@@ -8,8 +8,8 @@ use Illuminate\Support\Collection;
 use MailCarrier\Actions\Action;
 use MailCarrier\Concerns\InteractsWithCache;
 use MailCarrier\Dto\Dashboard\SentFailureChartDto;
-use MailCarrier\Enums\LogStatus;
 use MailCarrier\Enums\Dashboard\SentFailureChartFilter;
+use MailCarrier\Enums\LogStatus;
 use MailCarrier\Models\Log;
 
 class GetSentFailureStats extends Action

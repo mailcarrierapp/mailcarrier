@@ -96,6 +96,14 @@ class MailCarrierManager
     }
 
     /**
+     * Determine if the a file exists on the disk.
+     */
+    public function fileExists(string $resource, ?string $disk = null): bool
+    {
+        return $this->storage($disk)->exists($resource);
+    }
+
+    /**
      * Upload a file to the storage disk.
      *
      * @return string The file path

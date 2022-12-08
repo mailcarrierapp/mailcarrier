@@ -1,13 +1,24 @@
 <?php
 
-use MailCarrier\Actions\Attachments\Download;
+use Illuminate\Http\JsonResponse;
 use MailCarrier\Enums\AttachmentLogStrategy;
-use MailCarrier\Exceptions\AttachmentNotDownloadableException;
-use MailCarrier\Exceptions\AttachmentNotFoundException;
 use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Models\Attachment;
+use function Pest\Faker\faker;
+use function Pest\Laravel\getJson;
 
-it('throws exception when strategy is Upload and file does not exist on disk', function () {
+it('blocks guests', function () {
+    getJson(route('download.attachment', faker()->uuid()))
+        ->assertUnauthorized();
+});
+
+it('throws not found if the attachment does not exist', function () {
+    actingAsUser()
+        ->getJson(route('download.attachment', faker()->uuid()))
+        ->assertNotFound();
+});
+
+it('throws error when strategy is Upload and file does not exist on disk', function () {
     $attachment = Attachment::factory()->create([
         'strategy' => AttachmentLogStrategy::Upload,
     ]);
@@ -15,32 +26,37 @@ it('throws exception when strategy is Upload and file does not exist on disk', f
     MailCarrier::shouldReceive('fileExists')
         ->andReturn(false);
 
-    Download::resolve()->run($attachment);
-})->throws(AttachmentNotFoundException::class);
+    actingAsUser()
+        ->getJson(route('download.attachment', $attachment))
+        ->assertStatus(JsonResponse::HTTP_PRECONDITION_FAILED)
+        ->assertJsonPath('key', 'ATTACHMENT_NOT_FOUND_ON_DISK');
+});
 
-it('throws exception when strategy is None', function () {
+it('throws error when strategy is None', function () {
     $attachment = Attachment::factory()->create([
         'strategy' => AttachmentLogStrategy::None,
     ]);
 
-    Download::resolve()->run($attachment);
-})->throws(AttachmentNotDownloadableException::class);
+    actingAsUser()
+        ->getJson(route('download.attachment', $attachment))
+        ->assertStatus(JsonResponse::HTTP_PRECONDITION_FAILED)
+        ->assertJsonPath('key', 'ATTACHMENT_NOT_DOWNLOADABLE');
+});
 
-it('returns file content from db when strategy is Inline', function () {
+it('downloads file from db when strategy is Inline', function () {
     $attachment = Attachment::factory()->create([
         'strategy' => AttachmentLogStrategy::Inline,
         'name' => 'file.pdf',
         'content' => base64_encode('foo'),
     ]);
 
-    /** @var \MailCarrier\Http\GenericFile */
-    $result = Download::resolve()->run($attachment);
-
-    expect($result->fileName)->toBe('file.pdf');
-    expect($result->content)->toBe('foo');
+    actingAsUser()
+        ->getJson(route('download.attachment', $attachment))
+        ->assertOk()
+        ->assertDownload('file.pdf');
 });
 
-it('returns file content from disk when strategy is Upload', function () {
+it('downloads file from disk when strategy is Upload', function () {
     $attachment = Attachment::factory()->create([
         'strategy' => AttachmentLogStrategy::Upload,
         'name' => 'file.pdf',
@@ -56,9 +72,8 @@ it('returns file content from disk when strategy is Upload', function () {
         ->with('foo/bar.pdf', 'fake-disk')
         ->andReturn(base64_encode('foo'));
 
-    /** @var \MailCarrier\Http\GenericFile */
-    $result = Download::resolve()->run($attachment);
-
-    expect($result->fileName)->toBe('file.pdf');
-    expect($result->content)->toBe('foo');
+    actingAsUser()
+        ->getJson(route('download.attachment', $attachment))
+        ->assertOk()
+        ->assertDownload('file.pdf');
 });

@@ -21,7 +21,7 @@ class Download extends Action
     public function run(Attachment $attachment): ?GenericFile
     {
         if ($attachment->strategy === AttachmentLogStrategy::Upload) {
-            if (!MailCarrier::storage($attachment->disk)->exists($attachment->path)) {
+            if (!MailCarrier::fileExists($attachment->path, $attachment->disk)) {
                 throw new AttachmentNotFoundException($attachment);
             }
         }

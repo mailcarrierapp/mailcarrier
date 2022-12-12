@@ -8,7 +8,9 @@ use MailCarrier\Http\Controllers\SocialAuthController;
 
 Route::middleware(['web', 'auth:' . Config::get('filament.auth.guard')])->group(function () {
     Route::get('preview/logs/{log}', [LogController::class, 'preview'])->name('logs.preview');
-    Route::get('attachment/{attachment}', [MailCarrierController::class, 'downloadAttachment'])->name('download.attachment');
+    Route::get('attachment/{attachment}', [MailCarrierController::class, 'downloadAttachment'])
+        ->whereUuid('attachment')
+        ->name('download.attachment');
 });
 
 Route::prefix('auth')->middleware(['web', 'guest'])->group(function () {

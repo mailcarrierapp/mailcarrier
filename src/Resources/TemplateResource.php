@@ -43,7 +43,9 @@ class TemplateResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->searchable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('layout')
                     ->label('Layout')
@@ -53,7 +55,9 @@ class TemplateResource extends Resource
                     ->label('User')
                     ->formatStateUsing(fn (?User $state) => $state?->getFilamentName() ?: '-'),
 
-                Tables\Columns\TextColumn::make('created_at')->dateTime(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -72,7 +76,8 @@ class TemplateResource extends Resource
                         ]);
                     }),
             ])
-            ->bulkActions([]);
+            ->bulkActions([])
+            ->defaultSort('name');
     }
 
     /**

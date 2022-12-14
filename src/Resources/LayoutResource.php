@@ -56,7 +56,8 @@ class LayoutResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('templates_count'),
 
@@ -65,12 +66,14 @@ class LayoutResource extends Resource
                     ->formatStateUsing(fn (?User $state) => $state?->getFilamentName() ?: '-'),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([]);
+            ->bulkActions([])
+            ->defaultSort('name');
     }
 
     /**

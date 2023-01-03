@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool fileExists(string $resource, ?string $disk = null)
  * @method static string upload(string $content, string $fileName)
  * @method static string|null download(string $resource, ?string $disk = null)
- * @method static int downloadgetFileSize(string $resource, ?string $disk = null)
+ * @method static int getFileSize(string $resource, ?string $disk = null)
  * @method static string humanBytes(int $bytes)
  *
  * @see \MailCarrier\MailCarrierManager

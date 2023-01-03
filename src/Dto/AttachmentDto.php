@@ -7,11 +7,11 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class AttachmentDto extends DataTransferObject
 {
-    public readonly string $name;
+    public string $name;
 
-    public readonly string $content;
+    public string $content;
 
-    public readonly int $size;
+    public int $size;
 
     public function __construct(UploadedFile $file)
     {

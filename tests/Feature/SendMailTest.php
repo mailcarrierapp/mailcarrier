@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Queue;
 use MailCarrier\Actions\SendMail;
 use MailCarrier\Dto\SendMailDto;
 use MailCarrier\Enums\LogStatus;
@@ -12,7 +11,6 @@ use MailCarrier\Jobs\SendMailJob;
 use MailCarrier\Mail\GenericMail;
 use MailCarrier\Models\Log;
 use MailCarrier\Models\Template;
-
 use function Pest\Laravel\assertDatabaseCount;
 
 it('sends email to the recipient', function () {

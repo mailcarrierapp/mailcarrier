@@ -10,6 +10,7 @@
         "single_trait_insert_per_statement": true,
         "curly_braces_position": {
             "anonymous_classes_opening_brace": "same_line"
-        }
+        },
+        "fully_qualified_strict_types": false
     }
 }

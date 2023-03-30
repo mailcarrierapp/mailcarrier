@@ -26,8 +26,8 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: none
 
-      - name: Install composer dependencies
-        uses: ramsey/composer-install@v2
+      - name: Install dependencies
+        run: composer install --no-interaction --no-update
 
       - name: Run PHPStan
         run: ./vendor/bin/phpstan --error-format=github

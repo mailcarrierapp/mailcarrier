@@ -4,17 +4,17 @@ use Illuminate\Http\JsonResponse;
 use MailCarrier\Enums\AttachmentLogStrategy;
 use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Models\Attachment;
-use function Pest\Faker\faker;
+use function Pest\Faker\fake;
 use function Pest\Laravel\getJson;
 
 it('blocks guests', function () {
-    getJson(route('download.attachment', faker()->uuid()))
+    getJson(route('download.attachment', fake()->uuid()))
         ->assertUnauthorized();
 });
 
 it('throws not found if the attachment does not exist', function () {
     actingAsUser()
-        ->getJson(route('download.attachment', faker()->uuid()))
+        ->getJson(route('download.attachment', fake()->uuid()))
         ->assertNotFound();
 });
 

@@ -3,17 +3,17 @@
 use Laravel\Socialite\AbstractUser;
 use MailCarrier\Actions\Auth\SocialLogin;
 use MailCarrier\Models\User;
-use function Pest\Faker\faker;
+use function Pest\Faker\fake;
 use function Pest\Laravel\assertDatabaseCount;
 
 it('creates user if does not exist', function () {
     assertDatabaseCount(User::class, 0);
 
     $abstractUser = new class extends AbstractUser {};
-    $abstractUser->id = faker()->uuid();
-    $abstractUser->name = faker()->name();
-    $abstractUser->email = faker()->email();
-    $abstractUser->avatar = faker()->imageUrl();
+    $abstractUser->id = fake()->uuid();
+    $abstractUser->name = fake()->name();
+    $abstractUser->email = fake()->email();
+    $abstractUser->avatar = fake()->imageUrl();
     $abstractUser->user = ['foo' => 'bar'];
 
     SocialLogin::resolve()->run($abstractUser);
@@ -36,7 +36,7 @@ it('updates user if already exists by oauth ID', function () {
         'name' => 'foo',
         'email' => 'foo@example.org',
         'picture_url' => null,
-        'oauth_id' => $oauthId = faker()->uuid(),
+        'oauth_id' => $oauthId = fake()->uuid(),
         'oauth_raw' => ['foo' => 'bar'],
     ]);
 
@@ -44,9 +44,9 @@ it('updates user if already exists by oauth ID', function () {
 
     $abstractUser = new class extends AbstractUser {};
     $abstractUser->id = $oauthId;
-    $abstractUser->name = faker()->name();
-    $abstractUser->email = faker()->email();
-    $abstractUser->avatar = faker()->imageUrl();
+    $abstractUser->name = fake()->name();
+    $abstractUser->email = fake()->email();
+    $abstractUser->avatar = fake()->imageUrl();
     $abstractUser->user = ['foo2' => 'bar2'];
 
     SocialLogin::resolve()->run($abstractUser);

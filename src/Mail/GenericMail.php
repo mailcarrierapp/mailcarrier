@@ -64,4 +64,12 @@ class GenericMail extends Mailable
                 fn (GenericMail $mail) => $mail->bcc($this->params->bcc->email, $this->params->bcc->name)
             );
     }
+
+    /**
+     * Test the mail content against the given value.
+     */
+    public function hasHtml(string $html): bool
+    {
+        return $this->html === $html;
+    }
 }

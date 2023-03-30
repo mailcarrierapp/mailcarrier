@@ -16,6 +16,7 @@ class AttachmentFactory extends Factory
         return [
             'log_id' => Log::factory(),
             'strategy' => AttachmentLogStrategy::None,
+            'name' => $this->faker->slug() . '.pdf',
             'size' => $this->faker->numberBetween(1, 10000),
             'path' => $this->faker->filePath(),
             'disk' => null,

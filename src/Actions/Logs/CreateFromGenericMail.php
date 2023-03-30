@@ -17,7 +17,7 @@ use MailCarrier\Models\Log;
 class CreateFromGenericMail extends Action
 {
     /**
-     * Insert multiple logs at once.
+     * Create a log with attachments.
      */
     public function run(GenericMailDto $genericMailDto): Log
     {

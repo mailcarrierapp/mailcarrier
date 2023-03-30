@@ -14,7 +14,7 @@ class EnsureAuthManagerExists extends Action
     public function run(): User
     {
         return User::query()->firstOrCreate([
-            'email' => AuthEnum::AuthManagerEmail,
+            'email' => AuthEnum::AuthManagerEmail->value,
         ], [
             'name' => 'Auth Manager',
             'password' => null,

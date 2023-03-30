@@ -3,11 +3,11 @@
 namespace MailCarrier\Http\Controllers;
 
 use Filament\Facades\Filament;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Laravel\Socialite\Facades\Socialite;
 use MailCarrier\Actions\Auth\SocialLogin;
 use MailCarrier\Exceptions\SocialAuthNotEnabledException;
 use MailCarrier\Facades\MailCarrier;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SocialAuthController extends Controller
 {

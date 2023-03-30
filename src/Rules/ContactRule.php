@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Contracts\Validation\Rule;
 use MailCarrier\Dto\ContactDto;
 
-class ContactRule implements Rule, ImplicitRule
+class ContactRule implements Rule, ImplicitRule // @phpstan-ignore-line
 {
     /**
      * Determine if the validation rule passes.

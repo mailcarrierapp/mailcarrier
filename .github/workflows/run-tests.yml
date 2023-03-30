@@ -17,7 +17,7 @@ jobs:
         include:
           - laravel: 9.*
             testbench: 7.*
-            pest-plugin-laravel: 1.*
+            pest-plugin-laravel: 1.1.*
           - laravel: 10.*
             testbench: 8.*
             pest-plugin-laravel: 2.*

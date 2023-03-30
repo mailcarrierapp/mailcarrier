@@ -2,9 +2,11 @@
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use MailCarrier\Actions\SendMail;
+use MailCarrier\Dto\GenericMailDto;
 use MailCarrier\Dto\RemoteAttachmentDto;
 use MailCarrier\Dto\SendMailDto;
 use MailCarrier\Enums\AttachmentLogStrategy;
@@ -1031,6 +1033,58 @@ it('merges the recipient-defined attachments with the request ones when there ar
     ]);
 });
 
-it('invokes the before sending middleware')->skip('Todo');
+it('invokes the before sending middleware', function () {
+    MailCarrier::beforeSending(function (): void {
+        throw new \Exception('beforeSending middleware');
+    });
 
-it('invokes the sending middleware')->skip('Todo');
+    Config::set('mailcarrier.queue.force', false);
+    Mail::fake();
+
+    Template::factory()->create([
+        'slug' => 'welcome',
+    ]);
+
+    SendMail::resolve()->run(new SendMailDto([
+        'enqueue' => false,
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+    ]));
+
+    Mail::assertNothingOutgoing();
+})->throws(\Exception::class, 'beforeSending middleware');
+
+it('invokes the sending middleware', function () {
+    Config::set('mailcarrier.queue.force', false);
+    Mail::fake();
+
+    Template::factory()->create([
+        'slug' => 'welcome',
+    ]);
+
+    MailCarrier::sending(function (GenericMailDto $mail, \Closure $next): void {
+        $next();
+
+        // Throw after sending mail
+        throw new \Exception('sending after middleware');
+    });
+
+    $call = fn () => SendMail::resolve()->run(new SendMailDto([
+        'enqueue' => false,
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+    ]));
+
+    expect($call)->toThrow(\Exception::class, 'sending after middleware');
+
+    Mail::assertSent(GenericMail::class, 1);
+
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasTo('recipient@example.org') &&
+            $mail->hasSubject('Welcome!');
+    });
+});

@@ -222,8 +222,8 @@ it('sends multiple emails to multiple recipients', function () {
         'template' => 'welcome',
         'subject' => 'Welcome!',
         'recipients' => [
-            ['recipient' => 'recipient1@example.org'],
-            ['recipient' => 'recipient2@example.org'],
+            ['email' => 'recipient1@example.org'],
+            ['email' => 'recipient2@example.org'],
         ],
     ])->assertOk();
 
@@ -269,13 +269,13 @@ it('compiles the recipient-defined variables when there are multiple recipients'
         'subject' => 'Welcome!',
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'variables' => [
                     'name' => 'foo',
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'variables' => [
                     'name' => 'bar',
                 ],
@@ -337,13 +337,13 @@ it('merges the recipient-defined variables with the request ones when there are 
         ],
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'variables' => [
                     'name' => 'foo',
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'variables' => [
                     'name' => 'bar',
                 ],
@@ -403,7 +403,7 @@ it('uses the recipient-defined cc and bcc when there are multiple recipients', f
         'subject' => 'Welcome!',
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'cc' => 'recipient1+cc@example.org',
                 'bcc' => 'recipient1+bcc@example.org',
                 'variables' => [
@@ -411,7 +411,7 @@ it('uses the recipient-defined cc and bcc when there are multiple recipients', f
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'cc' => 'recipient2+cc@example.org',
                 'bcc' => 'recipient2+bcc@example.org',
                 'variables' => [
@@ -515,8 +515,8 @@ it('does not create any log if not requested', function () {
             'template' => 'welcome',
             'subject' => 'Welcome!',
             'recipients' => [
-                ['recipient' => 'recipient1@example.org'],
-                ['recipient' => 'recipient2@example.org'],
+                ['email' => 'recipient1@example.org'],
+                ['email' => 'recipient2@example.org'],
             ],
         ]));
 
@@ -539,8 +539,8 @@ it('enqueues the mail if requested and queue is enabled', function () {
         'template' => 'welcome',
         'subject' => 'Welcome!',
         'recipients' => [
-            ['recipient' => 'recipient1@example.org'],
-            ['recipient' => 'recipient2@example.org'],
+            ['email' => 'recipient1@example.org'],
+            ['email' => 'recipient2@example.org'],
         ],
     ])->assertOk();
 
@@ -576,8 +576,8 @@ it('enqueues the mail if not requested but forced', function () {
         'template' => 'welcome',
         'subject' => 'Welcome!',
         'recipients' => [
-            ['recipient' => 'recipient1@example.org'],
-            ['recipient' => 'recipient2@example.org'],
+            ['email' => 'recipient1@example.org'],
+            ['email' => 'recipient2@example.org'],
         ],
     ])->assertOk();
 
@@ -612,8 +612,8 @@ it('does not enqueue the mail if requested but queue is disabled', function () {
         'template' => 'welcome',
         'subject' => 'Welcome!',
         'recipients' => [
-            ['recipient' => 'recipient1@example.org'],
-            ['recipient' => 'recipient2@example.org'],
+            ['email' => 'recipient1@example.org'],
+            ['email' => 'recipient2@example.org'],
         ],
     ])->assertOk();
 
@@ -778,13 +778,13 @@ it('sends mail to multiple recipients with recipient-defined regular attachments
         'subject' => 'Welcome!',
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'attachments' => [
                     $attachment1 = UploadedFile::fake()->image('foo.jpg'),
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'attachments' => [
                     $attachment2 = UploadedFile::fake()->image('bar.jpg'),
                 ],
@@ -847,7 +847,7 @@ it('sends mail to multiple recipients with recipient-defined remote attachments'
         'subject' => 'Welcome!',
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'remoteAttachments' => [
                     new RemoteAttachmentDto([
                         'resource' => '/path/foo.jpg',
@@ -856,7 +856,7 @@ it('sends mail to multiple recipients with recipient-defined remote attachments'
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'remoteAttachments' => [
                     new RemoteAttachmentDto([
                         'resource' => '/path/bar.jpg',
@@ -922,7 +922,7 @@ it('sends mail to multiple recipients with recipient-defined regular and remote 
         'subject' => 'Welcome!',
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'attachments' => [
                     $attachment1 = UploadedFile::fake()->image('foo1.jpg'),
                 ],
@@ -934,7 +934,7 @@ it('sends mail to multiple recipients with recipient-defined regular and remote 
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'attachments' => [
                     $attachment2 = UploadedFile::fake()->image('bar1.jpg'),
                 ],
@@ -1022,7 +1022,7 @@ it('merges the recipient-defined attachments with the request ones when there ar
         ],
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'remoteAttachments' => [
                     new RemoteAttachmentDto([
                         'resource' => '/path/foo.jpg',
@@ -1031,7 +1031,7 @@ it('merges the recipient-defined attachments with the request ones when there ar
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'attachments' => [
                     $recipientAttachment = UploadedFile::fake()->image('bar.jpg'),
                 ],

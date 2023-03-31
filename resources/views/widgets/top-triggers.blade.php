@@ -12,21 +12,12 @@
             <p class="italic text-center">No data available</p>
         @else
             <x-tables::table>
-                <x-slot name="header">
-                    <x-tables::header-cell>
-                        Trigger
-                    </x-tables::header-cell>
-                    <x-tables::header-cell alignment="center">
-                        Count
-                    </x-tables::header-cell>
-                </x-slot>
-
                 @foreach ($data as $row)
                     <x-tables::row>
-                        <x-tables::cell class="px-4 py-1">
+                        <x-tables::cell class="py-2">
                             {{ $row->trigger }}
                         </x-tables::cell>
-                        <x-tables::cell class="px-4 py-1 text-center">
+                        <x-tables::cell class="py-2 text-center text-sm opacity-70">
                             {{ $row->count }}
                         </x-tables::cell>
                     </x-tables::row>

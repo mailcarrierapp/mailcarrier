@@ -1,26 +1,29 @@
 <?php
 
-namespace MailCarrier\Actions\Logs\Widgets;
+namespace MailCarrier\Actions\Widgets;
 
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use MailCarrier\Actions\Action;
-use MailCarrier\Concerns\InteractsWithCache;
 use MailCarrier\Models\Log;
 
 class GetTopTriggers extends Action
 {
-    use InteractsWithCache;
-
     /**
      * Generate a unique slug from the given name.
      */
     public function run(): Collection
     {
-        return $this
-            ->withCacheArgs(func_get_args())
-            ->cachedUntil(Carbon::now()->addMinutes(30), $this->getData(...));
+        return Cache::rememberForever('dashboard:top-triggers', $this->getData(...));
+    }
+
+    /**
+     * Flush the action cache.
+     */
+    public static function flush(): void
+    {
+        Cache::forget('dashboard:top-triggers');
     }
 
     /**

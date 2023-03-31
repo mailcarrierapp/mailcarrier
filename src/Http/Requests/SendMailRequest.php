@@ -58,7 +58,7 @@ class SendMailRequest extends FormRequest
                 // Apply rule only when recipients is an array of objects
                 Rule::when($this->has('recipients') && !is_array($this->json('recipients.0')), 'required|email'),
             ],
-            'recipients.*.recipient' => [
+            'recipients.*.email' => [
                 // Apply rule only when recipients is an array of objects
                 Rule::when($this->has('recipients') && is_array($this->json('recipients.0')), 'required|email'),
             ],
@@ -108,7 +108,7 @@ class SendMailRequest extends FormRequest
         if (is_array($this->input('recipients')) && !is_array($this->json('recipients.0'))) {
             $this->merge([
                 'recipients' => array_map(fn (string $recipient) => [
-                    'recipient' => $recipient,
+                    'email' => $recipient,
                 ], $this->input('recipients')),
             ]);
         }

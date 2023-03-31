@@ -1,25 +1,31 @@
 <?php
 
-namespace MailCarrier\Actions\Logs\Widgets;
+namespace MailCarrier\Actions\Widgets;
 
 use Flowframe\Trend\Trend;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use MailCarrier\Actions\Action;
-use MailCarrier\Concerns\InteractsWithCache;
 use MailCarrier\Dto\Dashboard\StatsOverviewDto;
 use MailCarrier\Enums\LogStatus;
 use MailCarrier\Models\Log;
 
 class GetStatsOverview extends Action
 {
-    use InteractsWithCache;
-
     /**
      * Generate a unique slug from the given name.
      */
     public function run(): StatsOverviewDto
     {
-        return $this->cachedUntil(Carbon::now()->addMinutes(30), $this->getData(...));
+        return Cache::rememberForever('dashboard:overview', $this->getData(...));
+    }
+
+    /**
+     * Flush the action cache.
+     */
+    public static function flush(): void
+    {
+        Cache::forget('dashboard:overview');
     }
 
     /**

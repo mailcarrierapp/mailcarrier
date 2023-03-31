@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Config;
@@ -10,28 +11,33 @@ use MailCarrier\Dto\RemoteAttachmentDto;
 use MailCarrier\Dto\SendMailDto;
 use MailCarrier\Enums\AttachmentLogStrategy;
 use MailCarrier\Enums\LogStatus;
-use MailCarrier\Exceptions\MissingVariableException;
 use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Jobs\SendMailJob;
 use MailCarrier\Mail\GenericMail;
 use MailCarrier\Models\Log;
 use MailCarrier\Models\Template;
 use function Pest\Laravel\assertDatabaseCount;
+use function Pest\Laravel\postJson;
 
-it('sends email to the recipient', function () {
+beforeEach(function () {
+    // Disable auth
+    Config::set('mailcarrier.api_endpoint.auth_guard', null);
+
     Config::set('mailcarrier.queue.force', false);
     Mail::fake();
+});
 
+it('sends email to the recipient', function () {
     Template::factory()->create([
         'slug' => 'welcome',
     ]);
 
-    SendMail::resolve()->run(new SendMailDto([
+    postJson(route('mailcarrier.send'), [
         'enqueue' => false,
         'template' => 'welcome',
         'subject' => 'Welcome!',
         'recipient' => 'recipient@example.org',
-    ]));
+    ])->assertOk();
 
     Mail::assertSent(GenericMail::class, 1);
 
@@ -50,16 +56,13 @@ it('sends email to the recipient', function () {
 });
 
 it('compiles the variable into the template', function () {
-    Config::set('mailcarrier.queue.force', false);
-    Mail::fake();
-
     Template::factory()->create([
         'layout_id' => null,
         'slug' => 'welcome',
         'content' => 'Welcome {{ name }}',
     ]);
 
-    SendMail::resolve()->run(new SendMailDto([
+    postJson(route('mailcarrier.send'), [
         'enqueue' => false,
         'template' => 'welcome',
         'subject' => 'Welcome!',
@@ -67,7 +70,7 @@ it('compiles the variable into the template', function () {
         'variables' => [
             'name' => 'foo',
         ],
-    ]));
+    ])->assertOk();
 
     Mail::assertSent(GenericMail::class, 1);
 
@@ -90,21 +93,18 @@ it('compiles the variable into the template', function () {
 });
 
 it('sends email to the given cc and bcc', function () {
-    Config::set('mailcarrier.queue.force', false);
-    Mail::fake();
-
     Template::factory()->create([
         'slug' => 'welcome',
     ]);
 
-    SendMail::resolve()->run(new SendMailDto([
+    postJson(route('mailcarrier.send'), [
         'enqueue' => false,
         'template' => 'welcome',
         'subject' => 'Welcome!',
         'recipient' => 'recipient@example.org',
         'cc' => 'cc@example.org',
         'bcc' => 'bcc@example.org',
-    ]));
+    ])->assertOk();
 
     Mail::assertSent(GenericMail::class, 1);
 
@@ -126,23 +126,106 @@ it('sends email to the given cc and bcc', function () {
     expect($log->error)->toBeNull();
 });
 
-it('sends multiple emails to multiple recipients', function () {
-    Config::set('mailcarrier.queue.force', false);
-    Mail::fake();
-
+it('sends email from the given sender email', function () {
     Template::factory()->create([
         'slug' => 'welcome',
     ]);
 
-    SendMail::resolve()->run(new SendMailDto([
+    postJson(route('mailcarrier.send'), [
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+        'sender' => 'sender@example.org',
+    ])->assertOk();
+
+    Mail::assertSent(GenericMail::class, 1);
+
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasTo('recipient@example.org') &&
+            $mail->hasSubject('Welcome!') &&
+            $mail->hasFrom('sender@example.org');
+    });
+
+    /** @var Log */
+    $log = Log::first();
+
+    expect($log->status)->toBe(LogStatus::Sent);
+    expect($log->sender->email)->toBe('sender@example.org');
+    expect($log->sender->name)->toBeNull();
+    expect($log->error)->toBeNull();
+});
+
+it('sends email from the given sender email and name', function () {
+    Template::factory()->create([
+        'slug' => 'welcome',
+    ]);
+
+    postJson(route('mailcarrier.send'), [
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+        'sender' => [
+            'email' => 'sender@example.org',
+            'name' => 'Sender',
+        ],
+    ])->assertOk();
+
+    Mail::assertSent(GenericMail::class, 1);
+
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasTo('recipient@example.org') &&
+            $mail->hasSubject('Welcome!') &&
+            $mail->hasFrom('sender@example.org', 'Sender');
+    });
+
+    /** @var Log */
+    $log = Log::first();
+
+    expect($log->status)->toBe(LogStatus::Sent);
+    expect($log->sender->email)->toBe('sender@example.org');
+    expect($log->sender->name)->toBe('Sender');
+    expect($log->error)->toBeNull();
+});
+
+it('throws error if the sender is an object without the email', function () {
+    Template::factory()->create([
+        'slug' => 'welcome',
+    ]);
+
+    postJson(route('mailcarrier.send'), [
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+        'sender' => [
+            'name' => 'Sender',
+        ],
+    ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrorFor('sender');
+
+    Mail::assertNothingOutgoing();
+
+    assertDatabaseCount(Log::class, 0);
+});
+
+it('sends multiple emails to multiple recipients', function () {
+    Template::factory()->create([
+        'slug' => 'welcome',
+    ]);
+
+    postJson(route('mailcarrier.send'), [
         'enqueue' => false,
         'template' => 'welcome',
         'subject' => 'Welcome!',
         'recipients' => [
-            ['recipient' => 'recipient1@example.org'],
-            ['recipient' => 'recipient2@example.org'],
+            ['email' => 'recipient1@example.org'],
+            ['email' => 'recipient2@example.org'],
         ],
-    ]));
+    ])->assertOk();
 
     Mail::assertSent(GenericMail::class, 2);
 
@@ -174,34 +257,31 @@ it('sends multiple emails to multiple recipients', function () {
 });
 
 it('compiles the recipient-defined variables when there are multiple recipients', function () {
-    Config::set('mailcarrier.queue.force', false);
-    Mail::fake();
-
     Template::factory()->create([
         'layout_id' => null,
         'slug' => 'welcome',
         'content' => 'Welcome {{ name }}',
     ]);
 
-    SendMail::resolve()->run(new SendMailDto([
+    postJson(route('mailcarrier.send'), [
         'enqueue' => false,
         'template' => 'welcome',
         'subject' => 'Welcome!',
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'variables' => [
                     'name' => 'foo',
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'variables' => [
                     'name' => 'bar',
                 ],
             ],
         ],
-    ]));
+    ])->assertOk();
 
     Mail::assertSent(GenericMail::class, 2);
 
@@ -241,16 +321,13 @@ it('compiles the recipient-defined variables when there are multiple recipients'
 });
 
 it('merges the recipient-defined variables with the request ones when there are multiple recipients', function () {
-    Config::set('mailcarrier.queue.force', false);
-    Mail::fake();
-
     Template::factory()->create([
         'layout_id' => null,
         'slug' => 'welcome',
         'content' => 'Welcome {{ name }} from {{ company }}',
     ]);
 
-    SendMail::resolve()->run(new SendMailDto([
+    postJson(route('mailcarrier.send'), [
         'enqueue' => false,
         'template' => 'welcome',
         'subject' => 'Welcome!',
@@ -260,19 +337,19 @@ it('merges the recipient-defined variables with the request ones when there are 
         ],
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'variables' => [
                     'name' => 'foo',
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'variables' => [
                     'name' => 'bar',
                 ],
             ],
         ],
-    ]));
+    ])->assertOk();
 
     Mail::assertSent(GenericMail::class, 2);
 
@@ -314,22 +391,19 @@ it('merges the recipient-defined variables with the request ones when there are 
 });
 
 it('uses the recipient-defined cc and bcc when there are multiple recipients', function () {
-    Config::set('mailcarrier.queue.force', false);
-    Mail::fake();
-
     Template::factory()->create([
         'layout_id' => null,
         'slug' => 'welcome',
         'content' => 'Welcome {{ name }}',
     ]);
 
-    SendMail::resolve()->run(new SendMailDto([
+    postJson(route('mailcarrier.send'), [
         'enqueue' => false,
         'template' => 'welcome',
         'subject' => 'Welcome!',
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'cc' => 'recipient1+cc@example.org',
                 'bcc' => 'recipient1+bcc@example.org',
                 'variables' => [
@@ -337,7 +411,7 @@ it('uses the recipient-defined cc and bcc when there are multiple recipients', f
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'cc' => 'recipient2+cc@example.org',
                 'bcc' => 'recipient2+bcc@example.org',
                 'variables' => [
@@ -345,7 +419,7 @@ it('uses the recipient-defined cc and bcc when there are multiple recipients', f
                 ],
             ],
         ],
-    ]));
+    ])->assertOk();
 
     Mail::assertSent(GenericMail::class, 2);
 
@@ -393,9 +467,6 @@ it('uses the recipient-defined cc and bcc when there are multiple recipients', f
 });
 
 it('throws exception when one or more template defined variables are not present', function () {
-    Config::set('mailcarrier.queue.force', false);
-    Mail::fake();
-
     Template::factory()->create([
         'layout_id' => null,
         'slug' => 'welcome',
@@ -403,7 +474,7 @@ it('throws exception when one or more template defined variables are not present
         'content' => 'Welcome {{ name }} from {{ company }}',
     ]);
 
-    $call = fn () => SendMail::resolve()->run(new SendMailDto([
+    postJson(route('mailcarrier.send'), [
         'enqueue' => false,
         'template' => 'welcome',
         'subject' => 'Welcome!',
@@ -411,9 +482,13 @@ it('throws exception when one or more template defined variables are not present
         'variables' => [
             'name' => 'foo',
         ],
-    ]));
-
-    expect($call)->toThrow(MissingVariableException::class, 'Missing variable "company" for template "Welcome"');
+    ])
+        ->assertStatus(Response::HTTP_PRECONDITION_FAILED)
+        ->assertJson([
+            'response' => 'error',
+            'key' => 'MISSING_VARIABLE',
+            'message' => 'Missing variable "company" for template "Welcome"',
+        ]);
 
     Mail::assertNothingOutgoing();
 
@@ -428,9 +503,6 @@ it('throws exception when one or more template defined variables are not present
 });
 
 it('does not create any log if not requested', function () {
-    Config::set('mailcarrier.queue.force', false);
-    Mail::fake();
-
     Template::factory()->create([
         'layout_id' => null,
         'slug' => 'welcome',
@@ -443,8 +515,8 @@ it('does not create any log if not requested', function () {
             'template' => 'welcome',
             'subject' => 'Welcome!',
             'recipients' => [
-                ['recipient' => 'recipient1@example.org'],
-                ['recipient' => 'recipient2@example.org'],
+                ['email' => 'recipient1@example.org'],
+                ['email' => 'recipient2@example.org'],
             ],
         ]));
 
@@ -454,9 +526,7 @@ it('does not create any log if not requested', function () {
 });
 
 it('enqueues the mail if requested and queue is enabled', function () {
-    Config::set('mailcarrier.queue.force', false);
     Config::set('mailcarrier.queue.enabled', true);
-    Mail::fake();
     Bus::fake();
 
     Template::factory()->create([
@@ -464,15 +534,15 @@ it('enqueues the mail if requested and queue is enabled', function () {
         'slug' => 'welcome',
     ]);
 
-    SendMail::resolve()->run(new SendMailDto([
+    postJson(route('mailcarrier.send'), [
         'enqueue' => true,
         'template' => 'welcome',
         'subject' => 'Welcome!',
         'recipients' => [
-            ['recipient' => 'recipient1@example.org'],
-            ['recipient' => 'recipient2@example.org'],
+            ['email' => 'recipient1@example.org'],
+            ['email' => 'recipient2@example.org'],
         ],
-    ]));
+    ])->assertOk();
 
     Mail::assertNothingOutgoing();
     Bus::assertDispatchedSync(SendMailJob::class, 0);
@@ -494,7 +564,6 @@ it('enqueues the mail if requested and queue is enabled', function () {
 it('enqueues the mail if not requested but forced', function () {
     Config::set('mailcarrier.queue.force', true);
     Config::set('mailcarrier.queue.enabled', true);
-    Mail::fake();
     Bus::fake();
 
     Template::factory()->create([
@@ -502,15 +571,15 @@ it('enqueues the mail if not requested but forced', function () {
         'slug' => 'welcome',
     ]);
 
-    SendMail::resolve()->run(new SendMailDto([
+    postJson(route('mailcarrier.send'), [
         'enqueue' => false,
         'template' => 'welcome',
         'subject' => 'Welcome!',
         'recipients' => [
-            ['recipient' => 'recipient1@example.org'],
-            ['recipient' => 'recipient2@example.org'],
+            ['email' => 'recipient1@example.org'],
+            ['email' => 'recipient2@example.org'],
         ],
-    ]));
+    ])->assertOk();
 
     Mail::assertNothingOutgoing();
     Bus::assertNotDispatchedSync(SendMailJob::class, 0);
@@ -530,9 +599,7 @@ it('enqueues the mail if not requested but forced', function () {
 });
 
 it('does not enqueue the mail if requested but queue is disabled', function () {
-    Config::set('mailcarrier.queue.force', false);
     Config::set('mailcarrier.queue.enabled', false);
-    Mail::fake();
     Bus::fake();
 
     Template::factory()->create([
@@ -540,24 +607,22 @@ it('does not enqueue the mail if requested but queue is disabled', function () {
         'slug' => 'welcome',
     ]);
 
-    SendMail::resolve()->run(new SendMailDto([
+    postJson(route('mailcarrier.send'), [
         'enqueue' => false,
         'template' => 'welcome',
         'subject' => 'Welcome!',
         'recipients' => [
-            ['recipient' => 'recipient1@example.org'],
-            ['recipient' => 'recipient2@example.org'],
+            ['email' => 'recipient1@example.org'],
+            ['email' => 'recipient2@example.org'],
         ],
-    ]));
+    ])->assertOk();
 
     Mail::assertNothingOutgoing();
     Bus::assertDispatchedSync(SendMailJob::class, 2);
 });
 
 it('sends mail with regular attachments', function () {
-    Config::set('mailcarrier.queue.force', false);
     Config::set('mailcarrier.attachments.log_strategy', AttachmentLogStrategy::None);
-    Mail::fake();
 
     Template::factory()->create([
         'slug' => 'welcome',
@@ -598,9 +663,8 @@ it('sends mail with regular attachments', function () {
 });
 
 it('sends mail with remote attachments', function () {
-    Config::set('mailcarrier.queue.force', false);
     Config::set('mailcarrier.attachments.log_strategy', AttachmentLogStrategy::None);
-    Mail::fake();
+
     MailCarrier::partialMock()
         ->shouldReceive('getFileSize')
         ->twice()
@@ -651,9 +715,8 @@ it('sends mail with remote attachments', function () {
 });
 
 it('sends mail with both regular and remote attachments', function () {
-    Config::set('mailcarrier.queue.force', false);
     Config::set('mailcarrier.attachments.log_strategy', AttachmentLogStrategy::None);
-    Mail::fake();
+
     MailCarrier::partialMock()
         ->shouldReceive('getFileSize')
         ->once()
@@ -703,9 +766,7 @@ it('sends mail with both regular and remote attachments', function () {
 });
 
 it('sends mail to multiple recipients with recipient-defined regular attachments', function () {
-    Config::set('mailcarrier.queue.force', false);
     Config::set('mailcarrier.attachments.log_strategy', AttachmentLogStrategy::None);
-    Mail::fake();
 
     Template::factory()->create([
         'slug' => 'welcome',
@@ -717,13 +778,13 @@ it('sends mail to multiple recipients with recipient-defined regular attachments
         'subject' => 'Welcome!',
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'attachments' => [
                     $attachment1 = UploadedFile::fake()->image('foo.jpg'),
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'attachments' => [
                     $attachment2 = UploadedFile::fake()->image('bar.jpg'),
                 ],
@@ -769,9 +830,8 @@ it('sends mail to multiple recipients with recipient-defined regular attachments
 });
 
 it('sends mail to multiple recipients with recipient-defined remote attachments', function () {
-    Config::set('mailcarrier.queue.force', false);
     Config::set('mailcarrier.attachments.log_strategy', AttachmentLogStrategy::None);
-    Mail::fake();
+
     MailCarrier::partialMock()
         ->shouldReceive('getFileSize')
         ->twice()
@@ -787,7 +847,7 @@ it('sends mail to multiple recipients with recipient-defined remote attachments'
         'subject' => 'Welcome!',
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'remoteAttachments' => [
                     new RemoteAttachmentDto([
                         'resource' => '/path/foo.jpg',
@@ -796,7 +856,7 @@ it('sends mail to multiple recipients with recipient-defined remote attachments'
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'remoteAttachments' => [
                     new RemoteAttachmentDto([
                         'resource' => '/path/bar.jpg',
@@ -845,9 +905,8 @@ it('sends mail to multiple recipients with recipient-defined remote attachments'
 });
 
 it('sends mail to multiple recipients with recipient-defined regular and remote attachments', function () {
-    Config::set('mailcarrier.queue.force', false);
     Config::set('mailcarrier.attachments.log_strategy', AttachmentLogStrategy::None);
-    Mail::fake();
+
     MailCarrier::partialMock()
         ->shouldReceive('getFileSize')
         ->twice()
@@ -863,7 +922,7 @@ it('sends mail to multiple recipients with recipient-defined regular and remote 
         'subject' => 'Welcome!',
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'attachments' => [
                     $attachment1 = UploadedFile::fake()->image('foo1.jpg'),
                 ],
@@ -875,7 +934,7 @@ it('sends mail to multiple recipients with recipient-defined regular and remote 
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'attachments' => [
                     $attachment2 = UploadedFile::fake()->image('bar1.jpg'),
                 ],
@@ -937,9 +996,8 @@ it('sends mail to multiple recipients with recipient-defined regular and remote 
 });
 
 it('merges the recipient-defined attachments with the request ones when there are multiple recipients', function () {
-    Config::set('mailcarrier.queue.force', false);
     Config::set('mailcarrier.attachments.log_strategy', AttachmentLogStrategy::None);
-    Mail::fake();
+
     MailCarrier::partialMock()
         ->shouldReceive('getFileSize')
         ->times(3)
@@ -964,7 +1022,7 @@ it('merges the recipient-defined attachments with the request ones when there ar
         ],
         'recipients' => [
             [
-                'recipient' => 'recipient1@example.org',
+                'email' => 'recipient1@example.org',
                 'remoteAttachments' => [
                     new RemoteAttachmentDto([
                         'resource' => '/path/foo.jpg',
@@ -973,7 +1031,7 @@ it('merges the recipient-defined attachments with the request ones when there ar
                 ],
             ],
             [
-                'recipient' => 'recipient2@example.org',
+                'email' => 'recipient2@example.org',
                 'attachments' => [
                     $recipientAttachment = UploadedFile::fake()->image('bar.jpg'),
                 ],
@@ -1037,9 +1095,6 @@ it('invokes the before sending middleware', function () {
         throw new \Exception('beforeSending middleware');
     });
 
-    Config::set('mailcarrier.queue.force', false);
-    Mail::fake();
-
     Template::factory()->create([
         'slug' => 'welcome',
     ]);
@@ -1055,9 +1110,6 @@ it('invokes the before sending middleware', function () {
 })->throws(\Exception::class, 'beforeSending middleware');
 
 it('invokes the sending middleware', function () {
-    Config::set('mailcarrier.queue.force', false);
-    Mail::fake();
-
     Template::factory()->create([
         'slug' => 'welcome',
     ]);

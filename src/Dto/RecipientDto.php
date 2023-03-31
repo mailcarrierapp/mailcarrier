@@ -11,7 +11,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 class RecipientDto extends DataTransferObject
 {
     #[Email]
-    public string $recipient;
+    public string $email;
 
     /** @var array<string, mixed> */
     public array $variables = [];

@@ -42,7 +42,7 @@ class SendMail extends Action
         $this->template = (new Templates\FindBySlug)->run($params->template);
         $this->recipients = $params->recipients ?: [
             new RecipientDto(
-                recipient: $params->recipient,
+                email: $params->recipient,
             ),
         ];
 
@@ -114,7 +114,7 @@ class SendMail extends Action
         $genericMailDto = new GenericMailDto(
             trigger: $this->params->trigger,
             sender: $this->params->sender,
-            recipient: $recipient->recipient,
+            recipient: $recipient->email,
             cc: $recipient->cc,
             bcc: $recipient->bcc,
             subject: $this->params->subject,

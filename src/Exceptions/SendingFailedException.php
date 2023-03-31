@@ -29,8 +29,6 @@ class SendingFailedException extends MailCarrierException
 
     /**
      * Get the exception's context information.
-     *
-     * @return array
      */
     public function context(): array
     {

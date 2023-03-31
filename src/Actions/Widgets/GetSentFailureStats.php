@@ -1,12 +1,12 @@
 <?php
 
-namespace MailCarrier\Actions\Logs\Widgets;
+namespace MailCarrier\Actions\Widgets;
 
 use Flowframe\Trend\Trend;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use MailCarrier\Actions\Action;
-use MailCarrier\Concerns\InteractsWithCache;
 use MailCarrier\Dto\Dashboard\SentFailureChartDto;
 use MailCarrier\Enums\Dashboard\SentFailureChartFilter;
 use MailCarrier\Enums\LogStatus;
@@ -14,8 +14,6 @@ use MailCarrier\Models\Log;
 
 class GetSentFailureStats extends Action
 {
-    use InteractsWithCache;
-
     protected SentFailureChartFilter $filter;
 
     /**
@@ -25,9 +23,22 @@ class GetSentFailureStats extends Action
     {
         $this->filter = $filter;
 
-        return $this
-            ->withCacheArgs(func_get_args())
-            ->cachedUntil(Carbon::now()->addMinutes(30), $this->getData(...));
+        return Cache::rememberForever(
+            'dashboard:sent-failure.' . $filter->value,
+            $this->getData(...)
+        );
+    }
+
+    /**
+     * Flush the action cache.
+     */
+    public static function flush(): void
+    {
+        foreach (SentFailureChartFilter::cases() as $filter) {
+            Cache::forget(
+                'dashboard:sent-failure.' . $filter->value,
+            );
+        }
     }
 
     /**

@@ -15,8 +15,10 @@ use MailCarrier\Commands\UserCommand;
 use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Helpers\SocialiteProviders;
 use MailCarrier\Models\Layout;
+use MailCarrier\Models\Log;
 use MailCarrier\Models\Template;
 use MailCarrier\Observers\LayoutObserver;
+use MailCarrier\Observers\LogObserver;
 use MailCarrier\Observers\TemplateObserver;
 use MailCarrier\Resources\LayoutResource;
 use MailCarrier\Resources\LogResource;
@@ -109,6 +111,7 @@ class MailCarrierServiceProvider extends PluginServiceProvider
 
         Template::observe(TemplateObserver::class);
         Layout::observe(LayoutObserver::class);
+        Log::observe(LogObserver::class);
 
         // Register Social Auth event listener
         $this->listenSocialiteEvents();

@@ -3,7 +3,7 @@
 namespace MailCarrier\Widgets;
 
 use Filament\Widgets\Widget;
-use MailCarrier\Actions\Logs\Widgets\GetTopTriggers;
+use MailCarrier\Actions\Widgets\GetTopTriggers;
 
 class TopTriggersWidget extends Widget
 {

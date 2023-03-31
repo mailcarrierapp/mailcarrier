@@ -4,7 +4,7 @@ namespace MailCarrier\Widgets;
 
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
-use MailCarrier\Actions\Logs\Widgets\GetStatsOverview;
+use MailCarrier\Actions\Widgets\GetStatsOverview;
 
 class StatsOverviewWidget extends BaseWidget
 {

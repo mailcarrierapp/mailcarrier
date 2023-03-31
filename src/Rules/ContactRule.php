@@ -2,36 +2,26 @@
 
 namespace MailCarrier\Rules;
 
-use Illuminate\Contracts\Validation\ImplicitRule;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use MailCarrier\Dto\ContactDto;
 
-class ContactRule implements Rule, ImplicitRule // @phpstan-ignore-line
+class ContactRule implements ValidationRule
 {
     /**
-     * Determine if the validation rule passes.
+     * Run the validation rule.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         if (is_string($value) && filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            return true;
+            return;
         }
 
         if (is_array($value) && ContactDto::tryFrom($value)) {
-            return true;
+            return;
         }
 
-        return false;
-    }
-
-    /**
-     * Get the validation error message.
-     */
-    public function message(): string
-    {
-        return 'The field must be an email address or an object with "email" and "name" properties.';
+        $fail('The :attribute must be an email address or an object with "email" and "name" properties.');
     }
 }

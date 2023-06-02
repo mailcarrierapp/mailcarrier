@@ -1,5 +1,6 @@
 .idea
 *.cache
+composer.lock
 build
 coverage
 docs

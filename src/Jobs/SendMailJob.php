@@ -68,7 +68,7 @@ class SendMailJob implements ShouldQueue
      */
     protected function send(): void
     {
-        $sendMail = fn () => Mail::send(new GenericMail($this->genericMailDto));
+        $sendMail = fn (?GenericMailDto $override = null) => Mail::send(new GenericMail($override ?: $this->genericMailDto));
 
         if ($this->sendingMiddleware) {
             $middleware = unserialize($this->sendingMiddleware)->getClosure();

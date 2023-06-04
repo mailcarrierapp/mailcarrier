@@ -20,9 +20,25 @@ Design global layouts, compose your template, preview your emails and send them 
 - 🪄 **Hackable**: MailCarrier relies on [Laravel](https://laravel.com/) and [Filament](https://filamentphp.com/), that means that over 30K packages are available to customise your MailCarrier instance.
 - ⏳ **Queues**: You can choose whether or not to send emails in a enqueued, background jobs, to not block the user experience.  
 
-## Installation
+## Quick start
 
-Please follow https://mailcarrier.app/docs/getting-started/installation.
+### Classic way
+
+**Prerequisites**: PHP 8.1, Composer
+
+```shell
+curl "https://mailcarrier.app/create" | bash
+```
+
+Learn more about [the classic way](https://mailcarrier.app/docs/getting-started/installation).
+
+### Docker
+
+```shell
+docker run -p 80:80 -ti mailcarrier/mailcarrier
+```
+
+Learn more about [running with Docker](https://mailcarrier.app/docs/getting-started/running-docker).
 
 ## Testing
 

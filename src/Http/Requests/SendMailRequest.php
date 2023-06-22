@@ -107,9 +107,12 @@ class SendMailRequest extends FormRequest
         // Wrap recipient array list into a structured data
         if (is_array($this->input('recipients')) && !is_array($this->json('recipients.0'))) {
             $this->merge([
-                'recipients' => array_map(fn (string $recipient) => [
-                    'email' => $recipient,
-                ], $this->input('recipients')),
+                'recipients' => $this->collect('recipients')
+                    ->filter()
+                    ->map(fn (string $recipient) => [
+                        'email' => $recipient,
+                    ])
+                    ->toArray(),
             ]);
         }
 

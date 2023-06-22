@@ -1130,12 +1130,56 @@ it('invokes the sending middleware', function () {
 
     expect($call)->toThrow(\Exception::class, 'sending after middleware');
 
-    Mail::assertSent(GenericMail::class, 1);
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasTo('recipient@example.org')
+            && $mail->hasSubject('Welcome!');
+    });
+});
+
+it('allows to override the GenericMailDto from the sending middleware', function () {
+    Template::factory()->create([
+        'slug' => 'welcome',
+    ]);
+
+    SendMail::resolve()->run(new SendMailDto([
+        'enqueue' => false,
+        'sender' => 'sender@example.org',
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+    ]));
 
     Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
         $mail->build();
 
-        return $mail->hasTo('recipient@example.org') &&
-            $mail->hasSubject('Welcome!');
+        return $mail->hasFrom('sender@example.org')
+            && $mail->hasTo('recipient@example.org')
+            && $mail->hasSubject('Welcome!');
+    });
+
+    MailCarrier::sending(function (GenericMailDto $mail, \Closure $next): void {
+        $next($mail->clone(
+            sender: [
+                'email' => 'new-sender@example.org',
+            ],
+        ));
+    });
+
+    SendMail::resolve()->run(new SendMailDto([
+        'enqueue' => false,
+        'sender' => 'sender@example.org',
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+    ]));
+
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasFrom('new-sender@example.org')
+            && $mail->hasTo('recipient@example.org')
+            && $mail->hasSubject('Welcome!');
     });
 });

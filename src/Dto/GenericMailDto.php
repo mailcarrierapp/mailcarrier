@@ -35,4 +35,9 @@ class GenericMailDto extends DataTransferObject
     /** @var \MailCarrier\Dto\RemoteAttachmentDto[] */
     #[CastWith(ArrayCaster::class, itemType: RemoteAttachmentDto::class)]
     public array $remoteAttachments = [];
+
+    public array $tags = [];
+
+    /** @var array<string, mixed> */
+    public array $metadata = [];
 }

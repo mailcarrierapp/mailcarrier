@@ -29,6 +29,8 @@ class SendMailRequest extends FormRequest
             'cc' => ['sometimes', new ContactRule()],
             'bcc' => ['sometimes', new ContactRule()],
             'variables' => 'sometimes|array',
+            'tags' => 'sometimes|array',
+            'metadata' => 'sometimes|array',
 
             // Attachments as files
             'attachments' => 'sometimes|array',

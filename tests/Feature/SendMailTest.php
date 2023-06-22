@@ -1130,6 +1130,7 @@ it('invokes the sending middleware', function () {
 
     expect($call)->toThrow(\Exception::class, 'sending after middleware');
 
+    Mail::assertSent(GenericMail::class, 1);
     Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
         $mail->build();
 
@@ -1181,5 +1182,56 @@ it('allows to override the GenericMailDto from the sending middleware', function
         return $mail->hasFrom('new-sender@example.org')
             && $mail->hasTo('recipient@example.org')
             && $mail->hasSubject('Welcome!');
+    });
+});
+
+it('accepts an array of tags', function () {
+    Template::factory()->create([
+        'slug' => 'welcome',
+    ]);
+
+    postJson(route('mailcarrier.send'), [
+        'enqueue' => false,
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+        'tags' => ['foo', 'bar'],
+    ])->assertOk();
+
+    Mail::assertSent(GenericMail::class, 1);
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasTo('recipient@example.org')
+            && $mail->hasSubject('Welcome!')
+            && $mail->hasTag('foo')
+            && $mail->hasTag('bar');
+    });
+});
+
+it('accepts an array of metadata', function () {
+    Template::factory()->create([
+        'slug' => 'welcome',
+    ]);
+
+    postJson(route('mailcarrier.send'), [
+        'enqueue' => false,
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+        'metadata' => [
+            'meta1' => 'value1',
+            'meta2' => 'value2',
+        ],
+    ])->assertOk();
+
+    Mail::assertSent(GenericMail::class, 1);
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasTo('recipient@example.org')
+            && $mail->hasSubject('Welcome!')
+            && $mail->hasMetadata('meta1', 'value1')
+            && $mail->hasMetadata('meta2', 'value2');
     });
 });

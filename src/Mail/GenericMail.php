@@ -43,6 +43,14 @@ class GenericMail extends Mailable
             );
         }
 
+        foreach ($this->params->tags as $tag) {
+            $this->tag($tag);
+        }
+
+        foreach ($this->params->metadata as $metaName => $metaValue) {
+            $this->metadata($metaName, $metaValue);
+        }
+
         return $this
             ->to($this->params->recipient)
             ->html($this->params->content)

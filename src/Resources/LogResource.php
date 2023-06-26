@@ -63,7 +63,7 @@ class LogResource extends Resource
                             ->all()
                     )
                     ->extraAttributes(fn (Log $record): array => [
-                        'wire:click' => $record->attachments->isNotEmpty() ? 'mountTableAction("attachments", "' . $record->getKey() . '")' : '',
+                        'wire:click' => new HtmlString($record->attachments->isNotEmpty() ? "mountTableAction('attachments', '{$record->getKey()}')" : ''),
                         'class' => $record->attachments->isNotEmpty() ? 'cursor-pointer' : '',
                     ]),
 

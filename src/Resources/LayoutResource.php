@@ -96,6 +96,7 @@ class LayoutResource extends Resource
         return [
             Forms\Components\Card::make([
                 Forms\Components\TextInput::make('name')
+                    ->label('Internal name')
                     ->required()
                     ->autofocus()
                     // Disable field UI if the record exists and user can't unlock it

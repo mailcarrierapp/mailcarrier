@@ -1,7 +1,7 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npm run development",
+        "dev": "mix watch",
         "watch": "mix watch",
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",

@@ -100,6 +100,7 @@ class TemplateResource extends Resource
         return [
             Forms\Components\Card::make([
                 Forms\Components\TextInput::make('name')
+                    ->label('Internal name')
                     ->required()
                     ->autofocus()
                     // Disable field UI if the record exists and user can't unlock it
@@ -153,9 +154,10 @@ class TemplateResource extends Resource
                 Forms\Components\Group::make([
                     Forms\Components\Placeholder::make('Separator')
                         ->label('')
-                        ->content(new HtmlString('<div class="h-1 border-b border-gray-100 dark:border-gray-700"></div>')),
+                        ->content(new HtmlString('<div class="h-1 border-b border-slate-100 dark:border-slate-700"></div>')),
 
                     Forms\Components\TextInput::make('slug')
+                        ->helperText(new HtmlString('<span class="text-xs text-slate-500 pl-2">Use this as "template" key in your APIs</span>'))
                         ->dehydrated(false) // Prevent it from being updated
                         ->extraInputAttributes([
                             'readonly' => 'readonly',

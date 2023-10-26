@@ -26,8 +26,10 @@ class SendMailRequest extends FormRequest
             'trigger' => 'sometimes|string|max:255',
             'subject' => 'required|string|max:255',
             'sender' => ['sometimes', new ContactRule()],
-            'cc' => ['sometimes', new ContactRule()],
-            'bcc' => ['sometimes', new ContactRule()],
+            'cc' => 'sometimes|array',
+            'bcc' => 'sometimes|array',
+            'cc.*' => [new ContactRule()],
+            'bcc.*' => [new ContactRule()],
             'variables' => 'sometimes|array',
             'tags' => 'sometimes|array',
             'metadata' => 'sometimes|array',
@@ -65,8 +67,10 @@ class SendMailRequest extends FormRequest
                 Rule::when($this->has('recipients') && is_array($this->json('recipients.0')), 'required|email'),
             ],
             'recipients.*.variables' => 'sometimes|array',
-            'recipients.*.cc' => ['sometimes', new ContactRule()],
-            'recipients.*.bcc' => ['sometimes', new ContactRule()],
+            'recipients.*.cc' => 'sometimes|array',
+            'recipients.*.cc.*' => ['sometimes', new ContactRule()],
+            'recipients.*.bcc' => 'sometimes|array',
+            'recipients.*.bcc.*' => ['sometimes', new ContactRule()],
 
             // Recipients attachments
             'recipients.*.attachments' => 'sometimes|array',
@@ -106,6 +110,20 @@ class SendMailRequest extends FormRequest
             ]);
         }
 
+        // Wrap cc array list
+        if (!array_is_list($this->input('cc'))) {
+            $this->merge([
+                'cc' => [$this->input('cc')],
+            ]);
+        }
+
+        // Wrap bcc array list
+        if (!array_is_list($this->input('bcc'))) {
+            $this->merge([
+                'bcc' => [$this->input('bcc')],
+            ]);
+        }
+
         // Wrap recipient array list into a structured data
         if (is_array($this->input('recipients')) && !is_array($this->json('recipients.0'))) {
             $this->merge([
@@ -116,6 +134,17 @@ class SendMailRequest extends FormRequest
                     ])
                     ->toArray(),
             ]);
+        }
+
+        // Wrap recipient cc and bcc
+        foreach ($this->input('recipients') as $recipient) {
+            if (array_key_exists('cc', $recipient) && !array_is_list($recipient['cc'])) {
+                $recipient['cc'] = [$recipient['cc']];
+            }
+
+            if (array_key_exists('bcc', $recipient) && !array_is_list($recipient['bcc'])) {
+                $recipient['bcc'] = [$recipient['bcc']];
+            }
         }
 
         // Wrap remote attachments array list into a structured data

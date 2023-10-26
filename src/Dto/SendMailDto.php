@@ -20,11 +20,13 @@ class SendMailDto extends DataTransferObject
 
     public ?string $recipient;
 
-    #[CastWith(ContactStringCaster::class)]
-    public ?ContactDto $cc;
+    /** @var \MailCarrier\Dto\ContactDto[]|null */
+    #[CastWith(ArrayCaster::class, itemType: ContactStringCaster::class)]
+    public ?array $cc;
 
-    #[CastWith(ContactStringCaster::class)]
-    public ?ContactDto $bcc;
+    /** @var \MailCarrier\Dto\ContactDto[]|null */
+    #[CastWith(ArrayCaster::class, itemType: ContactStringCaster::class)]
+    public ?array $bcc;
 
     /** @var array<string, mixed> */
     public array $variables = [];

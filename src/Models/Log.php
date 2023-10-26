@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\MassPrunable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use MailCarrier\Dto\ContactDto;
 use MailCarrier\Dto\LogTemplateDto;
 use MailCarrier\Enums\LogStatus;
+use MailCarrier\Models\Casts\CollectionOfContacts;
 use MailCarrier\Models\Concerns\IsUuid;
 
 /**
@@ -21,8 +23,8 @@ use MailCarrier\Models\Concerns\IsUuid;
  * @property string|null $trigger
  * @property string|null $subject
  * @property \MailCarrier\Dto\ContactDto $sender
- * @property \MailCarrier\Dto\ContactDto $cc
- * @property \MailCarrier\Dto\ContactDto $bcc
+ * @property \Illuminate\Support\Collection<MailCarrier\Dto\ContactDto>|null $cc
+ * @property \Illuminate\Support\Collection<MailCarrier\Dto\ContactDto>|null $bcc
  * @property string $recipient
  * @property \MailCarrier\Dto\LogTemplateDto $template_frozen
  * @property array<string, mixed>|null $variables
@@ -82,8 +84,8 @@ class Log extends Model
     protected $casts = [
         'status' => LogStatus::class,
         'sender' => ContactDto::class,
-        'cc' => ContactDto::class,
-        'bcc' => ContactDto::class,
+        'cc' => CollectionOfContacts::class,
+        'bcc' => CollectionOfContacts::class,
         'template_frozen' => LogTemplateDto::class,
         'variables' => 'array',
     ];

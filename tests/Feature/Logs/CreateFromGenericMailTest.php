@@ -80,6 +80,9 @@ it('fallbacks to default config sender if no sender is specified', function () {
             new ContactDto(
                 email: 'cc@example.org',
             ),
+            new ContactDto(
+                email: 'cc2@example.org',
+            ),
         ],
         bcc: [
             new ContactDto(
@@ -98,8 +101,9 @@ it('fallbacks to default config sender if no sender is specified', function () {
     expect($log->subject)->toBe('Welcome');
     expect($log->sender->name)->toBe('MailCarrier');
     expect($log->sender->email)->toBe('no-reply@mailcarrier.app');
-    expect($log->cc->email)->toBe('cc@example.org');
-    expect($log->bcc->email)->toBe('bcc@example.org');
+    expect($log->cc[0]->email)->toBe('cc@example.org');
+    expect($log->cc[1]->email)->toBe('cc2@example.org');
+    expect($log->bcc[0]->email)->toBe('bcc@example.org');
     expect($log->variables)->tobe(['name' => 'foo']);
     expect($log->template->id)->toBe($template->id);
     expect($log->status)->toBe(LogStatus::Pending);
@@ -131,6 +135,9 @@ it('freezes the template data', function () {
             new ContactDto(
                 email: 'bcc@example.org',
             ),
+            new ContactDto(
+                email: 'bcc2@example.org',
+            ),
         ],
         template: $template,
         variables: ['name' => 'foo'],
@@ -139,8 +146,9 @@ it('freezes the template data', function () {
     expect($log->trigger)->toBe('test');
     expect($log->subject)->toBe('Welcome');
     expect($log->sender->email)->toBe('sender@example.org');
-    expect($log->cc->email)->toBe('cc@example.org');
-    expect($log->bcc->email)->toBe('bcc@example.org');
+    expect($log->cc[0]->email)->toBe('cc@example.org');
+    expect($log->bcc[0]->email)->toBe('bcc@example.org');
+    expect($log->bcc[1]->email)->toBe('bcc2@example.org');
     expect($log->variables)->tobe(['name' => 'foo']);
     expect($log->template->id)->toBe($template->id);
     expect($log->template_frozen->name)->toBe('template');
@@ -167,6 +175,9 @@ it('creates an attachment with attachment strategy NONE', function () {
         cc: [
             new ContactDto(
                 email: 'cc@example.org',
+            ),
+            new ContactDto(
+                email: 'cc2@example.org',
             ),
         ],
         bcc: [
@@ -272,6 +283,9 @@ it('creates an attachment with attachment strategy INLINE', function () {
             new ContactDto(
                 email: 'bcc@example.org',
             ),
+            new ContactDto(
+                email: 'bcc2@example.org',
+            ),
         ],
         template: Template::factory()->create(),
         variables: ['name' => 'foo'],
@@ -375,6 +389,9 @@ it('creates an attachment with attachment strategy UPLOAD', function () {
         cc: [
             new ContactDto(
                 email: 'cc@example.org',
+            ),
+            new ContactDto(
+                email: 'cc2@example.org',
             ),
         ],
         bcc: [

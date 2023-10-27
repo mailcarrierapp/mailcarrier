@@ -121,8 +121,96 @@ it('sends email to the given cc and bcc', function () {
     $log = Log::first();
 
     expect($log->status)->toBe(LogStatus::Sent);
-    expect($log->cc->email)->toBe('cc@example.org');
-    expect($log->bcc->email)->toBe('bcc@example.org');
+    expect($log->cc[0]->email)->toBe('cc@example.org');
+    expect($log->bcc[0]->email)->toBe('bcc@example.org');
+    expect($log->error)->toBeNull();
+});
+
+it('allows multiple cc and bcc as email strings', function () {
+    Template::factory()->create([
+        'slug' => 'welcome',
+    ]);
+
+    postJson(route('mailcarrier.send'), [
+        'enqueue' => false,
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+        'cc' => ['cc@example.org', 'cc2@example.org'],
+        'bcc' => ['bcc@example.org', 'bcc2@example.org'],
+    ])->assertOk();
+
+    Mail::assertSent(GenericMail::class, 1);
+
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasTo('recipient@example.org')
+            && $mail->hasSubject('Welcome!')
+            && $mail->hasCc('cc@example.org')
+            && $mail->hasCc('cc2@example.org')
+            && $mail->hasBcc('bcc@example.org')
+            && $mail->hasBcc('bcc2@example.org');
+    });
+
+    /** @var Log */
+    $log = Log::first();
+
+    expect($log->status)->toBe(LogStatus::Sent);
+    expect($log->cc)->toHaveCount(2);
+    expect($log->cc[0]->email)->toBe('cc@example.org');
+    expect($log->cc[1]->email)->toBe('cc2@example.org');
+    expect($log->bcc)->toHaveCount(2);
+    expect($log->bcc[0]->email)->toBe('bcc@example.org');
+    expect($log->bcc[1]->email)->toBe('bcc2@example.org');
+    expect($log->error)->toBeNull();
+});
+
+it('allows multiple cc and bcc as email contacts', function () {
+    Template::factory()->create([
+        'slug' => 'welcome',
+    ]);
+
+    postJson(route('mailcarrier.send'), [
+        'enqueue' => false,
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+        'cc' => [
+            ['email' => 'cc@example.org', 'name' => 'CC'],
+            ['email' => 'cc2@example.org'],
+        ],
+        'bcc' => [
+            ['email' => 'bcc@example.org', 'name' => 'BCC'],
+            ['email' => 'bcc2@example.org'],
+        ],
+    ])->assertOk();
+
+    Mail::assertSent(GenericMail::class, 1);
+
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasTo('recipient@example.org')
+            && $mail->hasSubject('Welcome!')
+            && $mail->hasCc('cc@example.org', 'CC')
+            && $mail->hasCc('cc2@example.org')
+            && $mail->hasBcc('bcc@example.org', 'BCC')
+            && $mail->hasBcc('bcc2@example.org');
+    });
+
+    /** @var Log */
+    $log = Log::first();
+
+    expect($log->status)->toBe(LogStatus::Sent);
+    expect($log->cc)->toHaveCount(2);
+    expect($log->cc[0]->email)->toBe('cc@example.org');
+    expect($log->cc[0]->name)->toBe('CC');
+    expect($log->cc[1]->email)->toBe('cc2@example.org');
+    expect($log->bcc)->toHaveCount(2);
+    expect($log->bcc[0]->email)->toBe('bcc@example.org');
+    expect($log->bcc[0]->name)->toBe('BCC');
+    expect($log->bcc[1]->email)->toBe('bcc2@example.org');
     expect($log->error)->toBeNull();
 });
 
@@ -451,16 +539,16 @@ it('uses the recipient-defined cc and bcc when there are multiple recipients', f
 
     expect($log1->status)->toBe(LogStatus::Sent);
     expect($log1->error)->toBeNull();
-    expect($log1->cc->email)->toBe('recipient1+cc@example.org');
-    expect($log1->bcc->email)->toBe('recipient1+bcc@example.org');
+    expect($log1->cc[0]->email)->toBe('recipient1+cc@example.org');
+    expect($log1->bcc[0]->email)->toBe('recipient1+bcc@example.org');
     expect($log1->variables)->toEqualCanonicalizing([
         'name' => 'foo',
     ]);
 
     expect($log2->status)->toBe(LogStatus::Sent);
     expect($log2->error)->toBeNull();
-    expect($log2->cc->email)->toBe('recipient2+cc@example.org');
-    expect($log2->bcc->email)->toBe('recipient2+bcc@example.org');
+    expect($log2->cc[0]->email)->toBe('recipient2+cc@example.org');
+    expect($log2->bcc[0]->email)->toBe('recipient2+bcc@example.org');
     expect($log2->variables)->toEqualCanonicalizing([
         'name' => 'bar',
     ]);

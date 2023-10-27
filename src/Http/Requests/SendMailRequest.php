@@ -68,9 +68,9 @@ class SendMailRequest extends FormRequest
             ],
             'recipients.*.variables' => 'sometimes|array',
             'recipients.*.cc' => 'sometimes|array',
-            'recipients.*.cc.*' => ['sometimes', new ContactRule()],
+            'recipients.*.cc.*' => [new ContactRule()],
             'recipients.*.bcc' => 'sometimes|array',
-            'recipients.*.bcc.*' => ['sometimes', new ContactRule()],
+            'recipients.*.bcc.*' => [new ContactRule()],
 
             // Recipients attachments
             'recipients.*.attachments' => 'sometimes|array',
@@ -111,14 +111,20 @@ class SendMailRequest extends FormRequest
         }
 
         // Wrap cc array list
-        if (!array_is_list($this->input('cc'))) {
+        if (
+            !is_null($this->input('cc'))
+            && (!is_array($this->input('cc')) || !array_is_list($this->input('cc')))
+        ) {
             $this->merge([
                 'cc' => [$this->input('cc')],
             ]);
         }
 
         // Wrap bcc array list
-        if (!array_is_list($this->input('bcc'))) {
+        if (
+            !is_null($this->input('bcc'))
+            && (!is_array($this->input('bcc')) || !array_is_list($this->input('bcc')))
+        ) {
             $this->merge([
                 'bcc' => [$this->input('bcc')],
             ]);
@@ -137,13 +143,15 @@ class SendMailRequest extends FormRequest
         }
 
         // Wrap recipient cc and bcc
-        foreach ($this->input('recipients') as $recipient) {
-            if (array_key_exists('cc', $recipient) && !array_is_list($recipient['cc'])) {
-                $recipient['cc'] = [$recipient['cc']];
-            }
+        if (is_array($this->input('recipients')) && array_is_list($this->input('recipients'))) {
+            foreach ($this->input('recipients') as $recipient) {
+                if (array_key_exists('cc', $recipient) && !array_is_list($recipient['cc'])) {
+                    $recipient['cc'] = [$recipient['cc']];
+                }
 
-            if (array_key_exists('bcc', $recipient) && !array_is_list($recipient['bcc'])) {
-                $recipient['bcc'] = [$recipient['bcc']];
+                if (array_key_exists('bcc', $recipient) && !array_is_list($recipient['bcc'])) {
+                    $recipient['bcc'] = [$recipient['bcc']];
+                }
             }
         }
 

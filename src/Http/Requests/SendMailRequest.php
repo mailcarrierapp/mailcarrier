@@ -143,16 +143,28 @@ class SendMailRequest extends FormRequest
         }
 
         // Wrap recipient cc and bcc
-        if (is_array($this->input('recipients')) && array_is_list($this->input('recipients'))) {
-            foreach ($this->input('recipients') as $recipient) {
-                if (array_key_exists('cc', $recipient) && !array_is_list($recipient['cc'])) {
-                    $recipient['cc'] = [$recipient['cc']];
+        $recipients = $this->input('recipients');
+
+        if (is_array($recipients)) {
+            foreach ($recipients as $i => $recipient) {
+                if (
+                    array_key_exists('cc', $recipient)
+                    && (!is_array($this->input('cc')) || !array_is_list($this->input('cc')))
+                ) {
+                    $recipients[$i]['cc'] = [$recipient['cc']];
                 }
 
-                if (array_key_exists('bcc', $recipient) && !array_is_list($recipient['bcc'])) {
-                    $recipient['bcc'] = [$recipient['bcc']];
+                if (
+                    array_key_exists('bcc', $recipient)
+                    && (!is_array($this->input('bcc')) || !array_is_list($this->input('bcc')))
+                ) {
+                    $recipients[$i]['bcc'] = [$recipient['bcc']];
                 }
             }
+
+            $this->merge([
+                'recipients' => $recipients,
+            ]);
         }
 
         // Wrap remote attachments array list into a structured data

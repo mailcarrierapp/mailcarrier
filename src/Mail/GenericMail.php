@@ -65,11 +65,11 @@ class GenericMail extends Mailable
             )
             ->when(
                 $this->params->cc,
-                fn (GenericMail $mail) => $mail->cc($this->params->cc->email, $this->params->cc->name)
+                fn (GenericMail $mail) => $mail->cc($this->params->cc)
             )
             ->when(
                 $this->params->bcc,
-                fn (GenericMail $mail) => $mail->bcc($this->params->bcc->email, $this->params->bcc->name)
+                fn (GenericMail $mail) => $mail->bcc($this->params->bcc)
             );
     }
 

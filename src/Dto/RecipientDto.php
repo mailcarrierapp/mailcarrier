@@ -2,7 +2,7 @@
 
 namespace MailCarrier\Dto;
 
-use MailCarrier\Dto\Casters\ContactStringCaster;
+use MailCarrier\Dto\Casters\ContactArrayCaster;
 use MailCarrier\Dto\Validators\Email;
 use Spatie\DataTransferObject\Attributes\CastWith;
 use Spatie\DataTransferObject\Casters\ArrayCaster;
@@ -16,11 +16,13 @@ class RecipientDto extends DataTransferObject
     /** @var array<string, mixed> */
     public array $variables = [];
 
-    #[CastWith(ContactStringCaster::class)]
-    public ?ContactDto $cc;
+    /** @var \MailCarrier\Dto\ContactDto[]|null */
+    #[CastWith(ContactArrayCaster::class)]
+    public ?array $cc;
 
-    #[CastWith(ContactStringCaster::class)]
-    public ?ContactDto $bcc;
+    /** @var \MailCarrier\Dto\ContactDto[]|null */
+    #[CastWith(ContactArrayCaster::class)]
+    public ?array $bcc;
 
     /** @var \Illuminate\Http\UploadedFile[] */
     public array $attachments = [];

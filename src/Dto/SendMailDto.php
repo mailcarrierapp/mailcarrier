@@ -2,6 +2,7 @@
 
 namespace MailCarrier\Dto;
 
+use MailCarrier\Dto\Casters\ContactArrayCaster;
 use MailCarrier\Dto\Casters\ContactStringCaster;
 use Spatie\DataTransferObject\Attributes\CastWith;
 use Spatie\DataTransferObject\Casters\ArrayCaster;
@@ -20,11 +21,13 @@ class SendMailDto extends DataTransferObject
 
     public ?string $recipient;
 
-    #[CastWith(ContactStringCaster::class)]
-    public ?ContactDto $cc;
+    /** @var \MailCarrier\Dto\ContactDto[]|null */
+    #[CastWith(ContactArrayCaster::class)]
+    public ?array $cc;
 
-    #[CastWith(ContactStringCaster::class)]
-    public ?ContactDto $bcc;
+    /** @var \MailCarrier\Dto\ContactDto[]|null */
+    #[CastWith(ContactArrayCaster::class)]
+    public ?array $bcc;
 
     /** @var array<string, mixed> */
     public array $variables = [];

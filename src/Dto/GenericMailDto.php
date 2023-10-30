@@ -21,9 +21,11 @@ class GenericMailDto extends DataTransferObject
 
     public ?ContactDto $sender;
 
-    public ?ContactDto $cc;
+    /** @var \MailCarrier\Dto\ContactDto[]|null */
+    public ?array $cc;
 
-    public ?ContactDto $bcc;
+    /** @var \MailCarrier\Dto\ContactDto[]|null */
+    public ?array $bcc;
 
     public Template $template;
 

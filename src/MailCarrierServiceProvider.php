@@ -76,6 +76,7 @@ class MailCarrierServiceProvider extends PluginServiceProvider
                 '3_create_templates_table',
                 '4_create_logs_table',
                 '5_create_attachments_table',
+                '6_transform_logs_cc_bcc_array',
             ])
             ->runsMigrations();
 

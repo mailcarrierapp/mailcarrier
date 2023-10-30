@@ -11,6 +11,10 @@
         "curly_braces_position": {
             "anonymous_classes_opening_brace": "same_line"
         },
-        "fully_qualified_strict_types": false
+        "fully_qualified_strict_types": false,
+        "blank_line_between_import_groups": false,
+        "braces_position": {
+            "anonymous_classes_opening_brace": "same_line"
+        }
     }
 }

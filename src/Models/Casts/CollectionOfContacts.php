@@ -13,7 +13,7 @@ class CollectionOfContacts implements CastsAttributes
      * Cast the given value.
      *
      * @param  array<string, mixed>  $attributes
-     * @return \Illuminate\Support\Collection<MailCarrier\Dto\ContactDto>|null
+     * @return \Illuminate\Support\Collection<\MailCarrier\Dto\ContactDto>|null
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): ?Collection
     {

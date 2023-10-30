@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\MassPrunable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use MailCarrier\Dto\ContactDto;
 use MailCarrier\Dto\LogTemplateDto;

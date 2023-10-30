@@ -10,22 +10,26 @@
 @if ($log->cc)
     <div>
         <p class="font-bold mb-1">Cc</p>
-        @if ($log->cc->name)
-            <p>{{ $log->cc->name }} &lt;{{ $log->cc->email }}&gt;</p>
-        @else
-            <p>{{ $log->cc->email }}</p>
-        @endif
+        @foreach ($log->cc as $cc)
+            @if ($cc->name)
+                <p>{{ $cc->name }} &lt;{{ $cc->email }}&gt;</p>
+            @else
+                <p>{{ $cc->email }}</p>
+            @endif
+        @endforeach
     </div>
 @endif
 
 @if ($log->bcc)
     <div>
         <p class="font-bold mb-1">Bcc</p>
-        @if ($log->bcc->name)
-            <p>{{ $log->bcc->name }} &lt;{{ $log->bcc->email }}&gt;</p>
-        @else
-            <p>{{ $log->bcc->email }}</p>
-        @endif
+        @foreach ($log->bcc as $bcc)
+            @if ($bcc->name)
+                <p>{{ $bcc->name }} &lt;{{ $bcc->email }}&gt;</p>
+            @else
+                <p>{{ $bcc->email }}</p>
+            @endif
+        @endforeach
     </div>
 @endif
 

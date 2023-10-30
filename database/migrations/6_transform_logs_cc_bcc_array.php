@@ -12,23 +12,27 @@ return new class extends Migration {
     {
         $tableName = (new Log())->getTable();
 
-        DB::table($tableName)->each(function (object $log) use ($tableName) {
-            $changes = [];
+        DB::table($tableName)
+            ->whereNotNull('cc')
+            ->orWhereNotNull('bcc')
+            ->orderBy('id')
+            ->each(function (object $log) use ($tableName) {
+                $changes = [];
 
-            if (!is_null($log->cc)) {
-                $changes['cc'] = [$log->cc];
-            }
+                if (!is_null($log->cc)) {
+                    $changes['cc'] = [json_decode($log->cc, true)];
+                }
 
-            if (!is_null($log->bcc)) {
-                $changes['bcc'] = [$log->bcc];
-            }
+                if (!is_null($log->bcc)) {
+                    $changes['bcc'] = [json_decode($log->bcc, true)];
+                }
 
-            if (!empty($changes)) {
-                DB::table($tableName)
-                    ->where('id', $log->id)
-                    ->update($changes);
-            }
-        });
+                if (!empty($changes)) {
+                    DB::table($tableName)
+                        ->where('id', $log->id)
+                        ->update($changes);
+                }
+            });
     }
 
     /**

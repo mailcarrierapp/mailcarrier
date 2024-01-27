@@ -3,33 +3,30 @@
 namespace MailCarrier\Widgets;
 
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Card;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 use MailCarrier\Actions\Widgets\GetStatsOverview;
 
 class StatsOverviewWidget extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
 
-    /**
-     * Get widget cards.
-     */
-    protected function getCards(): array
+    protected function getStats(): array
     {
         $data = GetStatsOverview::resolve()->run();
 
         return [
-            Card::make('Total sent', $data->sent)
-                ->icon('heroicon-s-sparkles')
+            Stat::make('Total sent', $data->sent)
+                ->icon('heroicon-o-signal')
                 ->chart($data->sent === 0 ? null : $data->sentLastWeek)
                 ->color('success'),
 
-            Card::make('Pending', $data->pending)
-                ->icon('heroicon-s-collection')
+            Stat::make('Pending', $data->pending)
+                ->icon('heroicon-o-clock')
                 ->color('warning'),
 
-            Card::make('Total errors', $data->failed)
+            Stat::make('Total errors', $data->failed)
                 ->description($data->failed === 0 ? null : $data->failurePercentage . '% of total emails')
-                ->icon('heroicon-s-thumb-down')
+                ->icon('heroicon-o-exclamation-triangle')
                 ->chart($data->failed === 0 ? null : $data->failedLastWeek)
                 ->color('danger'),
         ];

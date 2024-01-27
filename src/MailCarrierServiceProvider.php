@@ -5,7 +5,6 @@ namespace MailCarrier;
 use Filament\Events\ServingFilament;
 use Filament\Facades\Filament;
 use Filament\Navigation\NavigationBuilder;
-use Filament\PluginServiceProvider;
 use Illuminate\Support\Facades\Event;
 use MailCarrier\Commands\InstallCommand;
 use MailCarrier\Commands\SocialCommand;
@@ -20,6 +19,7 @@ use MailCarrier\Models\Template;
 use MailCarrier\Observers\LayoutObserver;
 use MailCarrier\Observers\LogObserver;
 use MailCarrier\Observers\TemplateObserver;
+use MailCarrier\Providers\Filament\AdminPanelProvider;
 use MailCarrier\Resources\LayoutResource;
 use MailCarrier\Resources\LogResource;
 use MailCarrier\Resources\TemplateResource;
@@ -27,8 +27,9 @@ use MailCarrier\Widgets\SentFailureChartWidget;
 use MailCarrier\Widgets\StatsOverviewWidget;
 use MailCarrier\Widgets\TopTriggersWidget;
 use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class MailCarrierServiceProvider extends PluginServiceProvider
+class MailCarrierServiceProvider extends PackageServiceProvider
 {
     public static string $name = 'mailcarrier';
 
@@ -49,19 +50,12 @@ class MailCarrierServiceProvider extends PluginServiceProvider
     ];
 
     /**
-     * The package is being configured.
-     */
-    public function packageConfiguring(Package $package): void
-    {
-        Event::listen(ServingFilament::class, $this->servingFilament(...));
-    }
-
-    /**
      * The package has been configured.
      */
-    public function packageConfigured(Package $package): void
+    public function configurePackage(Package $package): void
     {
         $package
+            ->name('mailcarrier')
             ->hasRoutes(['api', 'web'])
             ->hasCommands([
                 InstallCommand::class,
@@ -91,9 +85,9 @@ class MailCarrierServiceProvider extends PluginServiceProvider
      */
     public function packageRegistered(): void
     {
-        parent::packageRegistered();
-
         // Register dependencies
+        $this->app->register(AdminPanelProvider::class);
+
         if ($this->app->runningInConsole()) {
             $this->app->register(\Livewire\LivewireServiceProvider::class);
             $this->app->register(\Filament\FilamentServiceProvider::class);
@@ -108,32 +102,12 @@ class MailCarrierServiceProvider extends PluginServiceProvider
      */
     public function packageBooted(): void
     {
-        parent::packageBooted();
-
         Template::observe(TemplateObserver::class);
         Layout::observe(LayoutObserver::class);
         Log::observe(LogObserver::class);
 
         // Register Social Auth event listener
         $this->listenSocialiteEvents();
-    }
-
-    /**
-     * Register Filament settings.
-     */
-    public function servingFilament(): void
-    {
-        Filament::registerTheme(mix('css/app.css'));
-
-        // Edit the navigation
-        Filament::navigation(
-            fn (NavigationBuilder $builder): NavigationBuilder => $builder
-                ->items(LogResource::getNavigationItems())
-                ->group('Design', [
-                    ...LayoutResource::getNavigationItems(),
-                    ...TemplateResource::getNavigationItems(),
-                ])
-        );
     }
 
     /**

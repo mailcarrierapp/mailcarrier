@@ -3,9 +3,9 @@
 namespace MailCarrier\Resources;
 
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Support\HtmlString;
 use MailCarrier\Forms\Components\MonacoEditor;
@@ -20,6 +20,8 @@ class LayoutResource extends Resource
     protected static ?string $model = Layout::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-color-swatch';
+
+    // protected static ?string $navigationGroup = 'Design';
 
     /**
      * Default HTML content.

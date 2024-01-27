@@ -3,7 +3,7 @@
 namespace MailCarrier\Resources;
 
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Actions\Modal\Actions\Action as TablesModalAction;
 use Illuminate\Contracts\View\View as ContractView;

@@ -19,7 +19,9 @@ class LayoutResource extends Resource
 {
     protected static ?string $model = Layout::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-color-swatch';
+    protected static ?string $navigationIcon = 'heroicon-o-squares-plus';
+
+    protected static ?string $navigationGroup = 'Design';
 
     // protected static ?string $navigationGroup = 'Design';
 

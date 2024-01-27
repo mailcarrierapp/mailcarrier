@@ -11,14 +11,17 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use MailCarrier\Actions\SendMail;
 use MailCarrier\Dto\SendMailDto;
+use MailCarrier\Models\Template;
 use MailCarrier\Resources\TemplateResource;
 
 class EditTemplate extends EditRecord
 {
     protected static string $resource = TemplateResource::class;
 
-    /** @var \MailCarrier\Models\Template */
-    public $record;
+    public function getRecord(): Template
+    {
+        return $this->record;
+    }
 
     /**
      * Get resource top-right actions.
@@ -45,7 +48,7 @@ class EditTemplate extends EditRecord
                     Forms\Components\Checkbox::make('enqueue'),
                 ]),
             DeleteAction::make()
-                ->disabled($this->record->is_locked || !TemplateResource::canDelete($this->record)),
+                ->disabled($this->getRecord()->is_locked || !TemplateResource::canDelete($this->record)),
         ];
     }
 

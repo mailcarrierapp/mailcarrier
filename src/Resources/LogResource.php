@@ -2,11 +2,12 @@
 
 namespace MailCarrier\Resources;
 
+use Filament\Tables\Actions\Action as TablesAction;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\Alignment;
 use Filament\Tables\Table;
 use Filament\Tables;
-use Filament\Tables\Actions\Modal\Actions\Action as TablesModalAction;
-use Illuminate\Contracts\View\View as ContractView;
+use Filament\Tables\Enums\FiltersLayout;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
@@ -21,7 +22,7 @@ class LogResource extends Resource
 {
     protected static ?string $model = Log::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-mail';
+    protected static ?string $navigationIcon = 'heroicon-o-paper-airplane';
 
     /**
      * List all the records.
@@ -32,51 +33,68 @@ class LogResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('recipient')
                     ->searchable()
-                    ->limit(25)
+                    ->copyable()
+                    ->copyMessage('Email address copied')
+                    ->copyMessageDuration(1500)
                     ->tooltip(
-                        fn (Tables\Columns\TextColumn $column): ?string => strlen($column->getState()) > $column->getLimit() ? $column->getState() : null
+                        fn (Tables\Columns\TextColumn $column): ?string => strlen($column->getState()) > $column->getCharacterLimit() ? $column->getState() : null
                     ),
 
-                Tables\Columns\BadgeColumn::make('status')
-                    ->colors([
-                        'warning' => fn (string $state): bool => $state === LogStatus::Pending->value,
-                        'danger' => fn (string $state): bool => $state === LogStatus::Failed->value,
-                        'success' => fn (string $state): bool => $state === LogStatus::Sent->value,
-                    ])
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (LogStatus $state): string => match ($state) {
+                        LogStatus::Pending => 'warning',
+                        LogStatus::Failed => 'danger',
+                        LogStatus::Sent => 'success',
+                    })
+                    ->icon(fn (LogStatus $state): string => match ($state) {
+                        LogStatus::Pending => 'heroicon-o-clock',
+                        LogStatus::Failed => 'heroicon-o-exclamation-triangle',
+                        LogStatus::Sent => 'heroicon-o-check-circle',
+                    })
+                    ->formatStateUsing(fn (LogStatus $state) => ucfirst(mb_strtolower($state->value)))
                     ->tooltip(fn (Log $record) => $record->error),
 
                 Tables\Columns\TextColumn::make('subject')
                     ->searchable()
                     ->limit(25)
                     ->tooltip(
-                        fn (Tables\Columns\TextColumn $column): ?string => strlen($column->getState()) > $column->getLimit() ? $column->getState() : null
+                        fn (Tables\Columns\TextColumn $column): ?string => strlen($column->getState()) > $column->getCharacterLimit() ? $column->getState() : null
                     ),
 
-                Tables\Columns\TextColumn::make('trigger'),
-
-                Tables\Columns\TagsColumn::make('attachments')
-                    ->limit(2)
+                Tables\Columns\TextColumn::make('attachments')
+                    ->limitList(2)
+                    ->expandableLimitedList()
+                    ->badge()
+                    ->separator(',')
                     ->getStateUsing(
                         fn (Log $record): array => $record
                             ->attachments
                             ->pluck('name')
                             ->all()
                     )
-                    ->extraAttributes(fn (Log $record): array => [
-                        'wire:click' => new HtmlString($record->attachments->isNotEmpty() ? "mountTableAction('attachments', '{$record->getKey()}')" : ''),
-                        'class' => $record->attachments->isNotEmpty() ? 'cursor-pointer' : '',
-                    ]),
+                    ->action(
+                        Tables\Actions\Action::make('attachments')
+                            ->modalContent(fn (Log $record) => View::make('mailcarrier::modals.attachments', [
+                                'attachments' => $record->attachments,
+                            ]))
+                            ->modalSubmitAction(false)
+                            ->modalCancelActionLabel('Close')
+                            ->modalFooterActionsAlignment(Alignment::Center)
+                    ),
 
                 Tables\Columns\TextColumn::make('template_frozen')
                     ->label('Template')
-                    ->url(
-                        fn (Log $record): ?string => is_null($record->template_id) ? null : URL::route('filament.resources.templates.edit', [
-                            'record' => $record->template_id,
-                        ])
+                    ->url(fn (Log $record): ?string =>
+                        is_null($record->template_id) ?
+                            null :
+                            URL::route('filament.mailcarrier.resources.templates.edit', [
+                                'record' => $record->template_id,
+                            ])
                     )
                     ->openUrlInNewTab()
-                    ->formatStateUsing(
-                        fn (Log $record): HtmlString => static::getTemplateValue($record->template_frozen, $record->template)
+                    ->formatStateUsing(fn (Log $record): HtmlString =>
+                        static::getTemplateValue($record->template_frozen, $record->template)
                     ),
 
                 Tables\Columns\TextColumn::make('created_at')
@@ -84,8 +102,16 @@ class LogResource extends Resource
                     ->since()
                     ->tooltip(fn (Log $record): string => $record->created_at->toRfc7231String()),
             ])
-            ->filters(static::getTableFilters())
-            ->actions(static::getTableActions());
+            ->filters(static::getTableFilters(), layout: FiltersLayout::Modal)
+            ->filtersTriggerAction(
+                fn (TablesAction $action) => $action
+                    ->button()
+                    ->label('Filter')
+                    ->slideOver(),
+            )
+            ->actions(
+                Tables\Actions\ActionGroup::make(static::getTableActions())
+            );
     }
 
     /**
@@ -118,8 +144,8 @@ class LogResource extends Resource
     {
         return [
             Tables\Actions\Action::make('details')
-                ->action(fn () => null)
-                ->modalContent(fn (Log $record): ContractView => View::make('mailcarrier::modals.details', [
+                ->icon('heroicon-o-information-circle')
+                ->modalContent(fn (Log $record) => View::make('mailcarrier::modals.details', [
                     'log' => $record,
                     'variables' => str_replace( // Fix double quotes inside strings
                         '\"',
@@ -127,40 +153,19 @@ class LogResource extends Resource
                         json_encode($record->variables, JSON_PRETTY_PRINT)
                     ),
                 ]))
-                ->modalActions([
-                    TablesModalAction::make('close')
-                        ->label('Close')
-                        ->cancel()
-                        ->color('secondary'),
-                ]),
+                ->modalSubmitAction(false)
+                ->modalCancelActionLabel('Close')
+                ->modalFooterActionsAlignment(Alignment::Center),
 
             Tables\Actions\Action::make('preview')
-                ->action(fn () => null)
-                ->modalContent(fn (Log $record): ContractView => View::make('mailcarrier::modals.preview', [
+                ->icon('heroicon-o-eye')
+                ->modalContent(fn (Log $record) => View::make('mailcarrier::modals.preview', [
                     'id' => $record->id,
                 ]))
                 ->modalWidth('7xl')
-                ->modalActions([
-                    TablesModalAction::make('close')
-                        ->label('Close')
-                        ->cancel()
-                        ->color('secondary'),
-                ]),
-
-            Tables\Actions\Action::make('attachments')
-                ->action(fn () => null)
-                ->modalContent(fn (Log $record): ContractView => View::make('mailcarrier::modals.attachments', [
-                    'attachments' => $record->attachments,
-                ]))
-                ->modalActions([
-                    TablesModalAction::make('close')
-                        ->label('Close')
-                        ->cancel()
-                        ->color('secondary'),
-                ])
-                ->extraAttributes([
-                    'class' => 'hidden',
-                ]),
+                ->modalSubmitAction(false)
+                ->modalCancelActionLabel('Close')
+                ->modalFooterActionsAlignment(Alignment::Center),
         ];
     }
 

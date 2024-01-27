@@ -5,6 +5,7 @@ namespace MailCarrier\Providers\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -16,6 +17,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use MailCarrier\Resources\LayoutResource;
+use MailCarrier\Resources\LogResource;
+use MailCarrier\Resources\TemplateResource;
 use MailCarrier\Widgets\SentFailureChartWidget;
 use MailCarrier\Widgets\StatsOverviewWidget;
 
@@ -33,10 +37,16 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('images/favicon.ico'))
             ->brandLogo(asset('images/logo-dark.svg'))
             ->darkModeBrandLogo(asset('images/logo-light.svg'))
+            ->theme(asset('css/theme.css'))
             ->colors([
                 'primary' => Color::Indigo,
             ])
             ->discoverResources(in: '../../Resources', for: 'MailCarrier\\Resources')
+            ->resources([
+                LogResource::class,
+                LayoutResource::class,
+                TemplateResource::class,
+            ])
             ->discoverPages(in: app_path('Filament/Pages'), for: 'MailCarrier\\Pages')
             ->pages([
                 Pages\Dashboard::class,
@@ -46,6 +56,7 @@ class AdminPanelProvider extends PanelProvider
                 StatsOverviewWidget::class,
                 SentFailureChartWidget::class,
             ])
+            ->collapsibleNavigationGroups(false)
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

@@ -25,6 +25,6 @@ mix
     ]
   })
   .js('resources/js/monaco.js', 'dist/js')
-  .postCss('resources/css/app.css', 'dist/css', [
+  .postCss('resources/css/theme.css', 'dist/css', [
     require('tailwindcss'),
   ]);

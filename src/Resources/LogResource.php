@@ -33,9 +33,6 @@ class LogResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('recipient')
                     ->searchable()
-                    ->copyable()
-                    ->copyMessage('Email address copied')
-                    ->copyMessageDuration(1500)
                     ->tooltip(
                         fn (Tables\Columns\TextColumn $column): ?string => strlen($column->getState()) > $column->getCharacterLimit() ? $column->getState() : null
                     ),
@@ -102,6 +99,7 @@ class LogResource extends Resource
                     ->since()
                     ->tooltip(fn (Log $record): string => $record->created_at->toRfc7231String()),
             ])
+            ->recordAction('details')
             ->filters(static::getTableFilters(), layout: FiltersLayout::Modal)
             ->filtersTriggerAction(
                 fn (TablesAction $action) => $action

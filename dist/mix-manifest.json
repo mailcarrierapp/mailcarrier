@@ -1,4 +1,5 @@
 {
-    "/js/monaco.js": "/js/monaco.js",
-    "/css/theme.css": "/css/theme.css"
+    "/js/highlight.js": "/js/highlight.js",
+    "/css/theme.css": "/css/theme.css",
+    "/css/highlight.css": "/css/highlight.css"
 }

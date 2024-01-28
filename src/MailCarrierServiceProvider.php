@@ -2,9 +2,8 @@
 
 namespace MailCarrier;
 
-use Filament\Events\ServingFilament;
-use Filament\Facades\Filament;
-use Filament\Navigation\NavigationBuilder;
+use Filament\Support\Assets\Js;
+use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Support\Facades\Event;
 use MailCarrier\Commands\InstallCommand;
 use MailCarrier\Commands\SocialCommand;
@@ -103,6 +102,10 @@ class MailCarrierServiceProvider extends PackageServiceProvider
      */
     public function packageBooted(): void
     {
+        FilamentAsset::register([
+            Js::make('mailcarrier-hljs', asset('js/highlight.js')),
+        ]);
+
         Template::observe(TemplateObserver::class);
         Layout::observe(LayoutObserver::class);
         Log::observe(LogObserver::class);

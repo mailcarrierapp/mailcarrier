@@ -1,5 +1,4 @@
 const mix = require('laravel-mix');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 /*
 |--------------------------------------------------------------------------
@@ -14,17 +13,8 @@ const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 mix
   .setPublicPath('dist/')
-  .webpackConfig({
-    plugins: [
-      new MonacoWebpackPlugin({
-        languages: ['twig', 'json'],
-        features: ['!quickCommand'],
-        globalAPI: true,
-        filename: 'js/[name].worker.js'
-      })
-    ]
-  })
-  .js('resources/js/monaco.js', 'dist/js')
+  .js('resources/js/highlight.js', 'dist/js')
+  .sass('resources/css/highlight.scss', 'dist/css')
   .postCss('resources/css/theme.css', 'dist/css', [
     require('tailwindcss'),
   ]);

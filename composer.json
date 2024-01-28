@@ -29,7 +29,8 @@
         "ralphjsmit/laravel-filament-components": "^1.2",
         "socialiteproviders/manager": "^4.3",
         "spatie/data-transfer-object": "^3.9.1",
-        "twig/twig": "^3.5.1"
+        "twig/twig": "^3.5.1",
+        "wiebenieuwenhuis/filament-code-editor": "^1.0"
     },
     "require-dev": {
         "filament/upgrade": "^3.2",

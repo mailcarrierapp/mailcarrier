@@ -1,4 +1,13 @@
-<div class="text-sm">
+<div
+    class="text-sm"
+    x-init="
+        if (localStorage.getItem('theme') === 'light') {
+            $refs.variables.classList.add('theme-light');
+        } else {
+            $refs.variables.classList.add('theme-dark');
+        }
+
+        hljs.highlightAll()">
     <div>
         <p class="font-bold mb-1">Sender</p>
         @if ($log->sender->name)
@@ -36,25 +45,10 @@
 
     <div class="mt-4">
         <p class="font-bold mb-1">Variables</p>
-        <div
-            id="editor"
-            class="w-full rounded-lg shadow-sm focus:border-primary-600 focus:ring-1 focus:ring-inset focus:ring-primary-600 disabled:opacity-70 border-gray-300 dark:border-gray-600 overflow-hidden"
-            style="min-height: 200px"
-            wire:ignore>
-        </div>
+        <pre x-ref="variables" class="hljs w-full rounded p-3 shadow-sm focus:border-primary-600 focus:ring-1 focus:ring-inset focus:ring-primary-600 disabled:opacity-70 border border-gray-300/50 dark:border-gray-600/50"><code class="language-json">{!! $variables !!}</code></pre>
     </div>
-
-    <script wire:ignore>
-    monaco.editor.create(document.getElementById('editor'), {
-        value: `{!! $variables !!}`,
-        language: 'json',
-        readOnly: true,
-        automaticLayout: true,
-        scrollBeyondLastLine: false,
-        theme: 'vs-dark',
-        minimap: {
-            enabled: false,
-        },
-    });
-    </script>
 </div>
+
+@assets
+<link rel="stylesheet" href="{{ asset('css/highlight.css') }}" />
+@endassets

@@ -32,10 +32,7 @@ class LogResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('recipient')
-                    ->searchable()
-                    ->tooltip(
-                        fn (Tables\Columns\TextColumn $column): ?string => strlen($column->getState()) > $column->getCharacterLimit() ? $column->getState() : null
-                    ),
+                    ->searchable(),
 
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
@@ -145,11 +142,7 @@ class LogResource extends Resource
                 ->icon('heroicon-o-information-circle')
                 ->modalContent(fn (Log $record) => View::make('mailcarrier::modals.details', [
                     'log' => $record,
-                    'variables' => str_replace( // Fix double quotes inside strings
-                        '\"',
-                        '\\\"',
-                        json_encode($record->variables, JSON_PRETTY_PRINT)
-                    ),
+                    'variables' => json_encode($record->variables, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
                 ]))
                 ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Close')

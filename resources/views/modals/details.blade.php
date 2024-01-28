@@ -17,31 +17,31 @@
         @endif
     </div>
 
-    @if ($log->cc)
-        <div class="mt-4">
-            <p class="font-bold mb-1">Cc</p>
-            @foreach ($log->cc as $cc)
-                @if ($cc->name)
-                    <p>{{ $cc->name }} &lt;{{ $cc->email }}&gt;</p>
-                @else
-                    <p>{{ $cc->email }}</p>
-                @endif
-            @endforeach
-        </div>
-    @endif
+    <div class="mt-4">
+        <p class="font-bold mb-1">Cc</p>
+        @forelse (($log->cc ?: []) as $cc)
+            @if ($cc->name)
+                <p>{{ $cc->name }} &lt;{{ $cc->email }}&gt;</p>
+            @else
+                <p>{{ $cc->email }}</p>
+            @endif
+        @empty
+            <p class="italic opacity-80 text-xs">No data available</p>
+        @endforelse
+    </div>
 
-    @if ($log->bcc)
-        <div class="mt-4">
-            <p class="font-bold mb-1">Bcc</p>
-            @foreach ($log->bcc as $bcc)
-                @if ($bcc->name)
-                    <p>{{ $bcc->name }} &lt;{{ $bcc->email }}&gt;</p>
-                @else
-                    <p>{{ $bcc->email }}</p>
-                @endif
-            @endforeach
-        </div>
-    @endif
+    <div class="mt-4">
+        <p class="font-bold mb-1">Bcc</p>
+        @forelse (($log->bcc ?: []) as $bcc)
+            @if ($bcc->name)
+                <p>{{ $bcc->name }} &lt;{{ $bcc->email }}&gt;</p>
+            @else
+                <p>{{ $bcc->email }}</p>
+            @endif
+        @empty
+            <p class="italic opacity-80 text-xs">No data available</p>
+        @endforelse
+    </div>
 
     <div class="mt-4">
         <p class="font-bold mb-1">Variables</p>

@@ -2,7 +2,7 @@
 
 namespace MailCarrier\Resources\LayoutResource\Pages;
 
-use Filament\Pages\Actions\DeleteAction;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use MailCarrier\Models\Layout;
 use MailCarrier\Resources\LayoutResource;

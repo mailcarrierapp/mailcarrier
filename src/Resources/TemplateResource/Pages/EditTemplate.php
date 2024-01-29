@@ -4,8 +4,7 @@ namespace MailCarrier\Resources\TemplateResource\Pages;
 
 use Filament\Forms;
 use Filament\Notifications\Notification;
-use Filament\Pages\Actions\Action;
-use Filament\Pages\Actions\DeleteAction;
+use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
@@ -29,7 +28,7 @@ class EditTemplate extends EditRecord
     protected function getActions(): array
     {
         return [
-            Action::make('send_test')
+            Actions\Action::make('send_test')
                 ->label('Send test')
                 ->icon('heroicon-o-paper-airplane')
                 ->extraAttributes([
@@ -37,7 +36,7 @@ class EditTemplate extends EditRecord
                 ])
                 // Build the modal
                 ->action($this->sendTestMail(...))
-                ->modalButton('Send')
+                ->modalSubmitActionLabel('Send')
                 ->form([
                     Forms\Components\TextInput::make('email')
                         ->email()
@@ -47,7 +46,7 @@ class EditTemplate extends EditRecord
                         ->valueLabel('Variable value'),
                     Forms\Components\Checkbox::make('enqueue'),
                 ]),
-            DeleteAction::make()
+            Actions\DeleteAction::make()
                 ->disabled($this->getRecord()->is_locked || !TemplateResource::canDelete($this->record)),
         ];
     }

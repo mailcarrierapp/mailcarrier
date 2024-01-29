@@ -79,7 +79,16 @@ class TemplateResource extends Resource
                     }),
             ])
             ->bulkActions([])
-            ->defaultSort('name');
+            ->defaultSort('name')
+            ->emptyStateHeading('No template found')
+            ->emptyStateDescription('Wanna create your first template now?')
+            ->emptyStateActions([
+                Tables\Actions\Action::make('create')
+                    ->label('Create template')
+                    ->url(URL::route('filament.mailcarrier.resources.templates.create'))
+                    ->icon('heroicon-o-plus')
+                    ->button(),
+            ]);
     }
 
     /**

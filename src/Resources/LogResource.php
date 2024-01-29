@@ -8,6 +8,7 @@ use Filament\Support\Enums\Alignment;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
@@ -96,6 +97,7 @@ class LogResource extends Resource
                     ->since()
                     ->tooltip(fn (Log $record): string => $record->created_at->toRfc7231String()),
             ])
+            ->poll(Config::get('mailcarrier.logs.table_refresh_poll', '5s'))
             ->recordAction('details')
             ->filters(static::getTableFilters(), layout: FiltersLayout::Modal)
             ->filtersTriggerAction(

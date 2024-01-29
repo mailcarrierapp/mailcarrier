@@ -48,6 +48,17 @@ return [
         |
         */
         'prunable_period' => '3 months',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Table refresh time
+        |--------------------------------------------------------------------------
+        |
+        | The polling time to automatically refresh the logs table.
+        | Set it to null to disable the poll refresh.
+        |
+        */
+        'table_refresh_poll' => '5s',
     ],
 
     'attachments' => [

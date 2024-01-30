@@ -32,7 +32,7 @@ class EditTemplate extends EditRecord
                 ->label('Send test')
                 ->icon('heroicon-o-paper-airplane')
                 ->extraAttributes([
-                    'class' => 'has-paper-airplane-icon !bg-purple-500',
+                    'class' => 'button-send-test !bg-purple-500',
                 ])
                 // Build the modal
                 ->action($this->sendTestMail(...))

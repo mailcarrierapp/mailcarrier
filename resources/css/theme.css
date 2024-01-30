@@ -2,15 +2,16 @@
 
 @config '../../tailwind.config.js';
 
-.has-paper-airplane-icon svg {
-  transform: rotate(35deg);
-  margin-left: 0;
+.button-send-test svg {
+  position: relative;
+  top: -2px;
+  transform: rotate(-40deg);
 }
 
 .filament-login-page h2 {
-    display: none;
+  display: none;
 }
 
 .filament-login-page img.brand-logo {
-    @apply mb-6;
+  @apply mb-6;
 }

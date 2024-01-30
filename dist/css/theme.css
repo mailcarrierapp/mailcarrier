@@ -2146,8 +2146,14 @@ select {
 .h-screen {
   height: 100vh;
 }
+.h-\[300px\] {
+  height: 300px;
+}
 .max-h-96 {
   max-height: 24rem;
+}
+.max-h-full {
+  max-height: 100%;
 }
 .min-h-\[theme\(spacing\.48\)\] {
   min-height: 12rem;
@@ -2381,10 +2387,6 @@ select {
 }
 .-rotate-180 {
   --tw-rotate: -180deg;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-.-rotate-45 {
-  --tw-rotate: -45deg;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .rotate-180 {
@@ -5249,11 +5251,6 @@ select {
 
 .\[\&\>\*\:last-child\]\:mb-0>*:last-child {
   margin-bottom: 0px;
-}
-
-.\[\&\>svg\]\:-rotate-45>svg {
-  --tw-rotate: -45deg;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .\[\&_\.choices\\_\\_inner\]\:ps-0 .choices__inner {

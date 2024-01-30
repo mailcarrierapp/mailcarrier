@@ -9,11 +9,11 @@ use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\HtmlString;
+use MailCarrier\Forms\Components\CodeEditor;
 use MailCarrier\Models\Layout;
 use MailCarrier\Models\User;
 use MailCarrier\Resources\LayoutResource\Pages;
 use RalphJSmit\Filament\Components\Forms\Timestamps;
-use Wiebenieuwenhuis\FilamentCodeEditor\Components\CodeEditor;
 
 class LayoutResource extends Resource
 {

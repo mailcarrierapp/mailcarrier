@@ -11,13 +11,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\HtmlString;
 use MailCarrier\Actions\Templates\GenerateSlug;
-use MailCarrier\Forms\Components\MonacoEditor;
+use MailCarrier\Forms\Components\CodeEditor;
 use MailCarrier\Models\Layout;
 use MailCarrier\Models\Template;
 use MailCarrier\Models\User;
 use MailCarrier\Resources\TemplateResource\Pages;
 use RalphJSmit\Filament\Components\Forms\Timestamps;
-use Wiebenieuwenhuis\FilamentCodeEditor\Components\CodeEditor;
 
 class TemplateResource extends Resource
 {

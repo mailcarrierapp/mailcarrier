@@ -165,11 +165,13 @@ class TemplateResource extends Resource
                         return null;
                     }
 
-                    $viewLayoutUrl = URL::route('filament.resources.layouts.edit', ['record' => $record->layout_id]);
-                    $icon = svg('heroicon-o-external-link', 'w-4 h-4')->toHtml();
+                    $viewLayoutUrl = URL::route('filament.mailcarrier.resources.layouts.edit', [
+                        'record' => $record->layout_id,
+                    ]);
+                    $icon = svg('heroicon-o-arrow-top-right-on-square', 'w-5 h-5')->toHtml();
 
                     return new HtmlString(<<<HTML
-                        <a class="ml-2 text-primary-500 text-xs underline block" href="{$viewLayoutUrl}" target="_blank">{$icon}</a>
+                        <a class="text-primary-500 text-xs block" href="{$viewLayoutUrl}" target="_blank">{$icon}</a>
                     HTML);
                 }),
 

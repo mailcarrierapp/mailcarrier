@@ -46,6 +46,22 @@ class EditTemplate extends EditRecord
                         ->valueLabel('Variable value'),
                     Forms\Components\Checkbox::make('enqueue'),
                 ]),
+
+            Actions\Action::make('save')
+                ->label(__('Save changes'))
+                ->action('save'),
+        ];
+    }
+
+    /**
+     * Get resource after-form actions.
+     */
+    protected function getFormActions(): array
+    {
+        return [
+            Actions\Action::make('save')
+                ->label(__('Save changes'))
+                ->action('save'),
             Actions\DeleteAction::make()
                 ->disabled($this->getRecord()->is_locked || !TemplateResource::canDelete($this->record)),
         ];

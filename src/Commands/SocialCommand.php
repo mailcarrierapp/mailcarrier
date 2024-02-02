@@ -5,6 +5,7 @@ namespace MailCarrier\Commands;
 use Illuminate\Support\Str;
 use MailCarrier\Helpers\SocialiteProviders;
 use Symfony\Component\Process\Process;
+use function Laravel\Prompts\select;
 
 class SocialCommand extends Command
 {
@@ -18,14 +19,14 @@ class SocialCommand extends Command
 
     public function handle(): int
     {
-        $this->chosenDriver = $this->choice(
+        $this->chosenDriver = select(
             'Select your social auth provider',
             [
                 ...SocialiteProviders::getNativeSocialiteProviders(),
                 ...SocialiteProviders::getProvidersMap(),
                 self::DRIVER_OTHER,
             ],
-            default: self::DRIVER_OTHER
+            scroll: 8,
         );
 
         $this->installDependency();

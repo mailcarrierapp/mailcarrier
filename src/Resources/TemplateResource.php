@@ -119,12 +119,15 @@ class TemplateResource extends Resource
 
             Forms\Components\TextInput::make('slug')
                 ->label('Unique identifier (slug)')
+                ->placeholder('Leave empty to auto generate')
                 ->helperText(new HtmlString('<span class="text-xs text-slate-500 pl-2">Use this as "template" key in your APIs</span>'))
                 ->columnSpanFull()
-                ->disabled()
-                ->dehydrated(false) // Prevent it from being updated
+                ->required(fn (?Template $record) => !is_null($record))
+                // Disable field UI if the record exists and user can't unlock it
+                ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
+                // Save the field if record does not exist or user can unlock it
+                ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked)
                 ->extraInputAttributes([
-                    'readonly' => 'readonly',
                     'onClick' => 'this.select()',
                 ]),
 
@@ -175,7 +178,7 @@ class TemplateResource extends Resource
                 ->content(new HtmlString('<div class="h-1 border-b border-slate-100 dark:border-slate-700"></div>')),
 
             Forms\Components\Placeholder::make('Created by')
-                ->content(fn (Template $record) => $record->user?->getFilamentName() ?: '-'),
+                ->content(fn (?Template $record) => $record?->user?->getFilamentName() ?: '-'),
 
             ...Timestamps::make(),
         ]);

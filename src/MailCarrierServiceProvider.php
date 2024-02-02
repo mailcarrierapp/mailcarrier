@@ -57,6 +57,7 @@ class MailCarrierServiceProvider extends PackageServiceProvider
             ->name('mailcarrier')
             ->hasRoutes(['api', 'web'])
             ->hasViews()
+            ->hasAssets()
             ->hasCommands([
                 InstallCommand::class,
                 UpgradeCommand::class,
@@ -73,11 +74,6 @@ class MailCarrierServiceProvider extends PackageServiceProvider
                 '6_transform_logs_cc_bcc_array',
             ])
             ->runsMigrations();
-
-        // We use this over standard `->hasAssets()` to publish them inside the public vendor directly
-        $this->publishes([
-            $this->package->basePath('/../dist') => public_path(),
-        ], "{$this->package->shortName()}-assets");
     }
 
     /**
@@ -103,7 +99,7 @@ class MailCarrierServiceProvider extends PackageServiceProvider
     public function packageBooted(): void
     {
         FilamentAsset::register([
-            Js::make('mailcarrier-hljs', asset('js/highlight.js')),
+            Js::make('mailcarrier-hljs', asset('vendor/mailcarrier/js/highlight.js')),
         ]);
 
         Template::observe(TemplateObserver::class);

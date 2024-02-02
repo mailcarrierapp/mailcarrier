@@ -50,5 +50,5 @@
 </div>
 
 @assets
-<link rel="stylesheet" href="{{ asset('css/highlight.css') }}" />
+<link rel="stylesheet" href="{{ asset('vendor/mailcarrier/css/highlight.css') }}" />
 @endassets

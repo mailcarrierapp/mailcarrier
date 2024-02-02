@@ -12,9 +12,9 @@ const mix = require('laravel-mix');
 */
 
 mix
-  .setPublicPath('dist/')
-  .js('resources/js/highlight.js', 'dist/js')
-  .sass('resources/css/highlight.scss', 'dist/css')
-  .postCss('resources/css/theme.css', 'dist/css', [
+  .setPublicPath('resources/dist/')
+  .js('resources/js/highlight.js', 'js')
+  .sass('resources/css/highlight.scss', 'css')
+  .postCss('resources/css/theme.css', 'css', [
     require('tailwindcss'),
   ]);

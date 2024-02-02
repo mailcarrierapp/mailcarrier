@@ -33,10 +33,10 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->font('Poppins')
             ->brandName('MailCarrier')
-            ->favicon(asset('images/favicon.ico'))
-            ->brandLogo(asset('images/logo-dark.svg'))
-            ->darkModeBrandLogo(asset('images/logo-light.svg'))
-            ->theme(asset('css/theme.css'))
+            ->favicon(asset('vendor/mailcarrier/images/favicon.ico'))
+            ->brandLogo(asset('vendor/mailcarrier/images/logo-dark.svg'))
+            ->darkModeBrandLogo(asset('vendor/mailcarrier/images/logo-light.svg'))
+            ->theme(asset('vendor/mailcarrier/css/theme.css'))
             ->colors([
                 'primary' => Color::Indigo,
             ])

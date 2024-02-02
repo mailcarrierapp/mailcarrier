@@ -5,11 +5,9 @@ namespace MailCarrier\Resources;
 use Filament\Tables\Actions\Action as TablesAction;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\Alignment;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use MailCarrier\Actions\Logs\GetTriggers;
@@ -28,7 +26,7 @@ class LogResource extends Resource
     /**
      * List all the records.
      */
-    public static function table(Table $table): Table
+    public static function table(Tables\Table $table): Tables\Table
     {
         return $table
             ->columns([
@@ -78,20 +76,6 @@ class LogResource extends Resource
                             ->modalFooterActionsAlignment(Alignment::Center)
                     ),
 
-                Tables\Columns\TextColumn::make('template_frozen')
-                    ->label('Template')
-                    ->url(fn (Log $record): ?string =>
-                        is_null($record->template_id) ?
-                            null :
-                            URL::route('filament.mailcarrier.resources.templates.edit', [
-                                'record' => $record->template_id,
-                            ])
-                    )
-                    ->openUrlInNewTab()
-                    ->formatStateUsing(fn (Log $record): HtmlString =>
-                        static::getTemplateValue($record->template_frozen, $record->template)
-                    ),
-
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Sent at')
                     ->since()
@@ -127,10 +111,13 @@ class LogResource extends Resource
     protected static function getTableFilters(): array
     {
         return [
+            Tables\Filters\SelectFilter::make('template')
+                ->relationship('template', 'name')
+                ->searchable()
+                ->preload(),
+
             Tables\Filters\SelectFilter::make('trigger')
                 ->options((new GetTriggers())->run()),
-            Tables\Filters\SelectFilter::make('status')
-                ->options(LogStatus::toEntries()),
         ];
     }
 
@@ -145,6 +132,7 @@ class LogResource extends Resource
                 ->modalContent(fn (Log $record) => View::make('mailcarrier::modals.details', [
                     'log' => $record,
                     'variables' => json_encode($record->variables, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+                    'template' => static::getTemplateValue($record->template_frozen, $record->template),
                 ]))
                 ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Close')
@@ -183,7 +171,7 @@ class LogResource extends Resource
         };
 
         return new HtmlString(
-            ($icon ? svg($icon, 'w-4 h-4 inline-block mr-1 ' . $iconColor)->toHtml() : '') .
+            ($icon ? svg($icon, 'w-5 h-5 inline-block mr-1 ' . $iconColor)->toHtml() : '') .
             $label .
             ($subtitle ? '<p class="text-xs mt-1 text-slate-300">' . $subtitle . '</p>' : '')
         );

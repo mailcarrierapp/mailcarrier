@@ -44,8 +44,13 @@
     </div>
 
     <div class="mt-4">
+        <p class="font-bold mb-1">Template</p>
+        {!! $template !!}
+    </div>
+
+    <div class="mt-4">
         <p class="font-bold mb-1">Variables</p>
-        <pre x-ref="variables" class="hljs w-full rounded p-3 shadow-sm focus:border-primary-600 focus:ring-1 focus:ring-inset focus:ring-primary-600 disabled:opacity-70 border border-gray-300/50 dark:border-gray-600/50"><code class="language-json">{!! $variables !!}</code></pre>
+        <pre wire:ignore x-ref="variables" class="hljs w-full rounded p-3 shadow-sm focus:border-primary-600 focus:ring-1 focus:ring-inset focus:ring-primary-600 disabled:opacity-70 border border-gray-300/50 dark:border-gray-600/50"><code class="language-json">{!! $variables !!}</code></pre>
     </div>
 </div>
 

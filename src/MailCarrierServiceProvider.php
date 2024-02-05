@@ -56,6 +56,7 @@ class MailCarrierServiceProvider extends PackageServiceProvider
         $package
             ->name('mailcarrier')
             ->hasRoutes(['api', 'web'])
+            ->hasConfigFile()
             ->hasViews()
             ->hasAssets()
             ->hasCommands([

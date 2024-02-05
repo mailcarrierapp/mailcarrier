@@ -2,28 +2,47 @@
 
 namespace MailCarrier\Resources\LayoutResource\Pages;
 
-use Filament\Pages\Actions\DeleteAction;
+use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use MailCarrier\Models\Layout;
 use MailCarrier\Resources\LayoutResource;
 
 class EditLayout extends EditRecord
 {
     protected static string $resource = LayoutResource::class;
 
-    /** @var \MailCarrier\Models\Layout */
-    public $record;
+    public function getRecord(): Layout
+    {
+        return $this->record;
+    }
 
     /**
      * Get resource top-right actions.
      */
     protected function getActions(): array
     {
-        $canBeDeleted = !$this->record->is_locked &&
+        return [
+            Actions\Action::make('save')
+                ->label(__('Save changes'))
+                ->action('save'),
+        ];
+    }
+
+    /**
+     * Get resource after-form actions.
+     */
+    protected function getFormActions(): array
+    {
+        $canBeDeleted = !$this->getRecord()->is_locked &&
             LayoutResource::canDelete($this->record) &&
-            !$this->record->templates()->exists();
+            !$this->record->templates()->exists(); // @phpstan-ignore-line
 
         return [
-            DeleteAction::make()
+            Actions\Action::make('save')
+                ->label(__('Save changes'))
+                ->action('save'),
+
+            Actions\DeleteAction::make()
                 ->disabled(!$canBeDeleted),
         ];
     }

@@ -3,22 +3,26 @@
 namespace MailCarrier\Widgets;
 
 use Carbon\Carbon;
-use Filament\Widgets\LineChartWidget;
+use Filament\Widgets\ChartWidget;
 use MailCarrier\Actions\Widgets\GetSentFailureStats;
 use MailCarrier\Enums\Dashboard\SentFailureChartFilter;
 
-class SentFailureChartWidget extends LineChartWidget
+class SentFailureChartWidget extends ChartWidget
 {
+    protected static ?string $heading = 'Sent and failure over time';
+
     protected static ?string $pollingInterval = null;
 
     protected int|string|array $columnSpan = 2;
+
+    protected static ?string $maxHeight = '300px';
 
     public ?string $filter = 'today';
 
     /**
      * Get widget title.
      */
-    protected function getHeading(): string
+    public function getHeading(): string
     {
         return 'Sent and failure over time';
     }
@@ -71,5 +75,10 @@ class SentFailureChartWidget extends LineChartWidget
                 ->pluck('date')
                 ->map(fn (string $date) => Carbon::parse($date)->format($labelFormat)),
         ];
+    }
+
+    protected function getType(): string
+    {
+        return 'line';
     }
 }

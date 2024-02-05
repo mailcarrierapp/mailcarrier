@@ -3,6 +3,9 @@
 namespace MailCarrier\Commands;
 
 use MailCarrier\Actions\Auth\GenerateToken;
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\note;
+use function Laravel\Prompts\text;
 
 class TokenCommand extends Command
 {
@@ -12,14 +15,14 @@ class TokenCommand extends Command
 
     public function handle(): int
     {
-        $name = $this->validateInput(
-            fn () => $this->ask('What\'s the name of the token?', 'Unnamed'),
-            'name',
-            ['required']
+        $name = text(
+            'Token name',
+            placeholder: 'Unnamed',
+            required: true,
         );
 
-        $this->info('This is your brand new token:');
-        $this->comment((new GenerateToken())->run($name));
+        info('Generated token:');
+        note((new GenerateToken())->run($name));
 
         return self::SUCCESS;
     }

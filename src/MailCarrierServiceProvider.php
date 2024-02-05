@@ -2,10 +2,8 @@
 
 namespace MailCarrier;
 
-use Filament\Events\ServingFilament;
-use Filament\Facades\Filament;
-use Filament\Navigation\NavigationBuilder;
-use Filament\PluginServiceProvider;
+use Filament\Support\Assets\Js;
+use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Support\Facades\Event;
 use MailCarrier\Commands\InstallCommand;
 use MailCarrier\Commands\SocialCommand;
@@ -20,6 +18,7 @@ use MailCarrier\Models\Template;
 use MailCarrier\Observers\LayoutObserver;
 use MailCarrier\Observers\LogObserver;
 use MailCarrier\Observers\TemplateObserver;
+use MailCarrier\Providers\Filament\MailCarrierPanelProvider;
 use MailCarrier\Resources\LayoutResource;
 use MailCarrier\Resources\LogResource;
 use MailCarrier\Resources\TemplateResource;
@@ -27,8 +26,9 @@ use MailCarrier\Widgets\SentFailureChartWidget;
 use MailCarrier\Widgets\StatsOverviewWidget;
 use MailCarrier\Widgets\TopTriggersWidget;
 use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class MailCarrierServiceProvider extends PluginServiceProvider
+class MailCarrierServiceProvider extends PackageServiceProvider
 {
     public static string $name = 'mailcarrier';
 
@@ -49,20 +49,16 @@ class MailCarrierServiceProvider extends PluginServiceProvider
     ];
 
     /**
-     * The package is being configured.
-     */
-    public function packageConfiguring(Package $package): void
-    {
-        Event::listen(ServingFilament::class, $this->servingFilament(...));
-    }
-
-    /**
      * The package has been configured.
      */
-    public function packageConfigured(Package $package): void
+    public function configurePackage(Package $package): void
     {
         $package
+            ->name('mailcarrier')
             ->hasRoutes(['api', 'web'])
+            ->hasConfigFile()
+            ->hasViews()
+            ->hasAssets()
             ->hasCommands([
                 InstallCommand::class,
                 UpgradeCommand::class,
@@ -79,11 +75,6 @@ class MailCarrierServiceProvider extends PluginServiceProvider
                 '6_transform_logs_cc_bcc_array',
             ])
             ->runsMigrations();
-
-        // We use this over standard `->hasAssets()` to publish them inside the public vendor directly
-        $this->publishes([
-            $this->package->basePath('/../dist') => public_path(),
-        ], "{$this->package->shortName()}-assets");
     }
 
     /**
@@ -91,9 +82,9 @@ class MailCarrierServiceProvider extends PluginServiceProvider
      */
     public function packageRegistered(): void
     {
-        parent::packageRegistered();
-
         // Register dependencies
+        $this->app->register(MailCarrierPanelProvider::class);
+
         if ($this->app->runningInConsole()) {
             $this->app->register(\Livewire\LivewireServiceProvider::class);
             $this->app->register(\Filament\FilamentServiceProvider::class);
@@ -108,7 +99,9 @@ class MailCarrierServiceProvider extends PluginServiceProvider
      */
     public function packageBooted(): void
     {
-        parent::packageBooted();
+        FilamentAsset::register([
+            Js::make('mailcarrier-hljs', asset('vendor/mailcarrier/js/highlight.js')),
+        ]);
 
         Template::observe(TemplateObserver::class);
         Layout::observe(LayoutObserver::class);
@@ -116,24 +109,6 @@ class MailCarrierServiceProvider extends PluginServiceProvider
 
         // Register Social Auth event listener
         $this->listenSocialiteEvents();
-    }
-
-    /**
-     * Register Filament settings.
-     */
-    public function servingFilament(): void
-    {
-        Filament::registerTheme(mix('css/app.css'));
-
-        // Edit the navigation
-        Filament::navigation(
-            fn (NavigationBuilder $builder): NavigationBuilder => $builder
-                ->items(LogResource::getNavigationItems())
-                ->group('Design', [
-                    ...LayoutResource::getNavigationItems(),
-                    ...TemplateResource::getNavigationItems(),
-                ])
-        );
     }
 
     /**

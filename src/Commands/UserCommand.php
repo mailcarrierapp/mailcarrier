@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use MailCarrier\Models\User;
+use function Laravel\Prompts\password;
+use function Laravel\Prompts\text;
 
 class UserCommand extends Command
 {
@@ -40,21 +42,22 @@ class UserCommand extends Command
     protected function getUserData(): array
     {
         $data = [
-            'name' => $this->validateInput(fn () => $this->ask('Name'), 'name', ['required']),
-            'email' => $this->validateInput(fn () => $this->ask('Email address'), 'email', [
-                'required',
-                'email',
-                'unique:MailCarrier\Models\User',
-            ]),
-            'password' => $this->validateInput(fn () => $this->secret('Password (leave it blank to generate a random one)'), 'password', [
-                'nullable',
-                'min:8',
-            ]),
+            'name' => text('Name', required: true),
+            'email' => text(
+                'Email address',
+                required: true,
+                validate: fn (string $value) => $this->validatePrompt($value, ['email', 'unique:\MailCarrier\Models\User,email']),
+            ),
+            'password' => password(
+                'Password',
+                hint: 'Leave it blank for a random one',
+                validate: fn (?string $value) => $this->validatePrompt($value, ['nullable', 'min:8']),
+            ),
         ];
 
         // Generate a password if not provided
         if (!$data['password']) {
-            $data['password'] = $this->rawRandomPassword = md5(Str::random(32) . Str::uuid()->toString());
+            $data['password'] = $this->rawRandomPassword = Str::password(16);
         }
 
         // Finally encrypt the password

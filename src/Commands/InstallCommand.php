@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use MailCarrier\Actions\Auth\EnsureAuthManagerExists;
 use Symfony\Component\Process\Process;
+use function Laravel\Prompts\confirm;
 
 class InstallCommand extends Command
 {
@@ -131,12 +132,6 @@ class InstallCommand extends Command
 
         @mkdir($errorsTargetDir, recursive: true);
         copy(__DIR__ . '/../../resources/views/stubs/401.blade.php.stub', $errorsTargetDir . '/401.blade.php');
-
-        // Filament
-        $targetDir = getcwd() . '/resources/views/vendor/filament/components';
-
-        @mkdir($targetDir, recursive: true);
-        copy(__DIR__ . '/../../resources/views/stubs/brand.blade.php.stub', $targetDir . '/brand.blade.php');
     }
 
     /**
@@ -212,40 +207,9 @@ class InstallCommand extends Command
     {
         $this->labeledLine('Installing dashboard...', 'DOING', 'blue-400');
 
-        (new Process(['composer', 'require', 'filament/filament', '--no-scripts']))
-            ->mustRun();
-
-        $this->callSilently('vendor:publish', [
-            '--tag' => 'filament-config',
+        $this->callSilently('filament:install', [
+            '--no-interaction' => true,
         ]);
-
-        // Replace config values
-        $filamentConfigPath = getcwd() . '/config/filament.php';
-        $filamentConfig = file_get_contents($filamentConfigPath);
-
-        $filamentConfig = str_replace(
-            [
-                "'path' => env('FILAMENT_PATH', 'admin')",
-                "'brand' => env('APP_NAME')",
-                "'dark_mode' => false",
-                "'favicon' => null,",
-                'Widgets\AccountWidget::class,',
-                'Widgets\FilamentInfoWidget::class,',
-                'Pages\Dashboard::class,',
-            ],
-            [
-                "'path' => '/'",
-                "'brand' => 'MailCarrier'",
-                "'dark_mode' => true",
-                "'favicon' => '/images/favicon.ico',",
-                '',
-                '',
-                'MailCarrier\Pages\Dashboard::class,',
-            ],
-            $filamentConfig
-        );
-
-        file_put_contents($filamentConfigPath, $filamentConfig);
 
         $this->labeledLine('Dashboard installed.');
     }
@@ -295,7 +259,7 @@ class InstallCommand extends Command
      */
     protected function setupSocialAuth(): void
     {
-        if ($this->confirm('Do you want to setup Social Auth instead of regular one?')) {
+        if (confirm('Do you want to setup Social Auth instead of regular one?')) {
             $this->call('mailcarrier:social');
         } else {
             (new EnsureAuthManagerExists)->run();
@@ -312,7 +276,7 @@ class InstallCommand extends Command
      */
     protected function createFirstUser(): void
     {
-        if ($this->confirm('Do you want to create a user?', true)) {
+        if (confirm('Do you want to create a user?', true)) {
             $this->call('mailcarrier:user');
         } else {
             $this->line('You can create as many users as you want later on by running:');

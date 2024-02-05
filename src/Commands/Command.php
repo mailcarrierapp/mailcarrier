@@ -9,25 +9,13 @@ abstract class Command extends \Illuminate\Console\Command
 {
     /**
      * Validate an incoming input.
-     *
-     * @see https://github.com/filamentphp/filament/blob/2.x/packages/admin/src/Commands/Concerns/CanValidateInput.php
      */
-    protected function validateInput(\Closure $callback, string $field, array $rules): ?string
+    protected function validatePrompt(mixed $value, array $rules): ?string
     {
-        $input = $callback();
-
-        $validator = Validator::make(
-            [$field => $input],
-            [$field => $rules],
-        );
-
-        if ($validator->fails()) {
-            $this->error($validator->errors()->first());
-
-            $input = $this->validateInput($callback, $field, $rules);
-        }
-
-        return $input;
+        return Validator::make(
+            ['field' => $value],
+            ['field' => $rules],
+        )->errors()->first('field');
     }
 
     /**

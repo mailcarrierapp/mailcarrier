@@ -3,19 +3,16 @@
     breakpoints: {
         mobile: {
             label: 'Mobile',
-            icon: 'heroicon-o-device-mobile',
             width: '320px',
             height: '568px',
         },
         tablet: {
             label: 'Tablet',
-            icon: 'heroicon-o-device-tablet',
             width: '768px',
             height: '1024px',
         },
         desktop: {
             label: 'Desktop',
-            icon: 'heroicon-o-desktop-computer',
             width: null,
             height: '50vh',
         },
@@ -32,7 +29,7 @@
                     x-bind:aria-selected="size === key"
                     x-on:click="size = key">
                     <!-- Icon -->
-                    <x-heroicon-o-device-mobile
+                    <x-heroicon-o-device-phone-mobile
                         x-show="key === 'mobile'"
                         class="h-5 w-5 flex-none"
                         x-bind:class="size === key ? 'stroke-primary-500' : 'stroke-slate-600 dark:stroke-slate-400'" />
@@ -40,7 +37,7 @@
                         x-show="key === 'tablet'"
                         class="h-5 w-5 flex-none"
                         x-bind:class="size === key ? 'stroke-primary-500' : 'stroke-slate-600 dark:stroke-slate-400'" />
-                    <x-heroicon-o-desktop-computer
+                    <x-heroicon-o-computer-desktop
                         x-show="key === 'desktop'"
                         class="h-5 w-5 flex-none"
                         x-bind:class="size === key ? 'stroke-primary-500' : 'stroke-slate-600 dark:stroke-slate-400'" />

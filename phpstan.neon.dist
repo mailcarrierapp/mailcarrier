@@ -9,3 +9,5 @@ parameters:
     checkModelProperties: true
     checkMissingIterableValueType: false
     reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        - '#Method MailCarrier\\Resources\\(.*)\\Pages\\(.*)::getRecord\(\)(.*)#'

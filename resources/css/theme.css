@@ -1,0 +1,9 @@
+@import '../../vendor/filament/filament/resources/css/theme.css';
+
+@config '../../tailwind.config.js';
+
+.button-send-test svg {
+  position: relative;
+  top: -2px;
+  transform: rotate(-40deg);
+}

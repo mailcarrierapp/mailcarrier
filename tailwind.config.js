@@ -1,7 +1,8 @@
-/** @type {import('tailwindcss').Config} */
-const colors = require('tailwindcss/colors');
+import preset from './vendor/filament/filament/tailwind.config.preset'
 
-module.exports = {
+/** @type {import('tailwindcss').Config} */
+export default {
+  presets: [preset],
   content: [
     './src/Resources/**/*.php',
     './resources/**/*.blade.php',
@@ -9,19 +10,7 @@ module.exports = {
     './resources/**/*.js',
     './vendor/filament/**/*.blade.php',
   ],
-  darkMode: 'class',
-  theme: {
-    extend: {
-      colors: {
-        primary: colors.indigo,
-        danger: colors.rose,
-        success: colors.green,
-        warning: colors.yellow,
-      },
-    },
-  },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
+  safelist: [
+    'dark:flex',
   ],
 }

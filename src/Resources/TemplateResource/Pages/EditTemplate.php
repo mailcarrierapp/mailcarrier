@@ -2,23 +2,25 @@
 
 namespace MailCarrier\Resources\TemplateResource\Pages;
 
+use Filament\Actions;
 use Filament\Forms;
 use Filament\Notifications\Notification;
-use Filament\Pages\Actions\Action;
-use Filament\Pages\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use MailCarrier\Actions\SendMail;
 use MailCarrier\Dto\SendMailDto;
+use MailCarrier\Models\Template;
 use MailCarrier\Resources\TemplateResource;
 
 class EditTemplate extends EditRecord
 {
     protected static string $resource = TemplateResource::class;
 
-    /** @var \MailCarrier\Models\Template */
-    public $record;
+    public function getRecord(): Template
+    {
+        return $this->record;
+    }
 
     /**
      * Get resource top-right actions.
@@ -26,15 +28,15 @@ class EditTemplate extends EditRecord
     protected function getActions(): array
     {
         return [
-            Action::make('send_test')
+            Actions\Action::make('send_test')
                 ->label('Send test')
                 ->icon('heroicon-o-paper-airplane')
                 ->extraAttributes([
-                    'class' => 'has-paper-airplane-icon !bg-purple-500',
+                    'class' => 'button-send-test !bg-purple-500',
                 ])
                 // Build the modal
                 ->action($this->sendTestMail(...))
-                ->modalButton('Send')
+                ->modalSubmitActionLabel('Send')
                 ->form([
                     Forms\Components\TextInput::make('email')
                         ->email()
@@ -44,8 +46,24 @@ class EditTemplate extends EditRecord
                         ->valueLabel('Variable value'),
                     Forms\Components\Checkbox::make('enqueue'),
                 ]),
-            DeleteAction::make()
-                ->disabled($this->record->is_locked || !TemplateResource::canDelete($this->record)),
+
+            Actions\Action::make('save')
+                ->label(__('Save changes'))
+                ->action('save'),
+        ];
+    }
+
+    /**
+     * Get resource after-form actions.
+     */
+    protected function getFormActions(): array
+    {
+        return [
+            Actions\Action::make('save')
+                ->label(__('Save changes'))
+                ->action('save'),
+            Actions\DeleteAction::make()
+                ->disabled($this->getRecord()->is_locked || !TemplateResource::canDelete($this->record)),
         ];
     }
 

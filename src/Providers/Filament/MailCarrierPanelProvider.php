@@ -16,13 +16,14 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use MailCarrier\Pages\Login;
 use MailCarrier\Resources\LayoutResource;
 use MailCarrier\Resources\LogResource;
 use MailCarrier\Resources\TemplateResource;
 use MailCarrier\Widgets\SentFailureChartWidget;
 use MailCarrier\Widgets\StatsOverviewWidget;
 
-class AdminPanelProvider extends PanelProvider
+class MailCarrierPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
@@ -40,6 +41,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Indigo,
             ])
+            ->collapsibleNavigationGroups(false)
             ->discoverResources(in: '../../Resources', for: 'MailCarrier\\Resources')
             ->resources([
                 LogResource::class,
@@ -55,7 +57,6 @@ class AdminPanelProvider extends PanelProvider
                 StatsOverviewWidget::class,
                 SentFailureChartWidget::class,
             ])
-            ->collapsibleNavigationGroups(false)
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -69,6 +70,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->login(Login::class);
     }
 }

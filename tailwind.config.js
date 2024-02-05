@@ -10,4 +10,7 @@ export default {
     './resources/**/*.js',
     './vendor/filament/**/*.blade.php',
   ],
+  safelist: [
+    'dark:flex',
+  ],
 }

@@ -7,11 +7,3 @@
   top: -2px;
   transform: rotate(-40deg);
 }
-
-.filament-login-page h2 {
-  display: none;
-}
-
-.filament-login-page img.brand-logo {
-  @apply mb-6;
-}

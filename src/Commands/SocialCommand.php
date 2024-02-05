@@ -33,7 +33,6 @@ class SocialCommand extends Command
         $this->addServicesConfig();
         $this->addEnvs('.env');
         $this->addEnvs('.env.example');
-        $this->copyView();
 
         $this->info('Social Authentication installed correctly.');
 
@@ -110,17 +109,6 @@ class SocialCommand extends Command
         }
 
         file_put_contents($envPath, $envFile);
-    }
-
-    /**
-     * Publish Social Auth assets.
-     */
-    protected function copyView(): void
-    {
-        $targetDir = getcwd() . '/resources/views/vendor/filament';
-
-        @mkdir($targetDir, recursive: true);
-        copy(__DIR__ . '/../../resources/views/stubs/login.blade.php.stub', $targetDir . '/login.blade.php');
     }
 
     /**

@@ -18,7 +18,7 @@ use MailCarrier\Models\Template;
 use MailCarrier\Observers\LayoutObserver;
 use MailCarrier\Observers\LogObserver;
 use MailCarrier\Observers\TemplateObserver;
-use MailCarrier\Providers\Filament\AdminPanelProvider;
+use MailCarrier\Providers\Filament\MailCarrierPanelProvider;
 use MailCarrier\Resources\LayoutResource;
 use MailCarrier\Resources\LogResource;
 use MailCarrier\Resources\TemplateResource;
@@ -82,7 +82,7 @@ class MailCarrierServiceProvider extends PackageServiceProvider
     public function packageRegistered(): void
     {
         // Register dependencies
-        $this->app->register(AdminPanelProvider::class);
+        $this->app->register(MailCarrierPanelProvider::class);
 
         if ($this->app->runningInConsole()) {
             $this->app->register(\Livewire\LivewireServiceProvider::class);

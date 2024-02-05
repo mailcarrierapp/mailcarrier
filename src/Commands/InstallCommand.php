@@ -208,7 +208,7 @@ class InstallCommand extends Command
         $this->labeledLine('Installing dashboard...', 'DOING', 'blue-400');
 
         $this->callSilently('filament:install', [
-            '--no-interaction' =>  true,
+            '--no-interaction' => true,
         ]);
 
         $this->labeledLine('Dashboard installed.');

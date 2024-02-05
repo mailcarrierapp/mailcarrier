@@ -20,7 +20,7 @@ class Login extends BaseLoginPage
         return parent::authenticate();
     }
 
-    public function getHeading(): string | Htmlable
+    public function getHeading(): string|Htmlable
     {
         return '';
     }

@@ -35,7 +35,7 @@ class EditLayout extends EditRecord
     {
         $canBeDeleted = !$this->getRecord()->is_locked &&
             LayoutResource::canDelete($this->record) &&
-            !$this->record->templates()->exists();
+            !$this->record->templates()->exists(); // @phpstan-ignore-line
 
         return [
             Actions\Action::make('save')

@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use MailCarrier\Models\User;
-
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\text;
 
@@ -52,7 +51,7 @@ class UserCommand extends Command
             'password' => password(
                 'Password',
                 hint: 'Leave it blank for a random one',
-                validate: fn (string|null $value) => $this->validatePrompt($value, ['nullable', 'min:8']),
+                validate: fn (?string $value) => $this->validatePrompt($value, ['nullable', 'min:8']),
             ),
         ];
 

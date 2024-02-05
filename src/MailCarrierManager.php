@@ -90,7 +90,7 @@ class MailCarrierManager
     /**
      * Get the disk storage.
      */
-    public function storage(string $disk = null): Filesystem
+    public function storage(?string $disk = null): Filesystem
     {
         return Storage::disk($disk ?: Config::get('mailcarrier.attachments.disk'));
     }
@@ -98,7 +98,7 @@ class MailCarrierManager
     /**
      * Determine if the a file exists on the disk.
      */
-    public function fileExists(string $resource, string $disk = null): bool
+    public function fileExists(string $resource, ?string $disk = null): bool
     {
         return $this->storage($disk)->exists($resource);
     }
@@ -127,7 +127,7 @@ class MailCarrierManager
     /**
      * Download a file from the storage disk.
      */
-    public function download(string $resource, string $disk = null): ?string
+    public function download(string $resource, ?string $disk = null): ?string
     {
         $content = $this->storage($disk)->get($resource);
 
@@ -137,7 +137,7 @@ class MailCarrierManager
     /**
      * Get the file size from the storage disk.
      */
-    public function getFileSize(string $resource, string $disk = null): int
+    public function getFileSize(string $resource, ?string $disk = null): int
     {
         return $this->storage($disk)->size($resource);
     }

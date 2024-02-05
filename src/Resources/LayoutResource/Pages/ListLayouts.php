@@ -2,8 +2,8 @@
 
 namespace MailCarrier\Resources\LayoutResource\Pages;
 
-use Filament\Resources\Pages\ListRecords;
 use Filament\Actions;
+use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use MailCarrier\Models\Layout;
 use MailCarrier\Resources\LayoutResource;

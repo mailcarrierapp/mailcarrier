@@ -23,8 +23,6 @@ class ListLogs extends ListRecords
             ->latest();
     }
 
-
-
     public function getTabs(): array
     {
         return [

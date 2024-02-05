@@ -2,10 +2,10 @@
 
 namespace MailCarrier\Resources;
 
-use Filament\Tables\Actions\Action as TablesAction;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables;
+use Filament\Tables\Actions\Action as TablesAction;
 use Filament\Tables\Enums\FiltersLayout;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;

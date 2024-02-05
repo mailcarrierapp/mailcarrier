@@ -2,9 +2,9 @@
 
 namespace MailCarrier\Resources\TemplateResource\Pages;
 
+use Filament\Actions;
 use Filament\Forms;
 use Filament\Notifications\Notification;
-use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;

@@ -2,6 +2,8 @@
 
 namespace MailCarrier\Resources;
 
+use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables;
@@ -13,6 +15,7 @@ use Illuminate\Support\HtmlString;
 use MailCarrier\Actions\Logs\GetTriggers;
 use MailCarrier\Dto\LogTemplateDto;
 use MailCarrier\Enums\LogStatus;
+use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Models\Log;
 use MailCarrier\Models\Template;
 use MailCarrier\Resources\LogResource\Pages;
@@ -75,6 +78,25 @@ class LogResource extends Resource
                             ->modalCancelActionLabel('Close')
                             ->modalFooterActionsAlignment(Alignment::Center)
                     ),
+
+                Tables\Columns\TextColumn::make('tries')
+                    ->badge()
+                    ->tooltip(function (Log $record) {
+                        if ($record->status !== LogStatus::Failed || is_null($record->last_try_at)) {
+                            return null;
+                        }
+
+                        // We add "1" to retries count because the first try is not counted as "retry"
+                        if ($record->tries >= count(MailCarrier::getEmailRetriesBackoff()) + 1) {
+                            return 'No retry left.';
+                        }
+
+                        return 'Next retry in ' . $record->last_try_at
+                            ->addSeconds(
+                                MailCarrier::getEmailRetriesBackoff()[max(0, $record->tries - 1)]
+                            )
+                            ->diffForHumans(syntax: CarbonInterface::DIFF_ABSOLUTE);
+                    }),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Sent at')

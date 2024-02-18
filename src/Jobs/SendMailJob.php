@@ -2,6 +2,7 @@
 
 namespace MailCarrier\Jobs;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -12,6 +13,7 @@ use MailCarrier\Actions\Logs;
 use MailCarrier\Dto\GenericMailDto;
 use MailCarrier\Enums\LogStatus;
 use MailCarrier\Exceptions\SendingFailedException;
+use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Mail\GenericMail;
 use MailCarrier\Models\Log;
 
@@ -55,11 +57,13 @@ class SendMailJob implements ShouldQueue
             (new Logs\Update)->run($this->log, [
                 'status' => $error ? LogStatus::Failed : LogStatus::Sent,
                 'error' => $error,
+                'tries' => $this->log->tries + 1,
+                'last_try_at' => Carbon::now(),
             ]);
         }
 
         if ($error) {
-            throw (new SendingFailedException($error))->setLog($this->log);
+            throw (new SendingFailedException($error))->setLog($this->log->refresh());
         }
     }
 
@@ -83,13 +87,6 @@ class SendMailJob implements ShouldQueue
      */
     public function backoff(): array
     {
-        return [
-            5, // 5sec
-            30, // 30sec
-            60, // 1min
-            60 * 5, // 5min
-            60 * 30, // 30min
-            60 * 60, // 1h
-        ];
+        return MailCarrier::getEmailRetriesBackoff();
     }
 }

@@ -45,6 +45,11 @@ class SendMailJob implements ShouldQueue
      */
     public function handle(): void
     {
+        // Prevent sending already sent logs, e.g. from manual retry
+        if ($this->log?->status === LogStatus::Sent) {
+            return;
+        }
+
         $error = null;
 
         try {

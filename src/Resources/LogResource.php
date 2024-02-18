@@ -2,9 +2,10 @@
 
 namespace MailCarrier\Resources;
 
-use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Actions\Action as TablesAction;
@@ -13,7 +14,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use MailCarrier\Actions\Logs\GetTriggers;
+use MailCarrier\Actions\SendMail;
 use MailCarrier\Dto\LogTemplateDto;
+use MailCarrier\Dto\SendMailDto;
 use MailCarrier\Enums\LogStatus;
 use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Models\Log;
@@ -91,7 +94,7 @@ class LogResource extends Resource
                             return 'No retry left.';
                         }
 
-                        return 'Next retry in ' . $record->last_try_at
+                        return 'Retrying in ' . $record->last_try_at
                             ->addSeconds(
                                 MailCarrier::getEmailRetriesBackoff()[max(0, $record->tries - 1)]
                             )
@@ -158,7 +161,7 @@ class LogResource extends Resource
                 ]))
                 ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Close')
-                ->modalFooterActionsAlignment(Alignment::Center),
+                ->modalFooterActionsAlignment(Alignment::Right),
 
             Tables\Actions\Action::make('preview')
                 ->icon('heroicon-o-eye')
@@ -168,7 +171,18 @@ class LogResource extends Resource
                 ->modalWidth('7xl')
                 ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Close')
-                ->modalFooterActionsAlignment(Alignment::Center),
+                ->modalFooterActionsAlignment(Alignment::Right),
+
+            Tables\Actions\Action::make('manual_retry')
+                ->icon('heroicon-o-arrow-path')
+                ->color(Color::Orange)
+                ->modalWidth('2xl')
+                ->modalIcon('heroicon-o-arrow-path')
+                ->modalDescription('Are you sure you want to manually retry to send this email?')
+                ->modalSubmitActionLabel('Retry')
+                ->modalFooterActionsAlignment(Alignment::Right)
+                ->action(fn (?Log $record) => $record ? static::retryEmail($record) : null)
+                ->visible(fn (?Log $record) => $record?->status === LogStatus::Failed),
         ];
     }
 
@@ -197,5 +211,38 @@ class LogResource extends Resource
             $label .
             ($subtitle ? '<p class="text-xs mt-1 text-slate-300">' . $subtitle . '</p>' : '')
         );
+    }
+
+    protected static function retryEmail(Log $log): void
+    {
+        try {
+            SendMail::resolve()->run(
+                new SendMailDto([
+                    'template' => $log->template->slug,
+                    'subject' => $log->subject,
+                    'sender' => $log->sender,
+                    'recipient' => $log->recipient,
+                    'cc' => $log->cc->all(),
+                    'bcc' => $log->bcc->all(),
+                    'variables' => $log->variables,
+                    'trigger' => $log->trigger,
+                ]),
+                $log
+            );
+        } catch (\Throwable $e) {
+            Notification::make()
+                ->title('Error while sending email')
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
+
+            return;
+        }
+
+        Notification::make()
+            ->icon('heroicon-o-paper-airplane')
+            ->title('Email sent correctly')
+            ->success()
+            ->send();
     }
 }

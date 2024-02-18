@@ -14,6 +14,7 @@ use MailCarrier\Exceptions\MissingVariableException;
 use MailCarrier\Exceptions\TemplateRenderException;
 use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Jobs\SendMailJob;
+use MailCarrier\Models\Log;
 use MailCarrier\Models\Template;
 
 class SendMail extends Action
@@ -30,15 +31,21 @@ class SendMail extends Action
 
     protected bool $shouldLog = true;
 
+    protected ?Log $log = null;
+
     /**
      * Send or enqueue the email.
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function run(SendMailDto $params): void
+    public function run(SendMailDto $params, ?Log $log = null): void
     {
-        $this->params = $params;
+        if ($params->recipients && !is_null($log)) {
+            throw new \LogicException('A Log can be passed only with a single recipient.');
+        }
 
+        $this->log = $log;
+        $this->params = $params;
         $this->template = (new Templates\FindBySlug)->run($params->template);
         $this->recipients = $params->recipients ?: [
             new RecipientDto(
@@ -131,7 +138,11 @@ class SendMail extends Action
             error: $exception?->getMessage(),
         );
 
-        $log = !$this->shouldLog ? null : (new Logs\CreateFromGenericMail)->run($genericMailDto);
+        if ($this->log) {
+            $log = $this->log;
+        } else {
+            $log = !$this->shouldLog ? null : (new Logs\CreateFromGenericMail)->run($genericMailDto);
+        }
 
         if ($exception) {
             $exception->setLog($log);

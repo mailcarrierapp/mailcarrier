@@ -41,6 +41,8 @@ class CreateFromGenericMail extends Action
                 hash: $genericMailDto->template->getHash(),
             ),
             'variables' => $genericMailDto->variables,
+            'tags' => $genericMailDto->tags,
+            'metadata' => $genericMailDto->metadata,
         ]);
 
         $log->attachments()->createMany(

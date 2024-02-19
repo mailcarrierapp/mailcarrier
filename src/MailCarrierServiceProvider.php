@@ -73,7 +73,8 @@ class MailCarrierServiceProvider extends PackageServiceProvider
                 '4_create_logs_table',
                 '5_create_attachments_table',
                 '6_transform_logs_cc_bcc_array',
-                '7_add_tries_to_logs_table'
+                '7_add_tries_to_logs_table',
+                '8_add_tags_metadata_to_logs_table',
             ])
             ->runsMigrations();
     }

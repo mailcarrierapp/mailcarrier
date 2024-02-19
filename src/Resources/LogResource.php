@@ -3,6 +3,7 @@
 namespace MailCarrier\Resources;
 
 use Carbon\CarbonInterface;
+use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -10,15 +11,18 @@ use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Actions\Action as TablesAction;
 use Filament\Tables\Enums\FiltersLayout;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use MailCarrier\Actions\Logs\GetTriggers;
 use MailCarrier\Actions\SendMail;
 use MailCarrier\Dto\LogTemplateDto;
 use MailCarrier\Dto\SendMailDto;
 use MailCarrier\Enums\LogStatus;
 use MailCarrier\Facades\MailCarrier;
+use MailCarrier\Models\Attachment;
 use MailCarrier\Models\Log;
 use MailCarrier\Models\Template;
 use MailCarrier\Resources\LogResource\Pages;
@@ -176,12 +180,18 @@ class LogResource extends Resource
             Tables\Actions\Action::make('manual_retry')
                 ->icon('heroicon-o-arrow-path')
                 ->color(Color::Orange)
+                ->form([
+                    FileUpload::make('attachments')
+                        ->multiple()
+                        ->preserveFilenames()
+                        ->storeFiles(false),
+                ])
                 ->modalWidth('2xl')
                 ->modalIcon('heroicon-o-arrow-path')
                 ->modalDescription('Are you sure you want to manually retry to send this email?')
                 ->modalSubmitActionLabel('Retry')
                 ->modalFooterActionsAlignment(Alignment::Right)
-                ->action(fn (?Log $record) => $record ? static::retryEmail($record) : null)
+                ->action(fn (?Log $record, array $data) => $record ? static::retryEmail($record, $data) : null)
                 ->visible(fn (?Log $record) => $record?->status === LogStatus::Failed),
         ];
     }
@@ -213,7 +223,7 @@ class LogResource extends Resource
         );
     }
 
-    protected static function retryEmail(Log $log): void
+    protected static function retryEmail(Log $log, array $data): void
     {
         try {
             SendMail::resolve()->run(
@@ -226,6 +236,9 @@ class LogResource extends Resource
                     'bcc' => $log->bcc->all(),
                     'variables' => $log->variables,
                     'trigger' => $log->trigger,
+                    'tags' => $log->tags ?: [],
+                    'metadata' => $log->metadata ?: [],
+                    'attachments' => $data['attachments'] ?? [],
                 ]),
                 $log
             );

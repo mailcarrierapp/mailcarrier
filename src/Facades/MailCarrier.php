@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string|null download(string $resource, ?string $disk = null)
  * @method static int getFileSize(string $resource, ?string $disk = null)
  * @method static string humanBytes(int $bytes)
+ * @method static array<int, int> getEmailRetriesBackoff()
  *
  * @see \MailCarrier\MailCarrierManager
  */

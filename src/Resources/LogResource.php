@@ -2,7 +2,11 @@
 
 namespace MailCarrier\Resources;
 
+use Carbon\CarbonInterface;
+use Filament\Forms\Components\FileUpload;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Actions\Action as TablesAction;
@@ -11,8 +15,11 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use MailCarrier\Actions\Logs\GetTriggers;
+use MailCarrier\Actions\SendMail;
 use MailCarrier\Dto\LogTemplateDto;
+use MailCarrier\Dto\SendMailDto;
 use MailCarrier\Enums\LogStatus;
+use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Models\Log;
 use MailCarrier\Models\Template;
 use MailCarrier\Resources\LogResource\Pages;
@@ -76,6 +83,25 @@ class LogResource extends Resource
                             ->modalFooterActionsAlignment(Alignment::Center)
                     ),
 
+                Tables\Columns\TextColumn::make('tries')
+                    ->badge()
+                    ->tooltip(function (Log $record) {
+                        if ($record->status !== LogStatus::Failed || is_null($record->last_try_at)) {
+                            return null;
+                        }
+
+                        // We add "1" to retries count because the first try is not counted as "retry"
+                        if ($record->tries >= count(MailCarrier::getEmailRetriesBackoff()) + 1) {
+                            return 'No retry left.';
+                        }
+
+                        return 'Retrying in ' . $record->last_try_at
+                            ->addSeconds(
+                                MailCarrier::getEmailRetriesBackoff()[max(0, $record->tries - 1)]
+                            )
+                            ->diffForHumans(syntax: CarbonInterface::DIFF_ABSOLUTE);
+                    }),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Sent at')
                     ->since()
@@ -136,7 +162,7 @@ class LogResource extends Resource
                 ]))
                 ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Close')
-                ->modalFooterActionsAlignment(Alignment::Center),
+                ->modalFooterActionsAlignment(Alignment::Right),
 
             Tables\Actions\Action::make('preview')
                 ->icon('heroicon-o-eye')
@@ -146,7 +172,24 @@ class LogResource extends Resource
                 ->modalWidth('7xl')
                 ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Close')
-                ->modalFooterActionsAlignment(Alignment::Center),
+                ->modalFooterActionsAlignment(Alignment::Right),
+
+            Tables\Actions\Action::make('manual_retry')
+                ->icon('heroicon-o-arrow-path')
+                ->color(Color::Orange)
+                ->form([
+                    FileUpload::make('attachments')
+                        ->multiple()
+                        ->preserveFilenames()
+                        ->storeFiles(false),
+                ])
+                ->modalWidth('2xl')
+                ->modalIcon('heroicon-o-arrow-path')
+                ->modalDescription('Are you sure you want to manually retry to send this email?')
+                ->modalSubmitActionLabel('Retry')
+                ->modalFooterActionsAlignment(Alignment::Right)
+                ->action(fn (?Log $record, array $data) => $record ? static::retryEmail($record, $data) : null)
+                ->visible(fn (?Log $record) => $record?->status === LogStatus::Failed),
         ];
     }
 
@@ -175,5 +218,41 @@ class LogResource extends Resource
             $label .
             ($subtitle ? '<p class="text-xs mt-1 text-slate-300">' . $subtitle . '</p>' : '')
         );
+    }
+
+    protected static function retryEmail(Log $log, array $data): void
+    {
+        try {
+            SendMail::resolve()->run(
+                new SendMailDto([
+                    'template' => $log->template->slug,
+                    'subject' => $log->subject,
+                    'sender' => $log->sender,
+                    'recipient' => $log->recipient,
+                    'cc' => $log->cc->all(),
+                    'bcc' => $log->bcc->all(),
+                    'variables' => $log->variables,
+                    'trigger' => $log->trigger,
+                    'tags' => $log->tags ?: [],
+                    'metadata' => $log->metadata ?: [],
+                    'attachments' => $data['attachments'] ?? [],
+                ]),
+                $log
+            );
+        } catch (\Throwable $e) {
+            Notification::make()
+                ->title('Error while sending email')
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
+
+            return;
+        }
+
+        Notification::make()
+            ->icon('heroicon-o-paper-airplane')
+            ->title('Email sent correctly')
+            ->success()
+            ->send();
     }
 }

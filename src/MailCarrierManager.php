@@ -168,4 +168,21 @@ class MailCarrierManager
 
         return round($bytes, 2) . ' ' . $units[$i];
     }
+
+    /**
+     * Get the retries (in seconds) and labels for a failing email.
+     *
+     * @return array<int, int>
+     */
+    public function getEmailRetriesBackoff(): array
+    {
+        return [
+            5, // 5sec
+            30, // 30sec
+            60, // 1min
+            60 * 5, // 5min
+            60 * 30, // 30min
+            60 * 60, // 1h
+        ];
+    }
 }

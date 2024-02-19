@@ -28,8 +28,12 @@ use MailCarrier\Models\Concerns\IsUuid;
  * @property \MailCarrier\Dto\LogTemplateDto $template_frozen
  * @property array<string, mixed>|null $variables
  * @property string|null $error
+ * @property int $tries
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon|null $last_try_at
+ * @property array|null $tags
+ * @property array|null $metadata
  * @property-read \MailCarrier\Models\Template|null $template
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \MailCarrier\Models\Attachment> $attachments
  */
@@ -66,6 +70,8 @@ class Log extends Model
         'template_frozen',
         'variables',
         'error',
+        'tries',
+        'last_try_at',
     ];
 
     /**
@@ -87,6 +93,9 @@ class Log extends Model
         'bcc' => CollectionOfContacts::class,
         'template_frozen' => LogTemplateDto::class,
         'variables' => 'array',
+        'tags' => 'array',
+        'metadata' => 'json',
+        'last_try_at' => 'datetime',
     ];
 
     /**

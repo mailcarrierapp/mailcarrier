@@ -57,31 +57,8 @@ class LogResource extends Resource
 
                 Tables\Columns\TextColumn::make('subject')
                     ->searchable()
-                    ->limit(25)
-                    ->tooltip(
-                        fn (Tables\Columns\TextColumn $column): ?string => strlen($column->getState()) > $column->getCharacterLimit() ? $column->getState() : null
-                    ),
-
-                Tables\Columns\TextColumn::make('attachments')
-                    ->limitList(2)
-                    ->expandableLimitedList()
-                    ->badge()
-                    ->separator(',')
-                    ->getStateUsing(
-                        fn (Log $record): array => $record
-                            ->attachments
-                            ->pluck('name')
-                            ->all()
-                    )
-                    ->action(
-                        Tables\Actions\Action::make('attachments')
-                            ->modalContent(fn (Log $record) => View::make('mailcarrier::modals.attachments', [
-                                'attachments' => $record->attachments,
-                            ]))
-                            ->modalSubmitAction(false)
-                            ->modalCancelActionLabel('Close')
-                            ->modalFooterActionsAlignment(Alignment::Center)
-                    ),
+                    ->icon(fn (Log $record) => $record->attachments->isNotEmpty() ? 'heroicon-o-paper-clip' : '')
+                    ->iconColor('primary'),
 
                 Tables\Columns\TextColumn::make('tries')
                     ->badge()

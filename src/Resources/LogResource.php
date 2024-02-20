@@ -169,8 +169,8 @@ class LogResource extends Resource
                 ])
                 ->modalWidth('2xl')
                 ->modalIcon('heroicon-o-arrow-path')
-                ->modalDescription(fn (Log $record) =>
-                    $record->isFailed()
+                ->modalDescription(
+                    fn (Log $record) => $record->isFailed()
                         ? 'Are you sure you want to manually retry to send this email?'
                         : 'Are you sure you want to to send again this email?'
                 )
@@ -231,13 +231,14 @@ class LogResource extends Resource
                     'tags' => $log->tags ?: [],
                     'metadata' => $log->metadata ?: [],
                     'attachments' => $log->attachments
-                        ->map(fn (Attachment $attachment) => !$attachment->canBeDownloaded()
-                            ? null
-                            : new AttachmentDto(
-                                name: $attachment->name,
-                                content: $attachment->content,
-                                size: $attachment->size
-                            )
+                        ->map(
+                            fn (Attachment $attachment) => !$attachment->canBeDownloaded()
+                                ? null
+                                : new AttachmentDto(
+                                    name: $attachment->name,
+                                    content: $attachment->content,
+                                    size: $attachment->size
+                                )
                         )
                         ->filter()
                         ->merge(

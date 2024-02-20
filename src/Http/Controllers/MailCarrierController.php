@@ -51,7 +51,7 @@ class MailCarrierController extends Controller
                                 ...$recipient,
                                 'attachments' => Collection::make($request->file("recipients.{$i}.attachments"))
                                     ->map(fn (UploadedFile $file) => AttachmentDto::fromUploadedFile($file))
-                                    ->all()
+                                    ->all(),
                             ])
                             ->all(),
                     'attachments' => Collection::make($request->file('attachments'))

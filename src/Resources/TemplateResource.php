@@ -112,12 +112,10 @@ class TemplateResource extends Resource
                         ->filter()
                         ->mapWithKeys(fn (string $tag) => [$tag => $tag])
                 )
-                ->query(function (Builder $query, array $data): Builder {
-                    return $query->when(
-                        !is_null($data['value'] ?? null),
-                        fn (Builder $query) => $query->whereJsonContains('tags', $data['value'])
-                    );
-                }),
+                ->query(fn (Builder $query, array $data): Builder => $query->when(
+                    !is_null($data['value'] ?? null),
+                    fn (Builder $query) => $query->whereJsonContains('tags', $data['value'])
+                )),
         ];
     }
 

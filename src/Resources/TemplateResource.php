@@ -6,14 +6,13 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\HtmlString;
 use MailCarrier\Actions\Templates\GenerateSlug;
 use MailCarrier\Forms\Components\CodeEditor;
-use MailCarrier\Models\Layout;
 use MailCarrier\Models\Template;
-use MailCarrier\Models\User;
 use MailCarrier\Resources\TemplateResource\Pages;
 use RalphJSmit\Filament\Components\Forms\Timestamps;
 
@@ -47,18 +46,14 @@ class TemplateResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('layout')
-                    ->label('Layout')
-                    ->formatStateUsing(fn (?Layout $state) => $state?->name ?: '-'),
-
-                Tables\Columns\TextColumn::make('user')
-                    ->label('User')
-                    ->formatStateUsing(fn (?User $state) => $state?->getFilamentName() ?: '-'),
+                Tables\Columns\TextColumn::make('tags')
+                    ->badge(),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
             ])
+            ->filters(static::getTableFilters())
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ReplicateAction::make()
@@ -98,6 +93,31 @@ class TemplateResource extends Resource
             'index' => Pages\ListTemplates::route('/'),
             'create' => Pages\CreateTemplate::route('/create'),
             'edit' => Pages\EditTemplate::route('/{record}/edit'),
+        ];
+    }
+
+    /**
+     * Get the table filters.
+     */
+    protected static function getTableFilters(): array
+    {
+        return [
+            Tables\Filters\SelectFilter::make('tags')
+                ->searchable()
+                ->options(
+                    Template::query()
+                        ->pluck('tags')
+                        ->unique()
+                        ->flatten()
+                        ->filter()
+                        ->mapWithKeys(fn (string $tag) => [$tag => $tag])
+                )
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query->when(
+                        !is_null($data['value'] ?? null),
+                        fn (Builder $query) => $query->whereJsonContains('tags', $data['value'])
+                    );
+                }),
         ];
     }
 
@@ -174,6 +194,8 @@ class TemplateResource extends Resource
                         <a class="text-primary-500 text-xs block" href="{$viewLayoutUrl}" target="_blank">{$icon}</a>
                     HTML);
                 }),
+
+            Forms\Components\TagsInput::make('tags'),
 
             Forms\Components\Placeholder::make('Separator')
                 ->label('')

@@ -5,9 +5,12 @@ namespace MailCarrier\Http\Controllers;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use MailCarrier\Actions\Attachments\Download;
 use MailCarrier\Actions\SendMail;
+use MailCarrier\Dto\AttachmentDto;
 use MailCarrier\Dto\SendMailDto;
 use MailCarrier\Enums\ApiErrorKey;
 use MailCarrier\Exceptions\AttachmentNotDownloadableException;
@@ -39,7 +42,22 @@ class MailCarrierController extends Controller
     {
         try {
             $sendMail->run(
-                new SendMailDto($request->validated())
+                new SendMailDto([
+                    ...$request->safe()->except(['recipients', 'attachments']),
+                    'recipients' => !$request->has('recipients')
+                        ? null
+                        : $request->collect('recipients')
+                            ->map(fn (array $recipient, int $i) => [
+                                ...$recipient,
+                                'attachments' => Collection::make($request->file("recipients.{$i}.attachments"))
+                                    ->map(fn (UploadedFile $file) => AttachmentDto::fromUploadedFile($file))
+                                    ->all()
+                            ])
+                            ->all(),
+                    'attachments' => Collection::make($request->file('attachments'))
+                        ->map(fn (UploadedFile $file) => AttachmentDto::fromUploadedFile($file))
+                        ->all(),
+                ])
             );
         } catch (MissingVariableException $e) {
             report($e);

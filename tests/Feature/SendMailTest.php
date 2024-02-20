@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use MailCarrier\Actions\SendMail;
+use MailCarrier\Dto\AttachmentDto;
 use MailCarrier\Dto\GenericMailDto;
 use MailCarrier\Dto\RemoteAttachmentDto;
 use MailCarrier\Dto\SendMailDto;
@@ -722,8 +723,8 @@ it('sends mail with regular attachments', function () {
         'subject' => 'Welcome!',
         'recipient' => 'recipient@example.org',
         'attachments' => [
-            $attachment1 = UploadedFile::fake()->image('foo.jpg'),
-            $attachment2 = UploadedFile::fake()->image('bar.jpg'),
+            AttachmentDto::fromUploadedFile($attachment1 = UploadedFile::fake()->image('foo.jpg')),
+            AttachmentDto::fromUploadedFile($attachment2 = UploadedFile::fake()->image('bar.jpg')),
         ],
     ]));
 
@@ -820,7 +821,7 @@ it('sends mail with both regular and remote attachments', function () {
         'subject' => 'Welcome!',
         'recipient' => 'recipient@example.org',
         'attachments' => [
-            $attachment = UploadedFile::fake()->image('foo.jpg'),
+            AttachmentDto::fromUploadedFile($attachment = UploadedFile::fake()->image('foo.jpg')),
         ],
         'remoteAttachments' => [
             new RemoteAttachmentDto([
@@ -868,13 +869,13 @@ it('sends mail to multiple recipients with recipient-defined regular attachments
             [
                 'email' => 'recipient1@example.org',
                 'attachments' => [
-                    $attachment1 = UploadedFile::fake()->image('foo.jpg'),
+                    AttachmentDto::fromUploadedFile($attachment1 = UploadedFile::fake()->image('foo.jpg')),
                 ],
             ],
             [
                 'email' => 'recipient2@example.org',
                 'attachments' => [
-                    $attachment2 = UploadedFile::fake()->image('bar.jpg'),
+                    AttachmentDto::fromUploadedFile($attachment2 = UploadedFile::fake()->image('bar.jpg')),
                 ],
             ],
         ],
@@ -1012,7 +1013,7 @@ it('sends mail to multiple recipients with recipient-defined regular and remote 
             [
                 'email' => 'recipient1@example.org',
                 'attachments' => [
-                    $attachment1 = UploadedFile::fake()->image('foo1.jpg'),
+                    AttachmentDto::fromUploadedFile($attachment1 = UploadedFile::fake()->image('foo1.jpg')),
                 ],
                 'remoteAttachments' => [
                     new RemoteAttachmentDto([
@@ -1024,7 +1025,7 @@ it('sends mail to multiple recipients with recipient-defined regular and remote 
             [
                 'email' => 'recipient2@example.org',
                 'attachments' => [
-                    $attachment2 = UploadedFile::fake()->image('bar1.jpg'),
+                    AttachmentDto::fromUploadedFile($attachment2 = UploadedFile::fake()->image('bar1.jpg')),
                 ],
                 'remoteAttachments' => [
                     new RemoteAttachmentDto([
@@ -1100,7 +1101,7 @@ it('merges the recipient-defined attachments with the request ones when there ar
         'template' => 'welcome',
         'subject' => 'Welcome!',
         'attachments' => [
-            $globalAttachment = UploadedFile::fake()->image('globalRaw.jpg'),
+            AttachmentDto::fromUploadedFile($globalAttachment = UploadedFile::fake()->image('globalRaw.jpg')),
         ],
         'remoteAttachments' => [
             new RemoteAttachmentDto([
@@ -1121,7 +1122,7 @@ it('merges the recipient-defined attachments with the request ones when there ar
             [
                 'email' => 'recipient2@example.org',
                 'attachments' => [
-                    $recipientAttachment = UploadedFile::fake()->image('bar.jpg'),
+                    AttachmentDto::fromUploadedFile($recipientAttachment = UploadedFile::fake()->image('bar.jpg')),
                 ],
             ],
         ],

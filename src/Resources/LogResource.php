@@ -11,15 +11,19 @@ use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Actions\Action as TablesAction;
 use Filament\Tables\Enums\FiltersLayout;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use MailCarrier\Actions\Logs\GetTriggers;
 use MailCarrier\Actions\SendMail;
+use MailCarrier\Dto\AttachmentDto;
 use MailCarrier\Dto\LogTemplateDto;
 use MailCarrier\Dto\SendMailDto;
 use MailCarrier\Enums\LogStatus;
 use MailCarrier\Facades\MailCarrier;
+use MailCarrier\Models\Attachment;
 use MailCarrier\Models\Log;
 use MailCarrier\Models\Template;
 use MailCarrier\Resources\LogResource\Pages;
@@ -28,7 +32,7 @@ class LogResource extends Resource
 {
     protected static ?string $model = Log::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-paper-airplane';
+    protected static ?string $navigationIcon = 'heroicon-o-envelope';
 
     /**
      * List all the records.
@@ -151,22 +155,29 @@ class LogResource extends Resource
                 ->modalCancelActionLabel('Close')
                 ->modalFooterActionsAlignment(Alignment::Right),
 
-            Tables\Actions\Action::make('manual_retry')
+            Tables\Actions\Action::make('resend_email')
+                ->label(fn (Log $record) => $record->isFailed() ? 'Retry now' : 'Send again')
                 ->icon('heroicon-o-arrow-path')
-                ->color(Color::Orange)
+                ->color(fn (Log $record) => $record->isFailed() ? Color::Orange : 'primary')
                 ->form([
                     FileUpload::make('attachments')
+                        ->label('Additional attachments')
+                        ->helperText('Any extra attachment will be sent along the original ones')
                         ->multiple()
                         ->preserveFilenames()
                         ->storeFiles(false),
                 ])
                 ->modalWidth('2xl')
                 ->modalIcon('heroicon-o-arrow-path')
-                ->modalDescription('Are you sure you want to manually retry to send this email?')
-                ->modalSubmitActionLabel('Retry')
+                ->modalDescription(fn (Log $record) =>
+                    $record->isFailed()
+                        ? 'Are you sure you want to manually retry to send this email?'
+                        : 'Are you sure you want to to send again this email?'
+                )
+                ->modalSubmitActionLabel(fn (Log $record) => $record->isFailed() ? 'Retry' : 'Resend')
                 ->modalFooterActionsAlignment(Alignment::Right)
-                ->action(fn (?Log $record, array $data) => $record ? static::retryEmail($record, $data) : null)
-                ->visible(fn (?Log $record) => $record?->status === LogStatus::Failed),
+                ->action(fn (?Log $record, array $data) => $record ? static::resendEmail($record, $data) : null)
+                ->visible(fn (?Log $record) => $record?->status !== LogStatus::Pending),
         ];
     }
 
@@ -197,8 +208,15 @@ class LogResource extends Resource
         );
     }
 
-    protected static function retryEmail(Log $log, array $data): void
+    protected static function resendEmail(Log $log, array $data): void
     {
+        // Update the status to Failed just to send email again
+        if ($log->isSent()) {
+            $log->update([
+                'status' => LogStatus::Failed,
+            ]);
+        }
+
         try {
             SendMail::resolve()->run(
                 new SendMailDto([
@@ -212,7 +230,26 @@ class LogResource extends Resource
                     'trigger' => $log->trigger,
                     'tags' => $log->tags ?: [],
                     'metadata' => $log->metadata ?: [],
-                    'attachments' => $data['attachments'] ?? [],
+                    'attachments' => $log->attachments
+                        ->map(fn (Attachment $attachment) => !$attachment->canBeDownloaded()
+                            ? null
+                            : new AttachmentDto(
+                                name: $attachment->name,
+                                content: $attachment->content,
+                                size: $attachment->size
+                            )
+                        )
+                        ->filter()
+                        ->merge(
+                            Collection::make($data['attachments'])->map(
+                                fn (TemporaryUploadedFile $file) => new AttachmentDto(
+                                    name: $file->getClientOriginalName(),
+                                    content: base64_encode(file_get_contents($file->getRealPath())),
+                                    size: $file->getSize()
+                                )
+                            )
+                        )
+                        ->all(),
                 ]),
                 $log
             );

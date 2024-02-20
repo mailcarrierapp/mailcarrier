@@ -188,7 +188,7 @@ it('creates an attachment with attachment strategy NONE', function () {
         template: Template::factory()->create(),
         variables: ['name' => 'foo'],
         attachments: [
-            new AttachmentDto(UploadedFile::fake()->create('image.jpg', 100, 'image/jpeg')),
+            AttachmentDto::fromUploadedFile(UploadedFile::fake()->create('image.jpg', 100, 'image/jpeg')),
         ],
         remoteAttachments: [
             new RemoteAttachmentDto(
@@ -290,7 +290,7 @@ it('creates an attachment with attachment strategy INLINE', function () {
         template: Template::factory()->create(),
         variables: ['name' => 'foo'],
         attachments: [
-            new AttachmentDto(UploadedFile::fake()->create('image.jpg', 100, 'image/jpeg')),
+            AttachmentDto::fromUploadedFile(UploadedFile::fake()->create('image.jpg', 100, 'image/jpeg')),
         ],
         remoteAttachments: [
             new RemoteAttachmentDto(
@@ -402,7 +402,7 @@ it('creates an attachment with attachment strategy UPLOAD', function () {
         template: Template::factory()->create(),
         variables: ['name' => 'foo'],
         attachments: [
-            new AttachmentDto(UploadedFile::fake()->create('image.jpg', 100, 'image/jpeg')),
+            AttachmentDto::fromUploadedFile(UploadedFile::fake()->create('image.jpg', 100, 'image/jpeg')),
         ],
         remoteAttachments: [
             new RemoteAttachmentDto(

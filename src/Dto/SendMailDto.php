@@ -38,7 +38,7 @@ class SendMailDto extends DataTransferObject
 
     public ?string $trigger;
 
-    /** @var \Illuminate\Http\UploadedFile[] */
+    /** @var \MailCarrier\Dto\AttachmentDto[] */
     public array $attachments = [];
 
     /** @var \MailCarrier\Dto\RemoteAttachmentDto[] */

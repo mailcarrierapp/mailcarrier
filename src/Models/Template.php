@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
  * @property string $name
  * @property string $slug
  * @property string $content
+ * @property array|null $tags
  * @property-read \MailCarrier\Models\User|null $user
  * @property-read \MailCarrier\Models\Layout|null $layout
  */
@@ -34,6 +35,7 @@ class Template extends Model
         'name',
         'slug',
         'content',
+        'tags',
     ];
 
     /**
@@ -50,6 +52,7 @@ class Template extends Model
      */
     protected $casts = [
         'is_locked' => 'boolean',
+        'tags' => 'array',
     ];
 
     /**

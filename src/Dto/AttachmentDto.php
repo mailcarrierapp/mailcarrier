@@ -3,20 +3,26 @@
 namespace MailCarrier\Dto;
 
 use Illuminate\Http\UploadedFile;
-use Spatie\DataTransferObject\DataTransferObject;
 
-class AttachmentDto extends DataTransferObject
+class AttachmentDto
 {
-    public readonly string $name;
-
-    public readonly string $content;
-
-    public readonly int $size;
-
-    public function __construct(UploadedFile $file)
+    public static function fromUploadedFile(UploadedFile $file): self
     {
-        $this->name = $file->getClientOriginalName();
-        $this->content = base64_encode($file->getContent());
-        $this->size = $file->getSize();
+        return new self(
+            name: $file->getClientOriginalName(),
+            content: base64_encode($file->getContent()),
+            size: $file->getSize(),
+        );
+    }
+
+    /**
+     * @param  string  $content  Base64 encoded file content
+     */
+    public function __construct(
+        public readonly string $name,
+        public readonly string $content,
+        public readonly int $size
+    ) {
+        //
     }
 }

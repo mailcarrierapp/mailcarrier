@@ -127,4 +127,19 @@ class Log extends Model
                 fn (EloquentBuilder $query, string $period) => $query->where('created_at', '<=', Carbon::now()->sub(...explode(' ', $period)))
             );
     }
+
+    public function isFailed(): bool
+    {
+        return $this->status === LogStatus::Failed;
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === LogStatus::Pending;
+    }
+
+    public function isSent(): bool
+    {
+        return $this->status === LogStatus::Sent;
+    }
 }

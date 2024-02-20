@@ -87,7 +87,7 @@ class EditTemplate extends EditRecord
         Notification::make()
             ->title('Test email sent correctly')
             ->icon('heroicon-o-mail')
-            ->iconColor('success')
+            ->success()
             ->send();
     }
 }

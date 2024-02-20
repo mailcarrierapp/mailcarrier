@@ -24,7 +24,7 @@ class RecipientDto extends DataTransferObject
     #[CastWith(ContactArrayCaster::class)]
     public ?array $bcc;
 
-    /** @var \Illuminate\Http\UploadedFile[] */
+    /** @var \MailCarrier\Dto\AttachmentDto[] */
     public array $attachments = [];
 
     /** @var \MailCarrier\Dto\RemoteAttachmentDto[] */

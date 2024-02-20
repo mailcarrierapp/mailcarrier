@@ -2,11 +2,9 @@
 
 namespace MailCarrier\Actions;
 
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Laravel\SerializableClosure\SerializableClosure;
-use MailCarrier\Dto\AttachmentDto;
 use MailCarrier\Dto\GenericMailDto;
 use MailCarrier\Dto\RecipientDto;
 use MailCarrier\Dto\SendMailDto;
@@ -125,10 +123,7 @@ class SendMail extends Action
             cc: $recipient->cc,
             bcc: $recipient->bcc,
             subject: $this->params->subject,
-            attachments: array_map(
-                fn (UploadedFile $file) => new AttachmentDto($file),
-                $recipient->attachments
-            ),
+            attachments: $recipient->attachments,
             remoteAttachments: $recipient->remoteAttachments,
             template: $this->template,
             variables: $recipient->variables,

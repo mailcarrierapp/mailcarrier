@@ -16,7 +16,8 @@ class CreateTemplate extends CreateRecord
      */
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        return $data + [
+        return [
+            ...$data,
             'user_id' => Auth::id(),
             'slug' => (new GenerateSlug())->run($this->data['name']),
         ];

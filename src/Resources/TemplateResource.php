@@ -56,19 +56,21 @@ class TemplateResource extends Resource
             ->filters(static::getTableFilters())
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\ReplicateAction::make()
+                Tables\Actions\Action::make('duplicate')
                     ->label('Duplicate')
-                    ->excludeAttributes([
-                        'user_id',
-                        'is_locked',
-                        'slug',
-                    ])
-                    ->beforeReplicaSaved(function (Template $replica): void {
-                        $replica->fill([
+                    ->icon('heroicon-o-document-duplicate')
+                    ->requiresConfirmation()
+                    ->action(function (Template $record) {
+                        $name = $record->name . ' (Copy)';
+
+                        $newRecord = $record->replicate();
+                        $newRecord->fill([
                             'user_id' => Auth::id(),
-                            'name' => $replica->name . ' (Copy)',
-                            'slug' => (new GenerateSlug())->run($replica->name . ' (Copy)'),
-                        ]);
+                            'name' => $name,
+                            'slug' => (new GenerateSlug())->run($name),
+                        ])->save();
+
+                        redirect(TemplateResource::getUrl('edit', ['record' => $newRecord]));
                     }),
             ])
             ->bulkActions([])

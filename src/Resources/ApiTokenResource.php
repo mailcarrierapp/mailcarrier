@@ -2,30 +2,9 @@
 
 namespace MailCarrier\Resources;
 
-use Carbon\CarbonInterface;
-use Filament\Forms\Components\FileUpload;
-use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Support\Colors\Color;
-use Filament\Support\Enums\Alignment;
 use Filament\Tables;
-use Filament\Tables\Actions\Action as TablesAction;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\HtmlString;
 use Laravel\Sanctum\PersonalAccessToken;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
-use MailCarrier\Actions\Logs\GetTriggers;
-use MailCarrier\Actions\SendMail;
-use MailCarrier\Dto\AttachmentDto;
-use MailCarrier\Dto\LogTemplateDto;
-use MailCarrier\Dto\SendMailDto;
-use MailCarrier\Enums\LogStatus;
-use MailCarrier\Facades\MailCarrier;
-use MailCarrier\Models\Attachment;
-use MailCarrier\Models\Log;
-use MailCarrier\Models\Template;
 use MailCarrier\Resources\ApiTokenResource\Pages;
 
 class ApiTokenResource extends Resource
@@ -47,6 +26,11 @@ class ApiTokenResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->placeholder('No name provided'),
+
+                Tables\Columns\TextColumn::make('expires_at')
+                    ->dateTime()
+                    ->placeholder('Never expires'),
+
                 Tables\Columns\TextColumn::make('last_used_at')
                     ->dateTime()
                     ->placeholder('Never used'),

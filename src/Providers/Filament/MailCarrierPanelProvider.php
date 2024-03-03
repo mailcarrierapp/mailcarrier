@@ -17,10 +17,10 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use MailCarrier\Pages\Login;
+use MailCarrier\Resources\ApiTokenResource;
 use MailCarrier\Resources\LayoutResource;
 use MailCarrier\Resources\LogResource;
 use MailCarrier\Resources\TemplateResource;
-use MailCarrier\Resources\ApiTokenResource;
 use MailCarrier\Widgets\SentFailureChartWidget;
 use MailCarrier\Widgets\StatsOverviewWidget;
 

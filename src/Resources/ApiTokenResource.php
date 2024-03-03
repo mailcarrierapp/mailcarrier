@@ -28,6 +28,7 @@ class ApiTokenResource extends Resource
                     ->placeholder('No name provided'),
 
                 Tables\Columns\TextColumn::make('expires_at')
+                    ->label('Expiration date (UTC)')
                     ->dateTime()
                     ->placeholder('Never expires'),
 

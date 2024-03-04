@@ -17,10 +17,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use MailCarrier\Pages\Login;
-use MailCarrier\Resources\ApiTokenResource;
-use MailCarrier\Resources\LayoutResource;
-use MailCarrier\Resources\LogResource;
-use MailCarrier\Resources\TemplateResource;
+use MailCarrier\Resources;
 use MailCarrier\Widgets\SentFailureChartWidget;
 use MailCarrier\Widgets\StatsOverviewWidget;
 
@@ -45,10 +42,11 @@ class MailCarrierPanelProvider extends PanelProvider
             ->collapsibleNavigationGroups(false)
             ->discoverResources(in: '../../Resources', for: 'MailCarrier\\Resources')
             ->resources([
-                LogResource::class,
-                LayoutResource::class,
-                TemplateResource::class,
-                ApiTokenResource::class,
+                Resources\LogResource::class,
+                Resources\LayoutResource::class,
+                Resources\TemplateResource::class,
+                Resources\ApiTokenResource::class,
+                Resources\UserResource::class,
             ])
             ->discoverPages(in: app_path('Filament/Pages'), for: 'MailCarrier\\Pages')
             ->pages([

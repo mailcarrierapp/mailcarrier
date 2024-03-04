@@ -17,6 +17,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use MailCarrier\Pages\Login;
+use MailCarrier\Resources\ApiTokenResource;
 use MailCarrier\Resources\LayoutResource;
 use MailCarrier\Resources\LogResource;
 use MailCarrier\Resources\TemplateResource;
@@ -47,6 +48,7 @@ class MailCarrierPanelProvider extends PanelProvider
                 LogResource::class,
                 LayoutResource::class,
                 TemplateResource::class,
+                ApiTokenResource::class,
             ])
             ->discoverPages(in: app_path('Filament/Pages'), for: 'MailCarrier\\Pages')
             ->pages([

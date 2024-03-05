@@ -27,7 +27,7 @@ class CreateAction extends BaseCreateAction
             $this->form([
                 Forms\Components\Placeholder::make('cannot_create_users')
                     ->label('')
-                    ->content(new HtmlString(<<<HTML
+                    ->content(new HtmlString(<<<'HTML'
                         <div class="bg-warning-100 dark:bg-warning-500/20 border border-warning-300 dark:border-warning-600 rounded py-2 px-4">
                             Cannot create users with social authentication enabled.
                         </div>

@@ -4,7 +4,6 @@ namespace MailCarrier\Resources\ApiTokenResource\Actions;
 
 use Carbon\Carbon;
 use Filament\Actions\Action;
-use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Forms;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\MaxWidth;
@@ -13,8 +12,6 @@ use MailCarrier\Resources\ApiTokenResource;
 
 class CreateAction extends Action
 {
-    use CanCustomizeProcess;
-
     const GENERATED_TOKEN_FIELD_NAME = 'generated_token';
 
     public static function getDefaultName(): ?string

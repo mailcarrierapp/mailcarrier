@@ -25,16 +25,19 @@ class ApiTokenResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->searchable()
                     ->placeholder('No name provided'),
 
                 Tables\Columns\TextColumn::make('expires_at')
                     ->label('Expiration date (UTC)')
                     ->dateTime()
-                    ->placeholder('Never expires'),
+                    ->placeholder('Never expires')
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('last_used_at')
                     ->dateTime()
-                    ->placeholder('Never used'),
+                    ->placeholder('Never used')
+                    ->sortable(),
             ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),

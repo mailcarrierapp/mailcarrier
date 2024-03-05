@@ -60,6 +60,17 @@ class LogResource extends Resource
 
                 Tables\Columns\TextColumn::make('subject')
                     ->searchable()
+                    ->limit(60)
+                    ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+
+                        // Only render the tooltip if the column content exceeds the length limit.
+                        return $state;
+                    })
                     ->icon(fn (Log $record) => $record->attachments->isNotEmpty() ? 'heroicon-o-paper-clip' : '')
                     ->iconColor('primary'),
 
@@ -202,8 +213,8 @@ class LogResource extends Resource
 
         return new HtmlString(
             ($icon ? svg($icon, 'w-5 h-5 inline-block mr-1 ' . $iconColor)->toHtml() : '') .
-            $label .
-            ($subtitle ? '<p class="text-xs mt-1 text-slate-300">' . $subtitle . '</p>' : '')
+                $label .
+                ($subtitle ? '<p class="text-xs mt-1 text-slate-300">' . $subtitle . '</p>' : '')
         );
     }
 

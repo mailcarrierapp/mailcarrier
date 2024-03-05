@@ -18,6 +18,16 @@
     </div>
 
     <div class="mt-4">
+        <p class="font-bold mb-1">Recipient</p>
+        <p>{{ $log->recipient }}</p>
+    </div>
+
+    <div class="mt-4">
+        <p class="font-bold mb-1">Subject</p>
+        <p>{{ $log->subject }}</p>
+    </div>
+
+    <div class="mt-4">
         <p class="font-bold mb-1">Cc</p>
         @forelse (($log->cc ?: []) as $cc)
             @if ($cc->name)

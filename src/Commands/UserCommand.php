@@ -3,7 +3,6 @@
 namespace MailCarrier\Commands;
 
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use MailCarrier\Models\User;
 use function Laravel\Prompts\password;

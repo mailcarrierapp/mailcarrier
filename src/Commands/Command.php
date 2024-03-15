@@ -8,17 +8,6 @@ use function Termwind\render;
 abstract class Command extends \Illuminate\Console\Command
 {
     /**
-     * Validate an incoming input.
-     */
-    protected function validatePrompt(mixed $value, array $rules): ?string
-    {
-        return Validator::make(
-            ['field' => $value],
-            ['field' => $rules],
-        )->errors()->first('field');
-    }
-
-    /**
      * Show a success message for a task.
      */
     protected function labeledLine(string $line, string $label = 'DONE', string $bgColor = 'green-400', string $textColor = 'slate-600'): void

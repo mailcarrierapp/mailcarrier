@@ -46,12 +46,12 @@ class UserCommand extends Command
             'email' => text(
                 'Email address',
                 required: true,
-                validate: fn (string $value) => $this->validatePrompt($value, ['email', 'unique:\MailCarrier\Models\User,email']),
+                validate: ['email' => 'unique:\MailCarrier\Models\User,email'],
             ),
             'password' => password(
                 'Password',
                 hint: 'Leave it blank for a random one',
-                validate: fn (?string $value) => $this->validatePrompt($value, ['nullable', 'min:8']),
+                validate: ['password' => 'nullable', 'min:8'],
             ),
         ];
 
@@ -59,9 +59,6 @@ class UserCommand extends Command
         if (!$data['password']) {
             $data['password'] = $this->rawRandomPassword = Str::password(16);
         }
-
-        // Finally encrypt the password
-        $data['password'] = Hash::make($data['password']);
 
         return $data;
     }

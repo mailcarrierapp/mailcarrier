@@ -1,0 +1,17 @@
+<?php
+
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting()
+    ->withMiddleware()
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->render(function (RouteNotFoundException $e) {
+            if (str_contains($e->getMessage(), '[login]')) {
+                return redirect('/login');
+            }
+        });
+    })
+    ->create();

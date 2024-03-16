@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "mix watch",
     "watch": "mix watch",
-    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "watch-poll": "mix watch -- --watch-options-poll=3000",
     "hot": "mix watch --hot",
     "build": "mix --production"
   },

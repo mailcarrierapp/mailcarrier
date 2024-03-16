@@ -2,7 +2,6 @@
 
 namespace MailCarrier\Commands;
 
-use Composer\Semver\Comparator;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -60,10 +59,10 @@ class InstallCommand extends Command
     {
         $this->overrideMigrations();
         $this->overrideModels();
+        $this->overrideBootstrap();
         $this->overrideRoutes();
         $this->overrideProviders();
         $this->overrideViews();
-        $this->overrideHandler();
         $this->overrideReadme();
         $this->deleteFiles();
 
@@ -75,7 +74,10 @@ class InstallCommand extends Command
      */
     protected function overrideMigrations(): void
     {
-        @unlink(getcwd() . '/database/migrations/2014_10_12_000000_create_users_table.php');
+        // Remove existing users table
+        $this->call('migrate:rollback');
+
+        @unlink(getcwd() . '/database/migrations/0001_01_01_000000_create_users_table.php');
         @unlink(getcwd() . '/database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php');
     }
 
@@ -88,27 +90,21 @@ class InstallCommand extends Command
     }
 
     /**
+     * Override the default models.
+     */
+    protected function overrideBootstrap(): void
+    {
+        copy(__DIR__ . '/../../stubs/bootstrap_app.php.stub', getcwd() . '/bootstrap/app.php');
+        copy(__DIR__ . '/../../stubs/bootstrap_providers.php.stub', getcwd() . '/bootstrap/providers.php');
+    }
+
+    /**
      * Override the default routes.
      */
     protected function overrideRoutes(): void
     {
-        $kernelPath = getcwd() . '/app/Console/Kernel.php';
-        $kernel = file_get_contents($kernelPath);
-
-        $kernel = str_replace(
-            "require base_path('routes/console.php');
-    ",
-            '',
-            $kernel
-        );
-
-        file_put_contents($kernelPath, $kernel);
-
-        @unlink(getcwd() . '/routes/channels.php');
         @unlink(getcwd() . '/routes/console.php');
-
-        copy(__DIR__ . '/../../routes/stubs/api.php.stub', getcwd() . '/routes/api.php');
-        copy(__DIR__ . '/../../routes/stubs/web.php.stub', getcwd() . '/routes/web.php');
+        @unlink(getcwd() . '/routes/web.php');
     }
 
     /**
@@ -118,7 +114,6 @@ class InstallCommand extends Command
     {
         copy(__DIR__ . '/../Providers/stubs/AppServiceProvider.php.stub', getcwd() . '/app/Providers/AppServiceProvider.php');
         copy(__DIR__ . '/../Providers/stubs/AuthServiceProvider.php.stub', getcwd() . '/app/Providers/AuthServiceProvider.php');
-        copy(__DIR__ . '/../Providers/stubs/EventServiceProvider.php.stub', getcwd() . '/app/Providers/EventServiceProvider.php');
     }
 
     /**
@@ -132,14 +127,6 @@ class InstallCommand extends Command
 
         @mkdir($errorsTargetDir, recursive: true);
         copy(__DIR__ . '/../../resources/views/stubs/401.blade.php.stub', $errorsTargetDir . '/401.blade.php');
-    }
-
-    /**
-     * Override the default models.
-     */
-    protected function overrideHandler(): void
-    {
-        copy(__DIR__ . '/../../src/Exceptions/stubs/Handler.php.stub', getcwd() . '/app/Exceptions/Handler.php');
     }
 
     /**
@@ -166,11 +153,6 @@ class InstallCommand extends Command
     {
         $composerJsonPath = getcwd() . '/composer.json';
         $composerJson = file_get_contents($composerJsonPath);
-
-        // Set minimum PHP version
-        if (Comparator::lessThan($this->getComposerValue($composerJson, 'php'), '^8.1')) {
-            $composerJson = $this->setComposerValue($composerJson, 'php', '^8.1');
-        }
 
         // Install hook to update MailCarrier
         if (!str_contains($composerJson, '"@php artisan mailcarrier:upgrade"')) {
@@ -227,7 +209,11 @@ class InstallCommand extends Command
             '--tag' => 'mailcarrier-assets',
         ]);
 
-        $this->labeledLine('Configuration files and assets copied.');
+        $this->callSilently('vendor:publish', [
+            '--tag' => 'sanctum-migrations',
+        ]);
+
+        $this->labeledLine('Vendor files copied.');
     }
 
     /**

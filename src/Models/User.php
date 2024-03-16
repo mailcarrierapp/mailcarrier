@@ -53,6 +53,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
      */
     protected $casts = [
         'oauth_raw' => 'array',
+        'password' => 'hashed',
     ];
 
     /**

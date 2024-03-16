@@ -2,7 +2,6 @@
 
 namespace MailCarrier\Dto;
 
-use JessArcher\CastableDataTransferObject\CastableDataTransferObject;
 use Spatie\DataTransferObject\Attributes\Strict;
 
 #[Strict]

@@ -11,3 +11,4 @@ parameters:
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - '#Method MailCarrier\\Resources\\(.*)\\Pages\\(.*)::getRecord\(\)(.*)#'
+        - '#Unsafe usage of new static(.*)#'

@@ -43,6 +43,7 @@ class SendTestAction extends Action
                 ->valuePlaceholder('Fill or delete')
                 ->default(
                     Arr::mapWithKeys(
+                        // @phpstan-ignore-next-line
                         TemplateManager::make($this->getRecord())->extractVariableNames(),
                         fn (string $value) => [$value => null]
                     )

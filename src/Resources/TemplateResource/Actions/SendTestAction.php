@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\HtmlString;
 use MailCarrier\Actions\SendMail;
 use MailCarrier\Dto\SendMailDto;
+use MailCarrier\Helpers\TemplateManager;
 
 class SendTestAction extends Action
 {
@@ -25,6 +26,7 @@ class SendTestAction extends Action
 
         $this->label('Send test');
         $this->icon('heroicon-o-paper-airplane');
+        $this->modalHeading('Send test email');
         $this->modalSubmitActionLabel('Send');
         $this->modalFooterActionsAlignment(Alignment::End);
         $this->extraAttributes([
@@ -37,7 +39,14 @@ class SendTestAction extends Action
                 ->required(),
             Forms\Components\KeyValue::make('variables')
                 ->keyLabel('Variable name')
-                ->valueLabel('Variable value'),
+                ->valueLabel('Variable value')
+                ->valuePlaceholder('Fill or delete')
+                ->default(
+                    Arr::mapWithKeys(
+                        TemplateManager::make($this->getRecord())->extractVariableNames(),
+                        fn (string $value) => [$value => null]
+                    )
+                ),
             Forms\Components\Checkbox::make('enqueue'),
         ]);
 

@@ -19,34 +19,12 @@ use MailCarrier\Observers\LayoutObserver;
 use MailCarrier\Observers\LogObserver;
 use MailCarrier\Observers\TemplateObserver;
 use MailCarrier\Providers\Filament\MailCarrierPanelProvider;
-use MailCarrier\Resources\LayoutResource;
-use MailCarrier\Resources\LogResource;
-use MailCarrier\Resources\TemplateResource;
-use MailCarrier\Widgets\SentFailureChartWidget;
-use MailCarrier\Widgets\StatsOverviewWidget;
-use MailCarrier\Widgets\TopTriggersWidget;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class MailCarrierServiceProvider extends PackageServiceProvider
 {
     public static string $name = 'mailcarrier';
-
-    protected array $scripts = [
-        'mailcarrier' => __DIR__ . '/../dist/js/monaco.js',
-    ];
-
-    protected array $resources = [
-        LayoutResource::class,
-        TemplateResource::class,
-        LogResource::class,
-    ];
-
-    protected array $widgets = [
-        StatsOverviewWidget::class,
-        SentFailureChartWidget::class,
-        TopTriggersWidget::class,
-    ];
 
     /**
      * The package has been configured.

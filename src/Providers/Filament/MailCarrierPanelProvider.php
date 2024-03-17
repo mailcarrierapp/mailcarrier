@@ -40,7 +40,6 @@ class MailCarrierPanelProvider extends PanelProvider
                 'primary' => Color::Indigo,
             ])
             ->collapsibleNavigationGroups(false)
-            ->discoverResources(in: '../../Resources', for: 'MailCarrier\\Resources')
             ->resources([
                 Resources\LogResource::class,
                 Resources\LayoutResource::class,
@@ -48,11 +47,9 @@ class MailCarrierPanelProvider extends PanelProvider
                 Resources\ApiTokenResource::class,
                 Resources\UserResource::class,
             ])
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'MailCarrier\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: '../../Widgets', for: 'MailCarrier\\Widgets')
             ->widgets([
                 StatsOverviewWidget::class,
                 SentFailureChartWidget::class,

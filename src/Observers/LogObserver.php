@@ -4,7 +4,6 @@ namespace MailCarrier\Observers;
 
 use MailCarrier\Actions\Widgets\GetSentFailureStats;
 use MailCarrier\Actions\Widgets\GetStatsOverview;
-use MailCarrier\Actions\Widgets\GetTopTriggers;
 
 class LogObserver
 {
@@ -39,6 +38,5 @@ class LogObserver
     {
         GetSentFailureStats::flush();
         GetStatsOverview::flush();
-        GetTopTriggers::flush();
     }
 }

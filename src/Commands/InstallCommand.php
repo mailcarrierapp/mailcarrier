@@ -86,7 +86,7 @@ class InstallCommand extends Command
      */
     protected function overrideModels(): void
     {
-        copy(__DIR__ . '/../../src/Models/stubs/User.php.stub', getcwd() . '/app/Models/User.php');
+        @unlink(getcwd() . '/app/Models/User.php');
     }
 
     /**
@@ -122,11 +122,6 @@ class InstallCommand extends Command
     protected function overrideViews(): void
     {
         @unlink(getcwd() . '/resources/views/welcome.blade.php');
-
-        $errorsTargetDir = getcwd() . '/resources/views/errors';
-
-        @mkdir($errorsTargetDir, recursive: true);
-        copy(__DIR__ . '/../../resources/views/stubs/401.blade.php.stub', $errorsTargetDir . '/401.blade.php');
     }
 
     /**

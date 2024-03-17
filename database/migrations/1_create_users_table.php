@@ -22,7 +22,6 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-
         if (!Schema::hasTable('password_reset_tokens')) {
             Schema::create('password_reset_tokens', function (Blueprint $table) {
                 $table->string('email')->primary();

@@ -22,6 +22,19 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+        if (!Schema::hasTable('personal_access_tokens')) {
+            Schema::create('personal_access_tokens', function (Blueprint $table) {
+                $table->id();
+                $table->morphs('tokenable');
+                $table->string('name');
+                $table->string('token', 64)->unique();
+                $table->text('abilities')->nullable();
+                $table->timestamp('last_used_at')->nullable();
+                $table->timestamp('expires_at')->nullable();
+                $table->timestamps();
+            });
+        }
+
         if (!Schema::hasTable('password_reset_tokens')) {
             Schema::create('password_reset_tokens', function (Blueprint $table) {
                 $table->string('email')->primary();
@@ -48,6 +61,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('personal_access_tokens');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }

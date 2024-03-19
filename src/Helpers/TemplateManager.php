@@ -24,9 +24,14 @@ class TemplateManager
         $source = $this->template->layout?->content . $this->template->content;
 
         $twig = new Environment(new ArrayLoader());
-        $nodes = $twig->parse(
-            $twig->tokenize(new Source($source, ''))
-        )->getNode('body')->getNode('0');
+
+        try {
+            $nodes = $twig->parse(
+                $twig->tokenize(new Source($source, ''))
+            )->getNode('body')->getNode('0');
+        } catch (\Exception) {
+            return [];
+        }
 
         preg_match_all("|Twig\\\Node\\\Expression\\\NameExpression\(name\: '(.*)'|mi", (string) $nodes, $matches);
 

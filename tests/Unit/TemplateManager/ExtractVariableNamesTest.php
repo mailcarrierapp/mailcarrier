@@ -67,3 +67,17 @@ it('returns all the variables of the template along with its layout', function (
 
     expect($output)->toBe(['headline', 'name', 'ctaUrl', 'isPremium', 'tierLevel']);
 });
+
+it('returns empty array for a template with errors', function () {
+    $template = new Template([
+        'content' => <<<'TWIG'
+            Hello {{ name }},
+            {% if isPremium|default(false) %%}
+                {{ tierLevel|title }}
+        TWIG,
+    ]);
+
+    $output = TemplateManager::make($template)->extractVariableNames();
+
+    expect($output)->toBe([]);
+});

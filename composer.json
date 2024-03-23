@@ -25,6 +25,7 @@
         "laravel/socialite": "^5.6.1",
         "livewire/livewire": "^3.4",
         "nunomaduro/termwind": "^1.15|^2.0",
+        "pboivin/filament-peek": "^2.2",
         "ralphjsmit/laravel-filament-components": "^2.0",
         "socialiteproviders/manager": "^4.3",
         "spatie/data-transfer-object": "^3.9.1",

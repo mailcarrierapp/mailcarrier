@@ -13,6 +13,7 @@ use Illuminate\Support\HtmlString;
 use MailCarrier\Actions\Templates\GenerateSlug;
 use MailCarrier\Forms\Components\CodeEditor;
 use MailCarrier\Models\Template;
+use MailCarrier\Resources\TemplateResource\Actions\LivePreviewAction;
 use MailCarrier\Resources\TemplateResource\Pages;
 use RalphJSmit\Filament\Components\Forms\Timestamps;
 
@@ -98,6 +99,20 @@ class TemplateResource extends Resource
         ];
     }
 
+    public static function getFormEditor(): Forms\Components\Component
+    {
+        return Forms\Components\TextInput::make('name')
+                ->label('Internal name')
+                ->required()
+                ->autofocus()
+                ->columnSpanFull()
+                ->live(debounce: 200)
+                // Disable field UI if the record exists and user can't unlock it
+                ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
+                // Save the field if record does not exist or user can unlock it
+                ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked);
+    }
+
     /**
      * Get the table filters.
      */
@@ -127,16 +142,6 @@ class TemplateResource extends Resource
     protected static function getFormContent(): Forms\Components\Section
     {
         return Forms\Components\Section::make([
-            Forms\Components\TextInput::make('name')
-                ->label('Internal name')
-                ->required()
-                ->autofocus()
-                ->columnSpanFull()
-                // Disable field UI if the record exists and user can't unlock it
-                ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
-                // Save the field if record does not exist or user can unlock it
-                ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked),
-
             Forms\Components\TextInput::make('slug')
                 ->label('Unique identifier (slug)')
                 ->placeholder('Leave empty to auto generate')
@@ -150,6 +155,8 @@ class TemplateResource extends Resource
                 ->extraInputAttributes([
                     'onClick' => 'this.select()',
                 ]),
+
+            static::getFormEditor(),
 
             CodeEditor::make('content')
                 ->required()
@@ -171,6 +178,10 @@ class TemplateResource extends Resource
     protected static function getFormSidebar(): Forms\Components\Section
     {
         return Forms\Components\Section::make([
+            Forms\Components\Actions::make([
+                LivePreviewAction::make(),
+            ]),
+
             Forms\Components\Toggle::make('is_locked')
                 ->inline(false)
                 // Disable field UI if the record exists and user can't unlock it

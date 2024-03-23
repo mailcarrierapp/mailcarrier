@@ -5,9 +5,11 @@ use Illuminate\Support\Facades\Route;
 use MailCarrier\Http\Controllers\LogController;
 use MailCarrier\Http\Controllers\MailCarrierController;
 use MailCarrier\Http\Controllers\SocialAuthController;
+use MailCarrier\Http\Controllers\TemplateController;
 
 Route::middleware(['web', 'auth:' . Config::get('filament.auth.guard')])->group(function () {
-    Route::get('preview/logs/{log}', [LogController::class, 'preview'])->name('logs.preview');
+    Route::get('logs/{log}/preview', [LogController::class, 'preview'])->name('logs.preview');
+    Route::get('templates/preview', [TemplateController::class, 'preview'])->name('templates.preview');
     Route::get('attachment/{attachment}', [MailCarrierController::class, 'downloadAttachment'])
         ->whereUuid('attachment')
         ->name('download.attachment');

@@ -3,10 +3,7 @@
 namespace MailCarrier\Resources\TemplateResource\Pages;
 
 use Filament\Actions;
-use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Component;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Auth;
@@ -19,18 +16,10 @@ use Pboivin\FilamentPeek\Pages\Concerns\HasPreviewModal;
 
 class EditTemplate extends EditRecord
 {
-    use HasPreviewModal;
     use HasBuilderPreview;
+    use HasPreviewModal;
 
     protected static string $resource = TemplateResource::class;
-    protected static string $recordId;
-
-    public function mount(int|string $record): void
-    {
-        parent::mount($record);
-
-        static::$recordId = $this->getRecord()->id;
-    }
 
     public function getRecord(): Template
     {
@@ -68,18 +57,16 @@ class EditTemplate extends EditRecord
     public static function getBuilderEditorSchema(): Component|array
     {
         return TemplateResource::getFormEditor()
-            ->afterStateUpdated(function (Get $get, string $state) {
-                dump(
-                    $get('_internalId'),
-                    Auth::user()->id,
-                    $state
-                );
-
+            ->afterStateUpdated(function (Get $get, string $state, \Livewire\Component $livewire) {
                 Preview::cacheChanges(
                     $get('_internalId'),
                     Auth::user()->id,
                     $state
                 );
+
+                $livewire->js("
+                    document.querySelector('.filament-peek-panel-body iframe').contentWindow.location.reload();
+                ");
             });
     }
 
@@ -96,16 +83,8 @@ class EditTemplate extends EditRecord
         return $this->data['id'] ?? uniqid();
     }
 
-    protected function getBuilderPreviewUrl(string $builderName): ?string
+    protected function getBuilderPreviewUrl(): ?string
     {
-        // Generate a unique token for this preview
-        $templateId = $this->data['id'] ?? uniqid();
-        $userId = Auth::user()->id;
-
-        dump(
-            $templateId, $userId, $this->data['name']
-        );
-
         // Return the preview URL
         return route('templates.preview', [
             'token' => Preview::cacheChanges(

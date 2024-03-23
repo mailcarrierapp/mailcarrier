@@ -102,15 +102,15 @@ class TemplateResource extends Resource
     public static function getFormEditor(): Forms\Components\Component
     {
         return Forms\Components\TextInput::make('name')
-                ->label('Internal name')
-                ->required()
-                ->autofocus()
-                ->columnSpanFull()
-                ->live(debounce: 200)
+            ->label('Internal name')
+            ->required()
+            ->autofocus()
+            ->columnSpanFull()
+            ->live(debounce: 200)
                 // Disable field UI if the record exists and user can't unlock it
-                ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
+            ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
                 // Save the field if record does not exist or user can unlock it
-                ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked);
+            ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked);
     }
 
     /**

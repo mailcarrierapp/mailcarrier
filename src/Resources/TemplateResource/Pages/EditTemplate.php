@@ -90,7 +90,7 @@ class EditTemplate extends EditRecord
             'token' => Preview::cacheChanges(
                 $this->getPreviewInternalId(),
                 Auth::user()->id,
-                $this->data['name']
+                $this->data['content']
             ),
         ]);
     }

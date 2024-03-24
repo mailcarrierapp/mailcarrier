@@ -101,15 +101,16 @@ class TemplateResource extends Resource
 
     public static function getFormEditor(): Forms\Components\Component
     {
-        return Forms\Components\TextInput::make('name')
-            ->label('Internal name')
+        return CodeEditor::make('content')
             ->required()
-            ->autofocus()
             ->columnSpanFull()
-            ->live(debounce: 200)
-                // Disable field UI if the record exists and user can't unlock it
+            ->hint(new HtmlString('<a href="https://twig.symfony.com/doc/3.x/templates.html" class="underline text-primary-500 cursor-help" target="_blank" tabindex="-1">Help with syntax</a>'))
+            ->hintIcon('heroicon-o-code-bracket-square')
+            // Full width
+            ->columnSpan(2)
+            // Disable field UI if the record exists and user can't unlock it
             ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
-                // Save the field if record does not exist or user can unlock it
+            // Save the field if record does not exist or user can unlock it
             ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked);
     }
 
@@ -142,6 +143,17 @@ class TemplateResource extends Resource
     protected static function getFormContent(): Forms\Components\Section
     {
         return Forms\Components\Section::make([
+            Forms\Components\TextInput::make('name')
+            ->label('Internal name')
+            ->required()
+            ->autofocus()
+            ->columnSpanFull()
+            ->live(debounce: 200)
+                // Disable field UI if the record exists and user can't unlock it
+            ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
+                // Save the field if record does not exist or user can unlock it
+            ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked),
+
             Forms\Components\TextInput::make('slug')
                 ->label('Unique identifier (slug)')
                 ->placeholder('Leave empty to auto generate')
@@ -157,18 +169,6 @@ class TemplateResource extends Resource
                 ]),
 
             static::getFormEditor(),
-
-            CodeEditor::make('content')
-                ->required()
-                ->columnSpanFull()
-                ->hint(new HtmlString('<a href="https://twig.symfony.com/doc/3.x/templates.html" class="underline text-primary-500 cursor-help" target="_blank" tabindex="-1">Help with syntax</a>'))
-                ->hintIcon('heroicon-o-code-bracket-square')
-                // Full width
-                ->columnSpan(2)
-                // Disable field UI if the record exists and user can't unlock it
-                ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
-                // Save the field if record does not exist or user can unlock it
-                ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked),
         ]);
     }
 

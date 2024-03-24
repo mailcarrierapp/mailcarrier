@@ -13,7 +13,7 @@ class LivePreviewAction extends InlinePreviewAction
         $this->label('Live preview');
         $this->icon('heroicon-o-bolt');
         $this->button();
-        $this->builderPreview('name');
+        $this->builderPreview('content');
         $this->extraAttributes([
             'class' => '!bg-amber-500 hover:!bg-amber-400 w-full',
         ]);

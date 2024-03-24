@@ -82,6 +82,7 @@ class MailCarrierServiceProvider extends PackageServiceProvider
     {
         FilamentAsset::register([
             Js::make('mailcarrier-hljs', asset('vendor/mailcarrier/js/highlight.js')),
+            Js::make('mailcarrier-codemirror', asset('vendor/mailcarrier/js/codemirror.component.js')),
         ]);
 
         Template::observe(TemplateObserver::class);

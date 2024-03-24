@@ -57,6 +57,7 @@ class EditTemplate extends EditRecord
     public static function getBuilderEditorSchema(): Component|array
     {
         return TemplateResource::getFormEditor()
+            ->live()
             ->afterStateUpdated(function (Get $get, string $state, \Livewire\Component $livewire) {
                 Preview::cacheChanges(
                     $get('_internalId'),
@@ -65,7 +66,7 @@ class EditTemplate extends EditRecord
                 );
 
                 $livewire->js("
-                    document.querySelector('.filament-peek-panel-body iframe').contentWindow.location.reload();
+                    document.querySelector('.filament-peek-panel-body iframe')?.contentWindow?.location?.reload();
                 ");
             });
     }

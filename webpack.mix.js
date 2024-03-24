@@ -14,6 +14,7 @@ const mix = require('laravel-mix');
 mix
   .setPublicPath('resources/dist/')
   .js('resources/js/highlight.js', 'js')
+  .js('resources/js/codemirror.component.js', 'js')
   .sass('resources/css/highlight.scss', 'css')
   .postCss('resources/css/theme.css', 'css', [
     require('tailwindcss'),

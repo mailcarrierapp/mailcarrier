@@ -89,13 +89,6 @@ class EditTemplate extends EditRecord
                     $livewire->js("
                         document.querySelector('.filament-peek-panel-body iframe')?.contentWindow?.location?.reload();
                     ");
-                })
-                ->default(function (Get $get) {
-                    return Arr::mapWithKeys(
-                        // @phpstan-ignore-next-line
-                        TemplateManager::makeFromId($get('_internalId'), $get('content'))->extractVariableNames(),
-                        fn (string $value) => [$value => null]
-                    );
                 }),
         ];
     }
@@ -103,7 +96,12 @@ class EditTemplate extends EditRecord
     public function mutateInitialBuilderEditorData(string $builderName, array $editorData): array
     {
         return [
-            '_internalId' => $this->getPreviewInternalId(),
+            '_internalId' => $internalId = $this->getPreviewInternalId(),
+            'variables' => Arr::mapWithKeys(
+                // @phpstan-ignore-next-line
+                TemplateManager::makeFromId($internalId, $editorData['content'])->extractVariableNames(),
+                fn (string $value) => [$value => null]
+            ),
             ...$editorData,
         ];
     }

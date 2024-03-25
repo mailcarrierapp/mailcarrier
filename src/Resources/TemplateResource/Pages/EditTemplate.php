@@ -3,11 +3,13 @@
 namespace MailCarrier\Resources\TemplateResource\Pages;
 
 use Filament\Actions;
-use Filament\Forms\Components\Component;
+use Filament\Forms\Components;
 use Filament\Forms\Get;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use MailCarrier\Actions\Templates\Preview;
+use MailCarrier\Helpers\TemplateManager;
 use MailCarrier\Models\Template;
 use MailCarrier\Resources\TemplateResource;
 use MailCarrier\Resources\TemplateResource\Actions\SendTestAction;
@@ -54,21 +56,48 @@ class EditTemplate extends EditRecord
         ];
     }
 
-    public static function getBuilderEditorSchema(): Component|array
+    public static function getBuilderEditorSchema(): Components\Component|array
     {
-        return TemplateResource::getFormEditor()
-            ->live()
-            ->afterStateUpdated(function (Get $get, string $state, \Livewire\Component $livewire) {
-                Preview::cacheChanges(
-                    $get('_internalId'),
-                    Auth::user()->id,
-                    $state
-                );
+        return [
+            TemplateResource::getFormEditor()
+                ->live()
+                ->afterStateUpdated(function (Get $get, string $state, \Livewire\Component $livewire) {
+                    Preview::cacheChanges(
+                        $get('_internalId'),
+                        Auth::user()->id,
+                        $state,
+                        $get('variables')
+                    );
 
-                $livewire->js("
-                    document.querySelector('.filament-peek-panel-body iframe')?.contentWindow?.location?.reload();
-                ");
-            });
+                    $livewire->js("
+                        document.querySelector('.filament-peek-panel-body iframe')?.contentWindow?.location?.reload();
+                    ");
+                }),
+            Components\KeyValue::make('variables')
+                ->keyLabel('Variable name')
+                ->valueLabel('Variable value')
+                ->valuePlaceholder('Fill or delete')
+                ->live(debounce: 500)
+                ->afterStateUpdated(function (Get $get, array $state, \Livewire\Component $livewire) {
+                    Preview::cacheChanges(
+                        $get('_internalId'),
+                        Auth::user()->id,
+                        $get('content'),
+                        $state
+                    );
+
+                    $livewire->js("
+                        document.querySelector('.filament-peek-panel-body iframe')?.contentWindow?.location?.reload();
+                    ");
+                })
+                ->default(function (Get $get) {
+                    return Arr::mapWithKeys(
+                        // @phpstan-ignore-next-line
+                        TemplateManager::makeFromId($get('_internalId'), $get('content'))->extractVariableNames(),
+                        fn (string $value) => [$value => null]
+                    );
+                }),
+        ];
     }
 
     public function mutateInitialBuilderEditorData(string $builderName, array $editorData): array

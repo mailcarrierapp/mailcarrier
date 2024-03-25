@@ -21,10 +21,12 @@ class Preview extends Action
         $template = Template::find($data['templateId']) ?: new Template();
         $template->content = $data['content'];
 
-        return $this->render->run($template);
+        return $this->render
+            ->setStrictVariables(false)
+            ->run($template, $data['variables']);
     }
 
-    public static function cacheChanges(string $templateId, int $userId, string $content): string
+    public static function cacheChanges(string $templateId, int $userId, string $content, array $variables = []): string
     {
         $token = md5("template-{$templateId}-{$userId}");
 
@@ -32,6 +34,7 @@ class Preview extends Action
         $cacheData = [
             'templateId' => $templateId,
             'content' => $content,
+            'variables' => $variables,
         ];
 
         Cache::put('preview:' . $token, $cacheData, 5 * 60);

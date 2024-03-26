@@ -60,7 +60,7 @@ class EditTemplate extends EditRecord
     {
         return [
             TemplateResource::getFormEditor()
-                ->live()
+                ->live(debounce: 500)
                 ->afterStateUpdated(function (Get $get, string $state, \Livewire\Component $livewire) {
                     Preview::cacheChanges(
                         $get('_internalId'),

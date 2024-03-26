@@ -52,6 +52,7 @@ const CodeEditorAlpinePlugin = (Alpine) => {
             EditorView.updateListener.of((v) => {
               if (v.docChanged) {
                 this.state = v.state.doc.toString();
+                this.$wire.$commit();
               }
             }),
           ],

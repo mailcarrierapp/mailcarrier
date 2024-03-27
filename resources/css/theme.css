@@ -1,4 +1,4 @@
-@import '../../vendor/filament/filament/resources/css/theme.css';
+@import "../../vendor/filament/filament/resources/css/theme.css";
 
 @config '../../tailwind.config.js';
 
@@ -6,4 +6,8 @@
   position: relative;
   top: -2px;
   transform: rotate(-40deg);
+}
+
+.filament-peek-panel-body iframe {
+  @apply rounded bg-white;
 }

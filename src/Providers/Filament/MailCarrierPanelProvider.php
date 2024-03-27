@@ -17,6 +17,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use MailCarrier\Pages\Login;
+use MailCarrier\Preview\PreviewPlugin;
 use MailCarrier\Resources;
 use MailCarrier\Widgets\SentFailureChartWidget;
 use MailCarrier\Widgets\StatsOverviewWidget;
@@ -53,6 +54,9 @@ class MailCarrierPanelProvider extends PanelProvider
             ->widgets([
                 StatsOverviewWidget::class,
                 SentFailureChartWidget::class,
+            ])
+            ->plugins([
+                PreviewPlugin::make(),
             ])
             ->middleware([
                 EncryptCookies::class,

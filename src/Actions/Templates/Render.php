@@ -7,6 +7,15 @@ use MailCarrier\Models\Template;
 
 class Render extends Action
 {
+    private bool $strictVariables = true;
+
+    public function setStrictVariables(bool $strictVariables): static
+    {
+        $this->strictVariables = $strictVariables;
+
+        return $this;
+    }
+
     /**
      * Render a template with the given variables.
      */
@@ -26,7 +35,10 @@ class Render extends Action
         ]);
 
         $twig = new \Twig\Environment($loader);
-        $twig->enableStrictVariables();
+
+        if ($this->strictVariables) {
+            $twig->enableStrictVariables();
+        }
 
         return $twig->render($mainFileName, $variables);
     }

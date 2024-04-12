@@ -12,5 +12,6 @@ export default {
   ],
   safelist: [
     'dark:flex',
+    'max-w-[14rem]',
   ],
 }

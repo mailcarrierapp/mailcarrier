@@ -21,9 +21,13 @@ class Preview extends Action
         $template = Template::find($data['templateId']) ?: new Template();
         $template->content = $data['content'];
 
-        return $this->render
+        return rescue(
+            fn () => $this->render
             ->setStrictVariables(false)
-            ->run($template, $data['variables']);
+            ->run($template, $data['variables']),
+            rescue: '',
+            report: false
+        );
     }
 
     public static function cacheChanges(string $templateId, int $userId, string $content, array $variables = []): string

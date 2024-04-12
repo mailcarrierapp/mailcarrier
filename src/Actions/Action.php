@@ -8,6 +8,7 @@ use Mockery;
 use Mockery\Expectation;
 use Mockery\ExpectationInterface;
 use Mockery\HigherOrderMessage;
+use Mockery\LegacyMockInterface;
 use Mockery\MockInterface;
 
 /**
@@ -20,7 +21,7 @@ abstract class Action
 {
     use Resolvable;
 
-    public static function mock(): MockInterface
+    public static function mock(): MockInterface|LegacyMockInterface
     {
         if (static::isFake()) {
             return static::getFakeResolvedInstance();
@@ -45,7 +46,7 @@ abstract class Action
         return static::setFakeResolvedInstance($spy);
     }
 
-    public static function partialMock(): MockInterface
+    public static function partialMock(): MockInterface|LegacyMockInterface
     {
         return static::mock()->makePartial();
     }

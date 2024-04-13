@@ -20,4 +20,14 @@ class TemplateController extends Controller
             $preview->run(Cache::get('preview:' . $token))
         );
     }
+
+    /**
+     * Preview a template.
+     */
+    public function preview2(Request $request)
+    {
+        return view('mailcarrier::preview-template', [
+            'token' => $request->query('token') ?: throw new \Exception('No preview token provided.'),
+        ]);
+    }
 }

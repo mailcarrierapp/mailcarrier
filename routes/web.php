@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use MailCarrier\Http\Controllers\LogController;
@@ -20,3 +21,8 @@ Route::prefix('auth')->middleware(['web', 'guest'])->group(function () {
 });
 
 Route::get('templates/preview', [TemplateController::class, 'preview'])->name('templates.preview');
+
+Route::middleware('web')->group(function () {
+    Route::get('templates/preview2', [TemplateController::class, 'preview2']);
+});
+

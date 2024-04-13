@@ -30,8 +30,12 @@ class Preview extends Action
         );
     }
 
-    public static function cacheChanges(string $templateId, int $userId, string $content, array $variables = []): string
-    {
+    public static function cacheChanges(
+        string $templateId,
+        int $userId,
+        string $content,
+        array $variables = []
+    ): string {
         $token = md5("template-{$templateId}-{$userId}");
 
         // Store the preview data in the cache to be retrieved from the Preview action
@@ -41,7 +45,7 @@ class Preview extends Action
             'variables' => $variables,
         ];
 
-        Cache::put('preview:' . $token, $cacheData, 5 * 60);
+        Cache::put('preview:' . $token, $cacheData, 60 * 60);
 
         return $token;
     }

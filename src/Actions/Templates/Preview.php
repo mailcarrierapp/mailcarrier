@@ -23,8 +23,8 @@ class Preview extends Action
 
         return rescue(
             fn () => $this->render
-            ->setStrictVariables(false)
-            ->run($template, $data['variables']),
+                ->setStrictVariables(false)
+                ->run($template, $data['variables']),
             rescue: '',
             report: false
         );

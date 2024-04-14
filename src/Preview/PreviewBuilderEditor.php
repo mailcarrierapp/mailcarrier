@@ -10,13 +10,7 @@ class PreviewBuilderEditor extends BuilderEditor
 {
     public function render(): ViewContract
     {
-        if ($this->shouldAutoRefresh()) {
-            try {
-                $this->refreshBuilderPreview();
-            } catch (ValidationException $e) {
-                // pass
-            }
-        }
+        parent::render();
 
         return view('mailcarrier::livewire.preview.builder-editor');
     }

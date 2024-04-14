@@ -26,7 +26,7 @@ class TemplateManager
             Str::isUuid($templateId)
                 ? Template::findOrFail($templateId)
                 : new Template(['content' => $content])
-            );
+        );
     }
 
     public function extractVariableNames(): array

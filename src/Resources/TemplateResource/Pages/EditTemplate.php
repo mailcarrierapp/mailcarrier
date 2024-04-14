@@ -10,7 +10,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use MailCarrier\Actions\Templates\Preview;
 use MailCarrier\Helpers\TemplateManager;
-use MailCarrier\Livewire\PreviewTemplate;
 use MailCarrier\Models\Template;
 use MailCarrier\Resources\TemplateResource;
 use MailCarrier\Resources\TemplateResource\Actions\SendTestAction;

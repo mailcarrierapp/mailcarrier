@@ -1,6 +1,8 @@
 <template x-if="withEditor">
     <div class="flex gap-4">
-        <x-filament::button color="gray" x-on:click="$dispatch('open-modal', { id: 'preview-on-device' })">
+        <x-filament::button
+            class="!bg-amber-500 hover:!bg-amber-400"
+            x-on:click="$dispatch('open-modal', { id: 'preview-on-device' })">
             Preview on device
         </x-filament::button>
 
@@ -51,5 +53,8 @@
         "></qr-code>
 
     <x-slot name="footerActions">
+        <x-filament::button color="gray" class="mx-auto" x-on:click="close()">
+            Close
+        </x-filament::button>
     </x-slot>
 </x-filament::modal>

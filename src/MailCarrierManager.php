@@ -185,4 +185,13 @@ class MailCarrierManager
             60 * 60, // 1h
         ];
     }
+
+    public function isLocalhost(): bool
+    {
+        return Str::startsWith(Config::get('app.url'), [
+            'http://localhost', 'https://localhost',
+            'http://127.0.0.1', 'https://127.0.0.1',
+            'http://0.0.0.0', 'https://0.0.0.0',
+        ]);
+    }
 }

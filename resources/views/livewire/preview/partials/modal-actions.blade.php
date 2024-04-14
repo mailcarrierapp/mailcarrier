@@ -18,6 +18,7 @@
 
 <x-filament::modal
     id="preview-on-device"
+    width="lg"
     x-on:modal-opened="
         document.getElementById('device-preview-qrcode').setAttribute(
             'contents',
@@ -28,7 +29,13 @@
         Preview on device
     </x-slot>
 
-    Scan this QRCode from your device to preview the current template:
+    @if (\MailCarrier\Facades\MailCarrier::isLocalhost())
+        <div class="bg-warning-100 dark:bg-warning-500/20 border border-warning-300 dark:border-warning-600 rounded py-2 px-4 dark:text-warning-300 font-semibold">
+            Device preview will not work on localhost without a tunneling service like ngrok or expose.
+        </div>
+    @endif
+
+    Scan this QRCode from your device to live-preview the current template.
 
     <qr-code
         id="device-preview-qrcode"
@@ -39,7 +46,7 @@
         style="
             width: 300px;
             height: 300px;
-            margin: 2em auto;
+            margin: auto;
             background-color: #fff;
         "></qr-code>
 

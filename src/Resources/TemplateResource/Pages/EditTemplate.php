@@ -10,6 +10,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use MailCarrier\Actions\Templates\Preview;
 use MailCarrier\Helpers\TemplateManager;
+use MailCarrier\Livewire\PreviewTemplate;
 use MailCarrier\Models\Template;
 use MailCarrier\Resources\TemplateResource;
 use MailCarrier\Resources\TemplateResource\Actions\SendTestAction;
@@ -60,35 +61,28 @@ class EditTemplate extends EditRecord
     {
         return [
             TemplateResource::getFormEditor()
-                ->live(debounce: 500)
-                ->afterStateUpdated(function (Get $get, string $state, \Livewire\Component $livewire) {
+                ->live()
+                ->afterStateUpdated(function (Get $get, string $state) {
                     Preview::cacheChanges(
                         $get('_internalId'),
                         Auth::user()->id,
                         $state,
                         $get('variables')
                     );
-
-                    $livewire->js("
-                        document.querySelector('.filament-peek-panel-body iframe')?.contentWindow?.location?.reload();
-                    ");
                 }),
+
             Components\KeyValue::make('variables')
                 ->keyLabel('Variable name')
                 ->valueLabel('Variable value')
                 ->valuePlaceholder('Fill or delete')
-                ->live(debounce: 500)
-                ->afterStateUpdated(function (Get $get, array $state, \Livewire\Component $livewire) {
+                ->live()
+                ->afterStateUpdated(function (Get $get, array $state) {
                     Preview::cacheChanges(
                         $get('_internalId'),
                         Auth::user()->id,
                         $get('content'),
                         $state
                     );
-
-                    $livewire->js("
-                        document.querySelector('.filament-peek-panel-body iframe')?.contentWindow?.location?.reload();
-                    ");
                 }),
         ];
     }

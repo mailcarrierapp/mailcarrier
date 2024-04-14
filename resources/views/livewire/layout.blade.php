@@ -19,7 +19,7 @@
     </head>
 
     <body class="antialiased">
-        @yield('content')
+        {{ $slot }}
 
         @livewireScripts
     </body>

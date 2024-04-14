@@ -42,9 +42,9 @@
     <qr-code
         id="device-preview-qrcode"
         contents="https://mailcarrier.app"
-        module-color="#1c7d43"
-        position-ring-color="#13532d"
-        position-center-color="#70c559"
+        module-color="rgb({{ \Filament\Support\Colors\Color::Indigo[600] }})"
+        position-ring-color="rgb({{ \Filament\Support\Colors\Color::Indigo[800] }})"
+        position-center-color="rgb({{ \Filament\Support\Colors\Color::Indigo[400] }})"
         style="
             width: 300px;
             height: 300px;

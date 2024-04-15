@@ -18,7 +18,7 @@ class PreviewPlugin extends FilamentPeekPlugin
 
         $panel->renderHook(
             'panels::body.end',
-            fn () => view('mailcarrier::livewire.preview.preview-modal'),
+            fn () => view('mailcarrier::preview.preview-modal'),
         );
 
         if ($this->shouldLoadPluginScripts()) {

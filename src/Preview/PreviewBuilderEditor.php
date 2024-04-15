@@ -12,7 +12,7 @@ class PreviewBuilderEditor extends BuilderEditor
     {
         parent::render();
 
-        return view('mailcarrier::livewire.preview.builder-editor');
+        return view('mailcarrier::preview.builder-editor');
     }
 
     public function closeBuilderEditor(): void

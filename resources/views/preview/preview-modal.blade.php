@@ -68,7 +68,7 @@
                 @endif
 
                 <div class="filament-peek-modal-actions">
-                    @include('mailcarrier::livewire.preview.partials.modal-actions')
+                    @include('mailcarrier::preview.partials.modal-actions')
                 </div>
             </div>
 

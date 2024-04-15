@@ -55,7 +55,7 @@
         </qr-code>
 
     <x-slot name="footerActions">
-        <x-filament::button color="gray" class="mx-auto" x-on:click="close()">
+        <x-filament::button color="gray" class="ml-auto" x-on:click="close()">
             Close
         </x-filament::button>
     </x-slot>

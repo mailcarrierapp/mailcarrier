@@ -11,3 +11,7 @@
 .filament-peek-panel-body iframe {
   @apply rounded bg-white;
 }
+
+.cm-editor {
+  @apply h-full;
+}

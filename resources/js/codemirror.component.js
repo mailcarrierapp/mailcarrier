@@ -1,8 +1,10 @@
-import { indentWithTab } from "@codemirror/commands";
+import {
+  history,
+  indentWithTab
+} from "@codemirror/commands";
 import { html } from "@codemirror/lang-html";
 import { Compartment, EditorState } from '@codemirror/state';
-import { EditorView, keymap } from "@codemirror/view";
-import { basicSetup } from "codemirror";
+import { EditorView, highlightActiveLineGutter, keymap, lineNumbers } from "@codemirror/view";
 import { dracula } from 'thememirror';
 
 // Adapted from https://github.com/dotswan/filament-code-editor
@@ -43,12 +45,14 @@ const CodeEditorAlpinePlugin = (Alpine) => {
           tabSize: 2,
           styleSelectedText: true,
           extensions: [
-            basicSetup,
             keymap.of([indentWithTab]),
             this.languageConfig.of(language === 'json' ? json() : html()),
             this.themeConfig.of([dracula]),
             EditorView.lineWrapping,
             EditorState.readOnly.of(this.isReadOnly),
+            lineNumbers(),
+            history(),
+            highlightActiveLineGutter(),
             EditorView.updateListener.of((v) => {
               if (v.docChanged) {
                 this.state = v.state.doc.toString();

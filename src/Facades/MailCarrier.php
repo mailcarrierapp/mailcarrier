@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static int getFileSize(string $resource, ?string $disk = null)
  * @method static string humanBytes(int $bytes)
  * @method static array<int, int> getEmailRetriesBackoff()
+ * @method static bool isLocalhost()
  *
  * @see \MailCarrier\MailCarrierManager
  */

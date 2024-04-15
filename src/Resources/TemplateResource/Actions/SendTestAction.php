@@ -30,7 +30,7 @@ class SendTestAction extends Action
         $this->modalSubmitActionLabel('Send');
         $this->modalFooterActionsAlignment(Alignment::End);
         $this->extraAttributes([
-            'class' => 'button-send-test !bg-purple-500',
+            'class' => 'button-send-test !bg-purple-500 hover:!bg-purple-400',
         ]);
 
         $this->form([

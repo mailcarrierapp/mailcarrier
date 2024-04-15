@@ -13,6 +13,7 @@ use Illuminate\Support\HtmlString;
 use MailCarrier\Actions\Templates\GenerateSlug;
 use MailCarrier\Forms\Components\CodeEditor;
 use MailCarrier\Models\Template;
+use MailCarrier\Resources\TemplateResource\Actions\LivePreviewAction;
 use MailCarrier\Resources\TemplateResource\Pages;
 use RalphJSmit\Filament\Components\Forms\Timestamps;
 
@@ -98,6 +99,20 @@ class TemplateResource extends Resource
         ];
     }
 
+    public static function getFormEditor(): Forms\Components\Component
+    {
+        return CodeEditor::make('content')
+            ->required()
+            ->hint(new HtmlString('<a href="https://twig.symfony.com/doc/3.x/templates.html" class="underline text-primary-500 cursor-help" target="_blank" tabindex="-1">Help with syntax</a>'))
+            ->hintIcon('heroicon-o-code-bracket-square')
+            // Full width
+            ->columnSpanFull()
+            // Disable field UI if the record exists and user can't unlock it
+            ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
+            // Save the field if record does not exist or user can unlock it
+            ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked);
+    }
+
     /**
      * Get the table filters.
      */
@@ -151,17 +166,7 @@ class TemplateResource extends Resource
                     'onClick' => 'this.select()',
                 ]),
 
-            CodeEditor::make('content')
-                ->required()
-                ->columnSpanFull()
-                ->hint(new HtmlString('<a href="https://twig.symfony.com/doc/3.x/templates.html" class="underline text-primary-500 cursor-help" target="_blank" tabindex="-1">Help with syntax</a>'))
-                ->hintIcon('heroicon-o-code-bracket-square')
-                // Full width
-                ->columnSpan(2)
-                // Disable field UI if the record exists and user can't unlock it
-                ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
-                // Save the field if record does not exist or user can unlock it
-                ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked),
+            static::getFormEditor(),
         ]);
     }
 
@@ -171,6 +176,10 @@ class TemplateResource extends Resource
     protected static function getFormSidebar(): Forms\Components\Section
     {
         return Forms\Components\Section::make([
+            Forms\Components\Actions::make([
+                LivePreviewAction::make(),
+            ]),
+
             Forms\Components\Toggle::make('is_locked')
                 ->inline(false)
                 // Disable field UI if the record exists and user can't unlock it

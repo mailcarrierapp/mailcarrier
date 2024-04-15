@@ -2,6 +2,7 @@
 
 namespace MailCarrier\Helpers;
 
+use Illuminate\Support\Str;
 use MailCarrier\Models\Template;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -17,6 +18,15 @@ class TemplateManager
     public static function make(Template $template): static
     {
         return new static($template);
+    }
+
+    public static function makeFromId(string $templateId, string $content): static
+    {
+        return new static(
+            Str::isUuid($templateId)
+                ? Template::findOrFail($templateId)
+                : new Template(['content' => $content])
+        );
     }
 
     public function extractVariableNames(): array

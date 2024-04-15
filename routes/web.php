@@ -5,9 +5,10 @@ use Illuminate\Support\Facades\Route;
 use MailCarrier\Http\Controllers\LogController;
 use MailCarrier\Http\Controllers\MailCarrierController;
 use MailCarrier\Http\Controllers\SocialAuthController;
+use MailCarrier\Livewire\PreviewTemplate;
 
 Route::middleware(['web', 'auth:' . Config::get('filament.auth.guard')])->group(function () {
-    Route::get('preview/logs/{log}', [LogController::class, 'preview'])->name('logs.preview');
+    Route::get('logs/{log}/preview', [LogController::class, 'preview'])->name('logs.preview');
     Route::get('attachment/{attachment}', [MailCarrierController::class, 'downloadAttachment'])
         ->whereUuid('attachment')
         ->name('download.attachment');
@@ -16,4 +17,8 @@ Route::middleware(['web', 'auth:' . Config::get('filament.auth.guard')])->group(
 Route::prefix('auth')->middleware(['web', 'guest'])->group(function () {
     Route::get('redirect', [SocialAuthController::class, 'redirect'])->name('auth.redirect');
     Route::get('callback', [SocialAuthController::class, 'callback'])->name('auth.callback');
+});
+
+Route::middleware('web')->group(function () {
+    Route::get('templates/preview', PreviewTemplate::class)->name('templates.preview');
 });

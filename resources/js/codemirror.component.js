@@ -5,7 +5,7 @@ import {
 import { html } from "@codemirror/lang-html";
 import { Compartment, EditorState } from '@codemirror/state';
 import { EditorView, highlightActiveLineGutter, keymap, lineNumbers } from "@codemirror/view";
-import { dracula } from 'thememirror';
+import { dracula, smoothy } from 'thememirror';
 
 // Adapted from https://github.com/dotswan/filament-code-editor
 const CodeEditorAlpinePlugin = (Alpine) => {
@@ -61,6 +61,21 @@ const CodeEditorAlpinePlugin = (Alpine) => {
             }),
           ],
         }),
+      });
+
+      window.addEventListener('theme-changed', () => {
+        let theme = localStorage.getItem('theme');
+        if (theme === 'system') {
+          theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+            ? 'dark'
+            : 'light';
+        }
+
+        this.editor.dispatch({
+          effects: this.themeConfig.reconfigure([
+            theme === 'light' ? smoothy : dracula
+          ])
+        });
       });
     },
   }));

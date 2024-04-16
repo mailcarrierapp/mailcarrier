@@ -1,0 +1,13 @@
+{
+  "resources/css/theme.css": {
+    "file": "css/theme.css",
+    "src": "resources/css/theme.css",
+    "isEntry": true
+  },
+  "resources/js/codemirror.component.js": {
+    "file": "js/codemirror.component.js",
+    "name": "codemirror.component",
+    "src": "resources/js/codemirror.component.js",
+    "isEntry": true
+  }
+}

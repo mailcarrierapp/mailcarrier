@@ -9,5 +9,11 @@
     "name": "codemirror.component",
     "src": "resources/js/codemirror.component.js",
     "isEntry": true
+  },
+  "resources/js/highlight.js": {
+    "file": "js/highlight.js",
+    "name": "highlight",
+    "src": "resources/js/highlight.js",
+    "isEntry": true
   }
 }

@@ -18,6 +18,7 @@ export default defineConfig({
       input: [
         'resources/css/theme.css',
         'resources/js/codemirror.component.js',
+        'resources/js/highlight.js',
       ],
     }),
     viteStaticCopy({

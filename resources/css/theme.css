@@ -1,5 +1,6 @@
 @import "../../vendor/filament/filament/resources/css/theme.css";
-
+@import "./hljs-dark.css";
+@import "./hljs-light.css";
 @config '../../tailwind.config.js';
 
 .button-send-test svg {

@@ -23,13 +23,13 @@ class PreviewPlugin extends FilamentPeekPlugin
 
         if ($this->shouldLoadPluginScripts()) {
             FilamentAsset::register([
-                Assets\Js::make(static::ID, __DIR__ . '/../resources/dist/filament-peek.js'),
+                Assets\Js::make(static::ID, base_path('vendor/pboivin/filament-peek/resources/dist/filament-peek.js')),
             ], package: static::PACKAGE);
         }
 
         if ($this->shouldLoadPluginStyles()) {
             FilamentAsset::register([
-                Assets\Css::make(static::ID, __DIR__ . '/../resources/dist/filament-peek.css'),
+                Assets\Css::make(static::ID, base_path('vendor/pboivin/filament-peek/resources/dist/filament-peek.css')),
             ], package: static::PACKAGE);
         }
     }

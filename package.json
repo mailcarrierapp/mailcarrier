@@ -19,7 +19,6 @@
     "tailwindcss": "^3.4.1",
     "thememirror": "^2.0.1",
     "vite": "^5.2.9",
-    "vite-plugin-static-copy": "^1.0.2",
-    "@bitjson/qr-code": "^1.0.2"
+    "vite-plugin-static-copy": "^1.0.2"
   }
 }

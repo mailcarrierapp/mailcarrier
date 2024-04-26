@@ -25,7 +25,11 @@ class PreviewTemplate extends Component
     #[Layout('mailcarrier::livewire.layout')]
     public function render(Preview $preview): string
     {
-        $content = $preview->run(Cache::get('preview:' . $this->token));
+        if (!$previewContent = Cache::get('preview:' . $this->token)) {
+            return '<div></div>';
+        }
+
+        $content = $preview->run($previewContent);
 
         return <<<HTML
             <div wire:poll.1s>

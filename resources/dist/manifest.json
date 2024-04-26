@@ -1,0 +1,13 @@
+{
+  "resources/css/theme.css": {
+    "file": "css/theme.css",
+    "src": "resources/css/theme.css",
+    "isEntry": true
+  },
+  "resources/js/mailcarrier.js": {
+    "file": "js/mailcarrier.js",
+    "name": "mailcarrier",
+    "src": "resources/js/mailcarrier.js",
+    "isEntry": true
+  }
+}

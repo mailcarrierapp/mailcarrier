@@ -17,8 +17,7 @@ export default defineConfig({
     laravel({
       input: [
         'resources/css/theme.css',
-        'resources/js/codemirror.component.js',
-        'resources/js/highlight.js',
+        'resources/js/mailcarrier.js',
       ],
     }),
     viteStaticCopy({

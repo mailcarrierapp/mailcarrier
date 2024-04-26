@@ -4,16 +4,10 @@
     "src": "resources/css/theme.css",
     "isEntry": true
   },
-  "resources/js/codemirror.component.js": {
-    "file": "js/codemirror.component.js",
-    "name": "codemirror.component",
-    "src": "resources/js/codemirror.component.js",
-    "isEntry": true
-  },
-  "resources/js/highlight.js": {
-    "file": "js/highlight.js",
-    "name": "highlight",
-    "src": "resources/js/highlight.js",
+  "resources/js/mailcarrier.js": {
+    "file": "js/mailcarrier.js",
+    "name": "mailcarrier",
+    "src": "resources/js/mailcarrier.js",
     "isEntry": true
   }
 }

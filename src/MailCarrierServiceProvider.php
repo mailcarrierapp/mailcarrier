@@ -81,9 +81,7 @@ class MailCarrierServiceProvider extends PackageServiceProvider
     public function packageBooted(): void
     {
         FilamentAsset::register([
-            Js::make('mailcarrier-qrcode', 'https://unpkg.com/@bitjson/qr-code@1.0.2/dist/qr-code.js'),
-            Js::make('mailcarrier-hljs', asset('vendor/mailcarrier/js/highlight.js')),
-            Js::make('mailcarrier-codemirror', asset('vendor/mailcarrier/js/codemirror.component.js')),
+            Js::make('mailcarrier', asset('vendor/mailcarrier/js/mailcarrier.js')),
         ]);
 
         Template::observe(TemplateObserver::class);

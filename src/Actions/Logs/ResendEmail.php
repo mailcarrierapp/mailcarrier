@@ -16,8 +16,6 @@ class ResendEmail extends Action
 {
     public function run(Log $log, array $data = []): void
     {
-        $attachments = $data['attachments'] ?? Collection::make([]);
-
         // Update the status to Failed just to send email again
         if ($log->isSent()) {
             $log->update([
@@ -49,7 +47,7 @@ class ResendEmail extends Action
                     )
                     ->filter()
                     ->merge(
-                        Collection::make($attachments)->map(
+                        Collection::make($data['attachments'] ?? [])->map(
                             fn (TemporaryUploadedFile $file) => new AttachmentDto(
                                 name: $file->getClientOriginalName(),
                                 content: base64_encode(file_get_contents($file->getRealPath())),

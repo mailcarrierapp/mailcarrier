@@ -4,6 +4,7 @@ namespace MailCarrier\Resources;
 
 use Carbon\CarbonInterface;
 use Filament\Forms\Components\FileUpload;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
@@ -180,7 +181,30 @@ class LogResource extends Resource
                 )
                 ->modalSubmitActionLabel(fn (Log $record) => $record->isFailed() ? 'Retry' : 'Resend')
                 ->modalFooterActionsAlignment(Alignment::Right)
-                ->action(fn (?Log $record, array $data) => $record ? (new ResendEmail())->run($record, $data) : null)
+                ->action(function (?Log $record, array $data) {
+                    if (!$record) {
+                        return;
+                    }
+
+
+                    try {
+                        ResendEmail::resolve()->run($record, $data);
+                    } catch (\Throwable $e) {
+                        Notification::make()
+                            ->title('Error while sending email')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->send();
+
+                        return;
+                    }
+
+                    Notification::make()
+                        ->icon('heroicon-o-paper-airplane')
+                        ->title('Email sent correctly')
+                        ->success()
+                        ->send();
+                })
                 ->visible(fn (?Log $record) => $record?->status !== LogStatus::Pending),
         ];
     }

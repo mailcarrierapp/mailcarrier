@@ -2,8 +2,8 @@
 
 namespace MailCarrier\Commands;
 
-use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use MailCarrier\Actions\Logs\ResendEmail;
 use MailCarrier\Enums\LogStatus;
 use MailCarrier\Models\Log;
@@ -18,12 +18,11 @@ class RetryCommand extends Command
     {
         $this->info('Retrying failed emails...');
 
-        $date = $this->option('date')
-            ? Carbon::parse($this->option('date'))
-            : Carbon::now()->subDay();
-
         $failed = Log::query()
-            ->whereDate('created_at', '=', $date)
+            ->when(
+                $this->option('date'),
+                fn (Builder $query) => $query->whereDate('created_at', $this->option('date'))
+            )
             ->where('status', LogStatus::Failed)
             ->get();
 

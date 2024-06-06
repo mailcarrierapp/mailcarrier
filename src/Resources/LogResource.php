@@ -10,19 +10,14 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Actions\Action as TablesAction;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use MailCarrier\Actions\Logs\GetTriggers;
-use MailCarrier\Actions\SendMail;
-use MailCarrier\Dto\AttachmentDto;
+use MailCarrier\Actions\Logs\ResendEmail;
 use MailCarrier\Dto\LogTemplateDto;
-use MailCarrier\Dto\SendMailDto;
 use MailCarrier\Enums\LogStatus;
 use MailCarrier\Facades\MailCarrier;
-use MailCarrier\Models\Attachment;
 use MailCarrier\Models\Log;
 use MailCarrier\Models\Template;
 use MailCarrier\Resources\LogResource\Pages;
@@ -186,7 +181,29 @@ class LogResource extends Resource
                 )
                 ->modalSubmitActionLabel(fn (Log $record) => $record->isFailed() ? 'Retry' : 'Resend')
                 ->modalFooterActionsAlignment(Alignment::Right)
-                ->action(fn (?Log $record, array $data) => $record ? static::resendEmail($record, $data) : null)
+                ->action(function (?Log $record, array $data) {
+                    if (!$record) {
+                        return;
+                    }
+
+                    try {
+                        ResendEmail::resolve()->run($record, $data);
+                    } catch (\Throwable $e) {
+                        Notification::make()
+                            ->title('Error while sending email')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->send();
+
+                        return;
+                    }
+
+                    Notification::make()
+                        ->icon('heroicon-o-paper-airplane')
+                        ->title('Email sent correctly')
+                        ->success()
+                        ->send();
+                })
                 ->visible(fn (?Log $record) => $record?->status !== LogStatus::Pending),
         ];
     }
@@ -216,68 +233,5 @@ class LogResource extends Resource
                 $label .
                 ($subtitle ? '<p class="text-xs mt-1 text-slate-300">' . $subtitle . '</p>' : '')
         );
-    }
-
-    protected static function resendEmail(Log $log, array $data): void
-    {
-        // Update the status to Failed just to send email again
-        if ($log->isSent()) {
-            $log->update([
-                'status' => LogStatus::Failed,
-            ]);
-        }
-
-        try {
-            SendMail::resolve()->run(
-                new SendMailDto([
-                    'template' => $log->template->slug,
-                    'subject' => $log->subject,
-                    'sender' => $log->sender,
-                    'recipient' => $log->recipient,
-                    'cc' => $log->cc->all(),
-                    'bcc' => $log->bcc->all(),
-                    'variables' => $log->variables,
-                    'trigger' => $log->trigger,
-                    'tags' => $log->tags ?: [],
-                    'metadata' => $log->metadata ?: [],
-                    'attachments' => $log->attachments
-                        ->map(
-                            fn (Attachment $attachment) => !$attachment->canBeDownloaded()
-                                ? null
-                                : new AttachmentDto(
-                                    name: $attachment->name,
-                                    content: $attachment->content,
-                                    size: $attachment->size
-                                )
-                        )
-                        ->filter()
-                        ->merge(
-                            Collection::make($data['attachments'])->map(
-                                fn (TemporaryUploadedFile $file) => new AttachmentDto(
-                                    name: $file->getClientOriginalName(),
-                                    content: base64_encode(file_get_contents($file->getRealPath())),
-                                    size: $file->getSize()
-                                )
-                            )
-                        )
-                        ->all(),
-                ]),
-                $log
-            );
-        } catch (\Throwable $e) {
-            Notification::make()
-                ->title('Error while sending email')
-                ->body($e->getMessage())
-                ->danger()
-                ->send();
-
-            return;
-        }
-
-        Notification::make()
-            ->icon('heroicon-o-paper-airplane')
-            ->title('Email sent correctly')
-            ->success()
-            ->send();
     }
 }

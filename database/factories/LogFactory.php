@@ -37,14 +37,18 @@ class LogFactory extends Factory
             'variables' => [
                 'name' => $this->faker->name(),
             ],
-            'cc' => new ContactDto(
-                email: $this->faker->safeEmail(),
-                name: $this->faker->name(),
-            ),
-            'bcc' => new ContactDto(
-                email: $this->faker->safeEmail(),
-                name: $this->faker->name(),
-            ),
+            'cc' => [
+                new ContactDto(
+                    email: $this->faker->safeEmail(),
+                    name: $this->faker->name(),
+                ),
+            ],
+            'bcc' => [
+                new ContactDto(
+                    email: $this->faker->safeEmail(),
+                    name: $this->faker->name(),
+                ),
+            ],
         ];
     }
 }

@@ -6,6 +6,7 @@ use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Support\Facades\Event;
 use MailCarrier\Commands\InstallCommand;
+use MailCarrier\Commands\RetryCommand;
 use MailCarrier\Commands\SocialCommand;
 use MailCarrier\Commands\TokenCommand;
 use MailCarrier\Commands\UpgradeCommand;
@@ -43,6 +44,7 @@ class MailCarrierServiceProvider extends PackageServiceProvider
                 SocialCommand::class,
                 UserCommand::class,
                 TokenCommand::class,
+                RetryCommand::class,
             ])
             ->hasMigrations([
                 '1_create_users_table',

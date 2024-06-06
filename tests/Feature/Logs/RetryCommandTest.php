@@ -21,9 +21,14 @@ it('resends emails from failed logs', function () {
         'created_at' => Carbon::now()->subDay(),
     ]);
 
-    $log2 = Log::factory()->create([ // This log should not be resent
-        'status' => LogStatus::Failed,
-        'created_at' => Carbon::now()->subDays(2),
+    $log2 = Log::factory()->create([ // This log should not be resent because already sent
+        'status' => LogStatus::Sent,
+        'created_at' => Carbon::now()->subDay(),
+    ]);
+
+    $log3 = Log::factory()->create([ // This log should not be resent because pending
+        'status' => LogStatus::Pending,
+        'created_at' => Carbon::now()->subDay(),
     ]);
 
     $this->artisan('mailcarrier:retry')
@@ -47,10 +52,19 @@ it('resends emails from failed logs', function () {
             $mail->hasFrom($log2->sender->email);
     });
 
+    Mail::assertNotSent(GenericMail::class, function (GenericMail $mail) use ($log3) {
+        $mail->build();
+
+        return $mail->hasTo($log3->recipient) &&
+            $mail->hasSubject($log3->subject) &&
+            $mail->hasFrom($log3->sender->email);
+    });
+
     expect($log->refresh()->status)->toBe(LogStatus::Sent);
     expect($log->error)->toBeNull();
 
-    expect($log2->refresh()->status)->toBe(LogStatus::Failed);
+    expect($log2->refresh()->status)->toBe(LogStatus::Sent);
+    expect($log3->refresh()->status)->toBe(LogStatus::Pending);
 });
 
 it('resends emails from failed logs with a specific date', function () {

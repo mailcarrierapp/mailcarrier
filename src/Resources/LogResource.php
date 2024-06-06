@@ -186,7 +186,6 @@ class LogResource extends Resource
                         return;
                     }
 
-
                     try {
                         ResendEmail::resolve()->run($record, $data);
                     } catch (\Throwable $e) {

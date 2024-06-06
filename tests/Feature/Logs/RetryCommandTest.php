@@ -26,9 +26,9 @@ it('resends emails from failed logs', function () {
         'created_at' => Carbon::now()->subDays(2),
     ]);
 
-    $this->artisan('mailcarrier:log-retry')
-        ->expectsOutput('Retrying failed logs...')
-        ->expectsOutput('1 log retried.')
+    $this->artisan('mailcarrier:retry')
+        ->expectsOutput('Retrying failed emails...')
+        ->expectsOutput('Failed emails retried.')
         ->assertExitCode(0);
 
     Mail::assertSent(GenericMail::class, function (GenericMail $mail) use ($log) {
@@ -64,9 +64,9 @@ it('resends emails from failed logs with a specific date', function () {
         'created_at' => '2021-01-03 00:00:00',
     ]);
 
-    $this->artisan('mailcarrier:log-retry --date=2021-01-01')
-        ->expectsOutput('Retrying failed logs...')
-        ->expectsOutput('1 log retried.')
+    $this->artisan('mailcarrier:retry --date=2021-01-01')
+        ->expectsOutput('Retrying failed emails...')
+        ->expectsOutput('Failed emails retried.')
         ->assertExitCode(0);
 
     Mail::assertSent(GenericMail::class, function (GenericMail $mail) use ($log) {

@@ -60,11 +60,11 @@ class SendMailRequest extends FormRequest
             'recipients' => 'required_without:recipient|prohibits:recipient|array|min:1',
             'recipients.*' => [
                 // Apply rule only when recipients is an array of objects
-                Rule::when($this->has('recipients') && !is_array($this->json('recipients.0')), 'required|email'),
+                Rule::when($this->has('recipients') && !is_array($this->input('recipients.0')), 'required|email'),
             ],
             'recipients.*.email' => [
                 // Apply rule only when recipients is an array of objects
-                Rule::when($this->has('recipients') && is_array($this->json('recipients.0')), 'required|email'),
+                Rule::when($this->has('recipients') && is_array($this->input('recipients.0')), 'required|email'),
             ],
             'recipients.*.variables' => 'sometimes|array',
             'recipients.*.cc' => 'sometimes|array',

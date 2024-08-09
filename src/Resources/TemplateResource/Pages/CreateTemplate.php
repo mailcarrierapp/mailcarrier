@@ -19,7 +19,7 @@ class CreateTemplate extends CreateRecord
         return [
             ...$data,
             'user_id' => Auth::id(),
-            'slug' => (new GenerateSlug())->run($this->data['name']),
+            'slug' => (new GenerateSlug)->run($this->data['name']),
         ];
     }
 }

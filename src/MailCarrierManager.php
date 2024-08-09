@@ -118,7 +118,7 @@ class MailCarrierManager
         );
 
         if (!$uploadResponse) {
-            throw new UploadException();
+            throw new UploadException;
         }
 
         return $filePath;

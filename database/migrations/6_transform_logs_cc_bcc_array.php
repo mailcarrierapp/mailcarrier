@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        $tableName = (new Log())->getTable();
+        $tableName = (new Log)->getTable();
 
         DB::table($tableName)
             ->whereNotNull('cc')

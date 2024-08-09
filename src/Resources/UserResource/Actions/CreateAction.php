@@ -51,7 +51,7 @@ class CreateAction extends BaseCreateAction
             Forms\Components\TextInput::make('email')
                 ->email()
                 ->required()
-                ->unique((new User())->getTable(), 'email'),
+                ->unique((new User)->getTable(), 'email'),
 
             Forms\Components\TextInput::make('password')
                 ->password()

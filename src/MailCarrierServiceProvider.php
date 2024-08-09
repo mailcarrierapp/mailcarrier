@@ -74,7 +74,7 @@ class MailCarrierServiceProvider extends PackageServiceProvider
             $this->app->register(\Laravel\Socialite\SocialiteServiceProvider::class);
         }
 
-        $this->app->scoped('mailcarrier', fn (): MailCarrierManager => new MailCarrierManager());
+        $this->app->scoped('mailcarrier', fn (): MailCarrierManager => new MailCarrierManager);
     }
 
     /**

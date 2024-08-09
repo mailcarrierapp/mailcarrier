@@ -18,7 +18,7 @@ class Preview extends Action
      */
     public function run(array $data): string
     {
-        $template = Template::find($data['templateId']) ?: new Template();
+        $template = Template::find($data['templateId']) ?: new Template;
         $template->content = $data['content'];
 
         return rescue(

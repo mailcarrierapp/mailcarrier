@@ -129,7 +129,7 @@ class LogResource extends Resource
                 ->preload(),
 
             Tables\Filters\SelectFilter::make('trigger')
-                ->options((new GetTriggers())->run()),
+                ->options((new GetTriggers)->run()),
         ];
     }
 

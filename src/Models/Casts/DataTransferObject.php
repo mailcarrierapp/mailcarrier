@@ -57,6 +57,6 @@ class DataTransferObject implements CastsAttributes
             ->getAttributes(CastUsingJsonFlags::class);
 
         return ($attributes[0] ?? null)?->newInstance()
-            ?? new CastUsingJsonFlags();
+            ?? new CastUsingJsonFlags;
     }
 }

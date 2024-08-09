@@ -10,6 +10,5 @@ class CastUsingJsonFlags
     public function __construct(
         public int $encode = 0,
         public int $decode = 0,
-    ) {
-    }
+    ) {}
 }

@@ -22,7 +22,7 @@ class TokenCommand extends Command
         );
 
         info('Generated token:');
-        note((new GenerateToken())->run($name));
+        note((new GenerateToken)->run($name));
 
         return self::SUCCESS;
     }

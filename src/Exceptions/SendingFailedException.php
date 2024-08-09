@@ -35,7 +35,7 @@ class SendingFailedException extends MailCarrierException
         return [
             'logId' => $this->log?->id,
             'trigger' => $this->log?->trigger,
-            'variables' => $this->log?->variables ?: new ArrayObject(),
+            'variables' => $this->log?->variables ?: new ArrayObject,
         ];
     }
 }

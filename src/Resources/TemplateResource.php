@@ -68,7 +68,7 @@ class TemplateResource extends Resource
                         $newRecord->fill([
                             'user_id' => Auth::id(),
                             'name' => $name,
-                            'slug' => (new GenerateSlug())->run($name),
+                            'slug' => (new GenerateSlug)->run($name),
                         ])->save();
 
                         redirect(TemplateResource::getUrl('edit', ['record' => $newRecord]));

@@ -33,7 +33,7 @@ class TemplateManager
     {
         $source = $this->template->layout?->content . $this->template->content;
 
-        $twig = new Environment(new ArrayLoader());
+        $twig = new Environment(new ArrayLoader);
 
         try {
             $nodes = $twig->parse(

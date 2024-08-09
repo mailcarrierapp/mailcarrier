@@ -17,7 +17,7 @@ class SocialAuthController extends Controller
     public function redirect(): RedirectResponse
     {
         if (!MailCarrier::getSocialAuthDriver()) {
-            throw new SocialAuthNotEnabledException();
+            throw new SocialAuthNotEnabledException;
         }
 
         return Socialite::driver(MailCarrier::getSocialAuthDriver())->redirect();
@@ -29,7 +29,7 @@ class SocialAuthController extends Controller
     public function callback(SocialLogin $login): RedirectResponse
     {
         if (!MailCarrier::getSocialAuthDriver()) {
-            throw new SocialAuthNotEnabledException();
+            throw new SocialAuthNotEnabledException;
         }
 
         /** @var \Laravel\Socialite\AbstractUser $user */

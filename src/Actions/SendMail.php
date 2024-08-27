@@ -120,6 +120,7 @@ class SendMail extends Action
             trigger: $this->params->trigger,
             sender: $this->params->sender,
             recipient: $recipient->email,
+            replyTo: $this->params->replyTo,
             cc: $recipient->cc,
             bcc: $recipient->bcc,
             subject: $this->params->subject,

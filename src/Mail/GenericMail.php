@@ -64,6 +64,10 @@ class GenericMail extends Mailable
                 fn (GenericMail $mail) => $mail->subject($this->params->subject)
             )
             ->when(
+                $this->params->replyTo,
+                fn (GenericMail $mail) => $mail->replyTo($this->params->replyTo->email, $this->params->replyTo->name)
+            )
+            ->when(
                 $this->params->cc,
                 fn (GenericMail $mail) => $mail->cc($this->params->cc)
             )

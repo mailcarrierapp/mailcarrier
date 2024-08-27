@@ -22,6 +22,7 @@ class GetTriggers extends Action
                 ->get()
                 ->pluck('trigger')
                 ->filter() // Remove null values
+                ->values()
                 ->mapWithKeys(fn (string $value) => [$value => $value])
                 ->toArray()
         );

@@ -20,5 +20,8 @@ it('returns the distinct triggers', function () {
         'trigger' => 'bar',
     ]);
 
-    expect(GetTriggers::resolve()->run())->toEqualCanonicalizing(['foo', 'bar']);
+    expect(GetTriggers::resolve()->run())->toEqualCanonicalizing([
+        'foo' => 'foo',
+        'bar' => 'bar',
+    ]);
 });

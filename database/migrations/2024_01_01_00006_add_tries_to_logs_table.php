@@ -12,6 +12,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        if (DB::table('migrations')->where('migration', '7_add_tries_to_logs_table')->exists()) {
+            return;
+        }
+
         Schema::table('logs', function (Blueprint $table) {
             $table->unsignedSmallInteger('tries')->default(0);
             $table->timestamp('last_try_at')->nullable();

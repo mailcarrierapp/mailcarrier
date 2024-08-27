@@ -10,6 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        if (DB::table('migrations')->where('migration', '6_transform_logs_cc_bcc_array')->exists()) {
+            return;
+        }
+
         $tableName = (new Log)->getTable();
 
         DB::table($tableName)

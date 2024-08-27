@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use MailCarrier\Models\Template;
 
@@ -11,6 +12,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        if (DB::table('migrations')->where('migration', '4_create_logs_table')->exists()) {
+            return;
+        }
+
         Schema::create('logs', function (Blueprint $table) {
             $table->uuid('id')->primary();
 

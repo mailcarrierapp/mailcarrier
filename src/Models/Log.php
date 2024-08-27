@@ -22,6 +22,7 @@ use MailCarrier\Models\Concerns\IsUuid;
  * @property string|null $trigger
  * @property string|null $subject
  * @property \MailCarrier\Dto\ContactDto $sender
+ * @property \MailCarrier\Dto\ContactDto|null $replyTo
  * @property \Illuminate\Support\Collection<MailCarrier\Dto\ContactDto>|null $cc
  * @property \Illuminate\Support\Collection<MailCarrier\Dto\ContactDto>|null $bcc
  * @property string $recipient
@@ -67,6 +68,7 @@ class Log extends Model
         'bcc',
         'sender',
         'recipient',
+        'replyTo',
         'template_frozen',
         'variables',
         'error',
@@ -89,6 +91,7 @@ class Log extends Model
     protected $casts = [
         'status' => LogStatus::class,
         'sender' => ContactDto::class,
+        'replyTo' => ContactDto::class,
         'cc' => CollectionOfContacts::class,
         'bcc' => CollectionOfContacts::class,
         'template_frozen' => LogTemplateDto::class,

@@ -19,6 +19,9 @@ class SendMailDto extends DataTransferObject
     #[CastWith(ContactStringCaster::class)]
     public ?ContactDto $sender;
 
+    #[CastWith(ContactStringCaster::class)]
+    public ?ContactDto $replyTo;
+
     public ?string $recipient;
 
     /** @var \MailCarrier\Dto\ContactDto[]|null */

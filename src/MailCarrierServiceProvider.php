@@ -56,6 +56,7 @@ class MailCarrierServiceProvider extends PackageServiceProvider
                 '7_add_tries_to_logs_table',
                 '8_add_tags_metadata_to_logs_table',
                 '9_add_tags_to_templates_table',
+                '10_add_replyto_to_logs_table',
             ])
             ->runsMigrations();
     }

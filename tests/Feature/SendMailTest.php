@@ -1324,3 +1324,52 @@ it('accepts an array of metadata', function () {
             && $mail->hasMetadata('meta2', 'value2');
     });
 });
+
+it('accepts a replyTo as string', function () {
+    Template::factory()->create([
+        'slug' => 'welcome',
+    ]);
+
+    postJson(route('mailcarrier.send'), [
+        'enqueue' => false,
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+        'replyTo' => 'reply@example.org',
+    ])->assertOk();
+
+    Mail::assertSent(GenericMail::class, 1);
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasTo('recipient@example.org')
+            && $mail->hasSubject('Welcome!')
+            && $mail->hasReplyTo('reply@example.org');
+    });
+});
+
+it('accepts a replyTo as object', function () {
+    Template::factory()->create([
+        'slug' => 'welcome',
+    ]);
+
+    postJson(route('mailcarrier.send'), [
+        'enqueue' => false,
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+        'replyTo' => [
+            'email' => 'reply@example.org',
+            'name' => 'Reply',
+        ],
+    ])->assertOk();
+
+    Mail::assertSent(GenericMail::class, 1);
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasTo('recipient@example.org')
+            && $mail->hasSubject('Welcome!')
+            && $mail->hasReplyTo('reply@example.org', 'Reply');
+    });
+});

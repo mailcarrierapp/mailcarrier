@@ -26,6 +26,7 @@ class SendMailRequest extends FormRequest
             'trigger' => 'sometimes|string|max:255',
             'subject' => 'required|string|max:255',
             'sender' => ['sometimes', new ContactRule],
+            'replyTo' => ['sometimes', new ContactRule],
             'cc' => 'sometimes|array',
             'bcc' => 'sometimes|array',
             'cc.*' => [new ContactRule],

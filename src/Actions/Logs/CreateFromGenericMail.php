@@ -32,6 +32,7 @@ class CreateFromGenericMail extends Action
                 email: Config::get('mail.from.address')
             ),
             'recipient' => $genericMailDto->recipient,
+            'replyTo' => $genericMailDto->replyTo,
             'cc' => $genericMailDto->cc,
             'bcc' => $genericMailDto->bcc,
             'error' => $genericMailDto->error,

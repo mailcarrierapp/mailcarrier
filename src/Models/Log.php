@@ -73,6 +73,8 @@ class Log extends Model
         'variables',
         'error',
         'tries',
+        'tags',
+        'metadata',
         'last_try_at',
     ];
 

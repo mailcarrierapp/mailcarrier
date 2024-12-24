@@ -7,8 +7,8 @@ parameters:
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
-    checkMissingIterableValueType: false
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
+        - identifier: missingType.iterableValue
         - '#Method MailCarrier\\Resources\\(.*)\\Pages\\(.*)::getRecord\(\)(.*)#'
         - '#Unsafe usage of new static(.*)#'

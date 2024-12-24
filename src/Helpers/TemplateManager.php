@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use MailCarrier\Models\Template;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\Node;
 use Twig\Source;
 
 class TemplateManager
@@ -31,6 +32,7 @@ class TemplateManager
 
     public function extractVariableNames(): array
     {
+        $variables = [];
         $source = $this->template->layout?->content . $this->template->content;
 
         $twig = new Environment(new ArrayLoader);
@@ -43,9 +45,9 @@ class TemplateManager
             return [];
         }
 
-        preg_match_all("|Twig\\\Node\\\Expression\\\NameExpression\(name\: '(.*)'|mi", (string) $nodes, $matches);
+        $this->extractVariables($nodes, $variables);
 
-        return array_values(array_unique($matches[1]));
+        return array_values(array_unique($variables));
     }
 
     protected function getLoader(): ArrayLoader
@@ -62,5 +64,18 @@ class TemplateManager
             $mainFileName => $mainFileContent,
             $layoutFileName => $this->template->layout?->content,
         ]);
+    }
+
+    protected function extractVariables(Node\Node $node, array &$variables): void
+    {
+        if ($node instanceof Node\Expression\Variable\ContextVariable) {
+            $variables[] = $node->getAttribute('name');
+        }
+
+        foreach ($node as $child) {
+            if ($child instanceof Node\Node) {
+                $this->extractVariables($child, $variables);
+            }
+        }
     }
 }

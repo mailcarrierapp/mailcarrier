@@ -3,6 +3,7 @@
 namespace MailCarrier\Resources;
 
 use Filament\Forms;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -139,35 +140,50 @@ class TemplateResource extends Resource
     /**
      * Get the form content.
      */
-    protected static function getFormContent(): Forms\Components\Section
+    protected static function getFormContent(): Forms\Components\Grid
     {
-        return Forms\Components\Section::make([
-            Forms\Components\TextInput::make('name')
-                ->label('Internal name')
-                ->required()
-                ->autofocus()
-                ->columnSpanFull()
-                // Disable field UI if the record exists and user can't unlock it
-                ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
-                // Save the field if record does not exist or user can unlock it
-                ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked),
+        return Grid::make(1)
+            ->schema([
+                Forms\Components\Section::make([
+                    Forms\Components\TextInput::make('name')
+                        ->label('Internal name')
+                        ->required()
+                        ->autofocus()
+                        ->columnSpanFull()
+                        // Disable field UI if the record exists and user can't unlock it
+                        ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
+                        // Save the field if record does not exist or user can unlock it
+                        ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked),
 
-            Forms\Components\TextInput::make('slug')
-                ->label('Unique identifier (slug)')
-                ->placeholder('Leave empty to auto generate')
-                ->helperText(new HtmlString('<span class="text-xs text-slate-500 pl-2">Use this as "template" key in your APIs</span>'))
-                ->columnSpanFull()
-                ->required(fn (?Template $record) => !is_null($record))
-                // Disable field UI if the record exists and user can't unlock it
-                ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
-                // Save the field if record does not exist or user can unlock it
-                ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked)
-                ->extraInputAttributes([
-                    'onClick' => 'this.select()',
+                    Forms\Components\TextInput::make('slug')
+                        ->label('Unique identifier (slug)')
+                        ->placeholder('Leave empty to auto generate')
+                        ->helperText('Use this as "template" key in your APIs')
+                        ->columnSpanFull()
+                        ->required(fn (?Template $record) => !is_null($record))
+                        // Disable field UI if the record exists and user can't unlock it
+                        ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
+                        // Save the field if record does not exist or user can unlock it
+                        ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked)
+                        ->extraInputAttributes([
+                            'onClick' => 'this.select()',
+                        ]),
+
+                    static::getFormEditor(),
                 ]),
 
-            static::getFormEditor(),
-        ]);
+                Forms\Components\Section::make([
+                    Forms\Components\Textarea::make('description')
+                        ->label('Description')
+                        ->helperText('A short description of the template, visible only in the admin area')
+                        ->placeholder('How is this template being used? What\'s the purpose?')
+                        ->columnSpanFull()
+                        // Disable field UI if the record exists and user can't unlock it
+                        ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
+                        // Save the field if record does not exist or user can unlock it
+                        ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked),
+                ]),
+            ]);
     }
 
     /**

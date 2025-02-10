@@ -36,6 +36,7 @@ class Template extends Model
         'slug',
         'content',
         'tags',
+        'description',
     ];
 
     /**

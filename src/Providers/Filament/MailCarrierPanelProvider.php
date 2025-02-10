@@ -9,6 +9,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -31,12 +32,14 @@ class MailCarrierPanelProvider extends PanelProvider
             ->id('mailcarrier')
             ->path('')
             ->login()
+            ->unsavedChangesAlerts()
             ->font('Poppins')
             ->brandName('MailCarrier')
             ->favicon(asset('vendor/mailcarrier/images/favicon.ico'))
             ->brandLogo(asset('vendor/mailcarrier/images/logo-dark.svg'))
             ->darkModeBrandLogo(asset('vendor/mailcarrier/images/logo-light.svg'))
             ->theme(asset('vendor/mailcarrier/css/theme.css'))
+            ->maxContentWidth(MaxWidth::Full)
             ->colors([
                 'primary' => Color::Indigo,
             ])

@@ -16,3 +16,7 @@
 .cm-editor {
   @apply h-full;
 }
+
+.fi-fo-field-wrp-helper-text {
+  @apply text-xs text-slate-500 pl-2;
+}

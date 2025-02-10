@@ -46,18 +46,7 @@ class MailCarrierServiceProvider extends PackageServiceProvider
                 TokenCommand::class,
                 RetryCommand::class,
             ])
-            ->hasMigrations([
-                '2024_01_01_00000_create_users_table',
-                '2024_01_01_00001_create_layouts_table',
-                '2024_01_01_00002_create_templates_table',
-                '2024_01_01_00003_create_logs_table',
-                '2024_01_01_00004_create_attachments_table',
-                '2024_01_01_00005_transform_logs_cc_bcc_array',
-                '2024_01_01_00006_add_tries_to_logs_table',
-                '2024_01_01_00007_add_tags_metadata_to_logs_table',
-                '2024_01_01_00008_add_tags_to_templates_table',
-                '2024_08_27_074130_add_replyto_to_logs_table',
-            ])
+            ->discoversMigrations()
             ->runsMigrations();
     }
 

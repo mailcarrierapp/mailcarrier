@@ -128,7 +128,10 @@ class SendMail extends Action
             remoteAttachments: $recipient->remoteAttachments,
             template: $this->template,
             variables: $recipient->variables,
-            tags: $this->params->tags,
+            tags: [
+                ...(Config::get('mailcarrier.send.template_tags', false) ? ($this->template->tags ?: []) : []),
+                ...$this->params->tags,
+            ],
             metadata: $this->params->metadata,
             content: $templateRender,
             error: $exception?->getMessage(),

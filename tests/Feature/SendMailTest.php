@@ -1373,3 +1373,82 @@ it('accepts a replyTo as object', function () {
             && $mail->hasReplyTo('reply@example.org', 'Reply');
     });
 });
+
+it('does not send the template tags to provider if not enabled', function () {
+    Config::set('mailcarrier.send.template_tags', false);
+
+    Template::factory()->create([
+        'slug' => 'welcome',
+        'tags' => ['tag1'],
+    ]);
+
+    postJson(route('mailcarrier.send'), [
+        'enqueue' => false,
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+        'tags' => ['foo'],
+    ])->assertOk();
+
+    Mail::assertSent(GenericMail::class, 1);
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasTo('recipient@example.org')
+            && $mail->hasSubject('Welcome!')
+            && $mail->hasTag('foo')
+            && !$mail->hasTag('tag1');
+    });
+});
+
+it('sends the template tags to provider when enabled', function () {
+    Config::set('mailcarrier.send.template_tags', true);
+
+    Template::factory()->create([
+        'slug' => 'welcome',
+        'tags' => ['tag1'],
+    ]);
+
+    postJson(route('mailcarrier.send'), [
+        'enqueue' => false,
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+    ])->assertOk();
+
+    Mail::assertSent(GenericMail::class, 1);
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasTo('recipient@example.org')
+            && $mail->hasSubject('Welcome!')
+            && $mail->hasTag('tag1');
+    });
+});
+
+it('merges the template tags along with request ones', function () {
+    Config::set('mailcarrier.send.template_tags', true);
+
+    Template::factory()->create([
+        'slug' => 'welcome',
+        'tags' => ['tag1'],
+    ]);
+
+    postJson(route('mailcarrier.send'), [
+        'enqueue' => false,
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+        'tags' => ['foo'],
+    ])->assertOk();
+
+    Mail::assertSent(GenericMail::class, 1);
+    Mail::assertSent(GenericMail::class, function (GenericMail $mail) {
+        $mail->build();
+
+        return $mail->hasTo('recipient@example.org')
+            && $mail->hasSubject('Welcome!')
+            && $mail->hasTag('foo')
+            && $mail->hasTag('tag1');
+    });
+});

@@ -140,6 +140,18 @@ return [
         'log_strategy' => AttachmentLogStrategy::Inline,
     ],
 
+    'send' => [
+        /*
+        |--------------------------------------------------------------------------
+        | Template tags to provider
+        |--------------------------------------------------------------------------
+        |
+        | Automatically send template tags as tags to email provider.
+        |
+        */
+        'template_tags' => false,
+    ],
+
     'queue' => [
         /*
         |--------------------------------------------------------------------------

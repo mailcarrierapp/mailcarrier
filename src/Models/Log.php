@@ -21,6 +21,7 @@ use MailCarrier\Models\Concerns\IsUuid;
  * @property \MailCarrier\Enums\LogStatus $status
  * @property string|null $trigger
  * @property string|null $subject
+ * @property string|null $message_id
  * @property \MailCarrier\Dto\ContactDto $sender
  * @property \MailCarrier\Dto\ContactDto|null $replyTo
  * @property \Illuminate\Support\Collection<MailCarrier\Dto\ContactDto>|null $cc
@@ -64,6 +65,7 @@ class Log extends Model
         'status',
         'trigger',
         'subject',
+        'message_id',
         'cc',
         'bcc',
         'sender',

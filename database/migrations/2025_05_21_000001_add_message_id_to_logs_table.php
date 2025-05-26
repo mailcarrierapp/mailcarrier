@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('logs', function (Blueprint $table) {
-            $table->string('message_id')->nullable()->after('id');
+            $table->string('message_id')->nullable()->index()->after('id');
         });
     }
 

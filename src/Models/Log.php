@@ -21,6 +21,7 @@ use MailCarrier\Models\Concerns\IsUuid;
  * @property \MailCarrier\Enums\LogStatus $status
  * @property string|null $trigger
  * @property string|null $subject
+ * @property string|null $message_id
  * @property \MailCarrier\Dto\ContactDto $sender
  * @property \MailCarrier\Dto\ContactDto|null $replyTo
  * @property \Illuminate\Support\Collection<MailCarrier\Dto\ContactDto>|null $cc
@@ -37,6 +38,7 @@ use MailCarrier\Models\Concerns\IsUuid;
  * @property array|null $metadata
  * @property-read \MailCarrier\Models\Template|null $template
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \MailCarrier\Models\Attachment> $attachments
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \MailCarrier\Models\LogEvent> $events
  */
 class Log extends Model
 {
@@ -117,6 +119,14 @@ class Log extends Model
     public function attachments(): HasMany
     {
         return $this->hasMany(Attachment::class);
+    }
+
+    /**
+     * Get the log's events.
+     */
+    public function events(): HasMany
+    {
+        return $this->hasMany(LogEvent::class);
     }
 
     /**

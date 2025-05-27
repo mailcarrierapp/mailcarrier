@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Mail\SentMessage;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
@@ -77,7 +78,14 @@ class SendMailJob implements ShouldQueue
      */
     protected function send(): void
     {
-        $sendMail = fn (?GenericMailDto $override = null) => Mail::send(new GenericMail($override ?: $this->genericMailDto));
+        $sendMail = function (?GenericMailDto $override = null) {
+            $sent = Mail::send(new GenericMail($override ?: $this->genericMailDto));
+
+            if ($sent instanceof SentMessage) {
+                $this->log->message_id = $sent->getMessageId();
+                $this->log->save();
+            }
+        };
 
         if ($this->sendingMiddleware) {
             $middleware = unserialize($this->sendingMiddleware)->getClosure();

@@ -3,6 +3,8 @@
 namespace MailCarrier\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
+use MailCarrier\Webhooks\Exceptions\WebhookValidationException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class Handler extends ExceptionHandler
@@ -45,6 +47,10 @@ class Handler extends ExceptionHandler
             if (str_contains($e->getMessage(), '[login]')) {
                 return redirect('/login');
             }
+        });
+
+        $this->renderable(function (WebhookValidationException $e) {
+            abort(Response::HTTP_UNPROCESSABLE_ENTITY, $e->getMessage());
         });
     }
 }

@@ -66,6 +66,7 @@ class Log extends Model
         'status',
         'trigger',
         'subject',
+        'message_id',
         'cc',
         'bcc',
         'sender',

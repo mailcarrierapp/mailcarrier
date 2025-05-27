@@ -39,7 +39,7 @@ class ProcessWebhook extends Action
                 }
 
                 if ($strategy->isFatal()) {
-                    throw new WebhookValidationException();
+                    throw new WebhookValidationException;
                 }
 
                 continue;

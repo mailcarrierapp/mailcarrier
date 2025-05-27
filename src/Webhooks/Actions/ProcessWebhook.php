@@ -29,19 +29,17 @@ class ProcessWebhook extends Action
             $strategy = App::make($strategyClass);
 
             if (!$strategy->validate($webhook)) {
-                $strategyName = Str::of($strategyClass)
-                    ->afterLast('\\')
-                    ->remove('::class')
-                    ->toString();
-
                 if ($strategy->isVerbose()) {
                     Log::warning('Webhook validation failed', [
-                        'strategy' => $strategyName,
+                        'strategy' => Str::of($strategyClass)
+                            ->afterLast('\\')
+                            ->remove('::class')
+                            ->toString(),
                     ]);
                 }
 
                 if ($strategy->isFatal()) {
-                    throw new WebhookValidationException('Webhook validation failed for strategy: ' . $strategyName);
+                    throw new WebhookValidationException();
                 }
 
                 continue;

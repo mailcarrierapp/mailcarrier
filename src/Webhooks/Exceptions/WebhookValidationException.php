@@ -2,9 +2,9 @@
 
 namespace MailCarrier\Webhooks\Exceptions;
 
-use Exception;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
-class WebhookValidationException extends Exception
+class WebhookValidationException extends UnprocessableEntityHttpException
 {
     public function __construct()
     {

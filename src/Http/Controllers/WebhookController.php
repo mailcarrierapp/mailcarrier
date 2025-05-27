@@ -16,7 +16,8 @@ class WebhookController extends Controller
     public function __invoke(Request $request, ProcessWebhook $processWebhook): Response
     {
         $webhook = new IncomingWebhook(
-            headers: new Collection($request->headers->all()),
+            headers: (new Collection($request->headers->all()))
+                ->map(fn (array $values) => $values[0]),
             body: $request->all(),
         );
 

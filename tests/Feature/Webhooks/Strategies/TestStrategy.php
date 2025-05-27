@@ -1,6 +1,6 @@
 <?php
 
-namespace MailCarrier\Tests\Webhooks\Strategies;
+namespace MailCarrier\Tests\Feature\Webhooks\Strategies;
 
 use Carbon\CarbonImmutable;
 use MailCarrier\Webhooks\Dto\IncomingWebhook;
@@ -28,10 +28,10 @@ class TestStrategy implements Strategy
 
     public function validate(IncomingWebhook $webhook): bool
     {
-        return $this->shouldValidate;
+        return true;
     }
 
-    public function extract(array $payload): WebhookData
+    public function extract(array $body): WebhookData
     {
         return new WebhookData(
             messageId: 'test-message-id',

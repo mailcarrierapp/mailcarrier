@@ -48,9 +48,5 @@ class Handler extends ExceptionHandler
                 return redirect('/login');
             }
         });
-
-        $this->renderable(function (WebhookValidationException $e) {
-            abort(Response::HTTP_UNPROCESSABLE_ENTITY, $e->getMessage());
-        });
     }
 }

@@ -3,8 +3,6 @@
 namespace MailCarrier\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\Response;
-use MailCarrier\Webhooks\Exceptions\WebhookValidationException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class Handler extends ExceptionHandler

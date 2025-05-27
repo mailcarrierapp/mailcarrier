@@ -23,6 +23,6 @@ class WebhookController extends Controller
 
         $processWebhook->run($webhook);
 
-        return new Response();
+        return new Response;
     }
 }

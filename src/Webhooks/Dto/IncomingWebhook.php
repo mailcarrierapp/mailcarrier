@@ -8,8 +8,8 @@ use Illuminate\Support\Collection;
 class IncomingWebhook
 {
     /**
-     * @param Collection<string, string> $headers
-     * @param array<string, mixed> $body
+     * @param  Collection<string, string>  $headers
+     * @param  array<string, mixed>  $body
      */
     public function __construct(
         public readonly Collection $headers,

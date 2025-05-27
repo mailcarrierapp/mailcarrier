@@ -2,10 +2,10 @@
 
 namespace MailCarrier\Webhooks\Actions;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use MailCarrier\Actions\Action;
 use MailCarrier\Models\Log as LogModel;
 use MailCarrier\Webhooks\Dto\IncomingWebhook;
@@ -30,9 +30,9 @@ class ProcessWebhook extends Action
 
             if (!$strategy->validate($webhook)) {
                 $strategyName = Str::of($strategyClass)
-                        ->afterLast("\\")
-                        ->remove("::class")
-                        ->toString();
+                    ->afterLast('\\')
+                    ->remove('::class')
+                    ->toString();
 
                 if ($strategy->isVerbose()) {
                     Log::warning('Webhook validation failed', [

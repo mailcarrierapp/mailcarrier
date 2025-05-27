@@ -13,8 +13,7 @@ class TestStrategy implements Strategy
         private readonly bool $shouldValidate = true,
         private readonly bool $isVerbose = false,
         private readonly bool $isFatal = false,
-    ) {
-    }
+    ) {}
 
     public function isVerbose(): bool
     {

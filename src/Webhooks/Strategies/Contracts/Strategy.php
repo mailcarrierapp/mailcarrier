@@ -2,8 +2,8 @@
 
 namespace MailCarrier\Webhooks\Strategies\Contracts;
 
-use MailCarrier\Webhooks\Dto\WebhookData;
 use MailCarrier\Webhooks\Dto\IncomingWebhook;
+use MailCarrier\Webhooks\Dto\WebhookData;
 
 interface Strategy
 {

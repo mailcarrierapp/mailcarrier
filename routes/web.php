@@ -24,4 +24,4 @@ Route::middleware('web')->group(function () {
     Route::get('templates/preview', PreviewTemplate::class)->name('templates.preview');
 });
 
-Route::post('webhook', WebhookController::class)->name('webhook');
+Route::post('webhook', WebhookController::class)->name('webhook.process');

@@ -5,10 +5,10 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use MailCarrier\Models\Log as LogModel;
 use MailCarrier\Models\LogEvent;
-use MailCarrier\Tests\Feature\Webhooks\Strategies\TestStrategy;
 use MailCarrier\Tests\Feature\Webhooks\Strategies\FailingStrategy;
-use MailCarrier\Tests\Feature\Webhooks\Strategies\VerboseFailingStrategy;
 use MailCarrier\Tests\Feature\Webhooks\Strategies\FatalFailingStrategy;
+use MailCarrier\Tests\Feature\Webhooks\Strategies\TestStrategy;
+use MailCarrier\Tests\Feature\Webhooks\Strategies\VerboseFailingStrategy;
 use MailCarrier\Webhooks\Actions\ProcessWebhook;
 use MailCarrier\Webhooks\Dto\IncomingWebhook;
 use function Pest\Laravel\postJson;
@@ -31,7 +31,7 @@ it('passes correct data to ProcessWebhook action', function () {
                 && $webhook->body === ['test' => 'data'];
         });
 
-    postJson(route('webhook'), ['test' => 'data'], ['x-custom-header' => 'custom-value'])
+    postJson(route('webhook.process'), ['test' => 'data'], ['x-custom-header' => 'custom-value'])
         ->assertOk();
 });
 
@@ -39,7 +39,7 @@ it('processes a valid webhook successfully', function () {
     $log = LogModel::factory()->create(['message_id' => 'test-message-id']);
     expect($log->events()->count())->toBe(0);
 
-    postJson(route('webhook'), [], ['header1' => 'value1'])
+    postJson(route('webhook.process'), [], ['header1' => 'value1'])
         ->assertOk();
 
     expect($log->events()->first())
@@ -57,7 +57,7 @@ it('continues to next strategy when validation fails', function () {
     $log = LogModel::factory()->create(['message_id' => 'test-message-id']);
     expect($log->events()->count())->toBe(0);
 
-    postJson(route('webhook'), [], ['header1' => 'value1'])
+    postJson(route('webhook.process'), [], ['header1' => 'value1'])
         ->assertOk();
 
     expect($log->events()->first())
@@ -75,7 +75,7 @@ it('logs a warning when validation fails and verbose is true', function () {
     $log = LogModel::factory()->create(['message_id' => 'test-message-id']);
     expect($log->events()->count())->toBe(0);
 
-    postJson(route('webhook'), [], ['header1' => 'value1'])
+    postJson(route('webhook.process'), [], ['header1' => 'value1'])
         ->assertOk();
 
     expect($log->events()->first())
@@ -94,7 +94,7 @@ it('throws an exception when validation fails and fatal is true', function () {
     $log = LogModel::factory()->create(['message_id' => 'test-message-id']);
     expect($log->events()->count())->toBe(0);
 
-    postJson(route('webhook'), [], ['header1' => 'value1'])
+    postJson(route('webhook.process'), [], ['header1' => 'value1'])
         ->assertUnprocessable()
         ->assertJson(['message' => 'Webhook validation failed.']);
 
@@ -110,7 +110,7 @@ it('does nothing when no strategy validates', function () {
     $log = LogModel::factory()->create(['message_id' => 'test-message-id']);
     expect($log->events()->count())->toBe(0);
 
-    postJson(route('webhook'), [], ['header1' => 'value1'])
+    postJson(route('webhook.process'), [], ['header1' => 'value1'])
         ->assertOk();
 
     expect($log->events()->count())->toBe(0);
@@ -120,7 +120,7 @@ it('does nothing when no strategy validates', function () {
 it('does nothing when log is not found', function () {
     expect(LogEvent::count())->toBe(0);
 
-    postJson(route('webhook'), [], ['header1' => 'value1'])
+    postJson(route('webhook.process'), [], ['header1' => 'value1'])
         ->assertOk();
 
     expect(LogEvent::count())->toBe(0);

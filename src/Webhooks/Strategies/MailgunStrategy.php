@@ -2,10 +2,10 @@
 
 namespace MailCarrier\Webhooks\Strategies;
 
-use MailCarrier\Webhooks\Dto\WebhookData;
-use MailCarrier\Webhooks\Dto\IncomingWebhook;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Config;
+use MailCarrier\Webhooks\Dto\IncomingWebhook;
+use MailCarrier\Webhooks\Dto\WebhookData;
 use MailCarrier\Webhooks\Strategies\Contracts\Strategy;
 
 class MailgunStrategy implements Strategy
@@ -66,8 +66,7 @@ class MailgunStrategy implements Strategy
     /**
      * Extract structured data from Mailgun's webhook payload.
      *
-     * @param array $payload The raw webhook payload from Mailgun
-     * @return WebhookData
+     * @param  array  $payload  The raw webhook payload from Mailgun
      */
     public function extract(array $payload): WebhookData
     {

@@ -18,7 +18,8 @@ Design global layouts, compose your template, preview your emails and send them 
 - 🔐 **Secure by default**: Both authentication and API endpoint are always secure: use one of the pre-built auth system or bring your own.
 - 📎  **Attachments**: Upload or retrieve attachments from a remote source such *S3*, *Spaces* etc.
 - 🪄 **Hackable**: MailCarrier relies on [Laravel](https://laravel.com/) and [Filament](https://filamentphp.com/), that means that over 30K packages are available to customise your MailCarrier instance.
-- ⏳ **Queues**: You can choose whether or not to send emails in a enqueued, background jobs, to not block the user experience.  
+- ⏳ **Queues**: You can choose whether or not to send emails in a enqueued, background jobs, to not block the user experience.
+- 🪝 **Webhooks**: Track and receive events from your provider directly in MailCarrier.  
 
 ## Quick start
 

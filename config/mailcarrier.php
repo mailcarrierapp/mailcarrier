@@ -196,4 +196,18 @@ return [
         */
         'connection' => null,
     ],
+
+    'webhooks' => [
+        'strategies' => [
+            // \MailCarrier\Webhooks\Strategies\MailgunStrategy::class,
+        ],
+
+        'providers' => [
+            'mailgun' => [
+                'secret' => env('MAILGUN_WEBHOOK_SECRET'),
+                'verbose' => env('MAILGUN_WEBHOOK_VERBOSE', false),
+                'fatal' => env('MAILGUN_WEBHOOK_FATAL', false),
+            ],
+        ],
+    ],
 ];

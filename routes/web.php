@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use MailCarrier\Http\Controllers\LogController;
 use MailCarrier\Http\Controllers\MailCarrierController;
 use MailCarrier\Http\Controllers\SocialAuthController;
+use MailCarrier\Http\Controllers\WebhookController;
 use MailCarrier\Livewire\PreviewTemplate;
 
 Route::middleware(['web', 'auth:' . Config::get('filament.auth.guard')])->group(function () {
@@ -22,3 +23,5 @@ Route::prefix('auth')->middleware(['web', 'guest'])->group(function () {
 Route::middleware('web')->group(function () {
     Route::get('templates/preview', PreviewTemplate::class)->name('templates.preview');
 });
+
+Route::post('webhook', WebhookController::class)->name('webhook.process');

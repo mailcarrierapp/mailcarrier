@@ -10,6 +10,7 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Actions\Action as TablesAction;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
@@ -69,8 +70,31 @@ class LogResource extends Resource
                     ->icon(fn (Log $record) => $record->attachments->isNotEmpty() ? 'heroicon-o-paper-clip' : '')
                     ->iconColor('primary'),
 
+                Tables\Columns\TextColumn::make('events_count')
+                    ->counts('events')
+                    ->label('Events')
+                    ->formatStateUsing(function (Log $record): HtmlString {
+                        if ($record->events->isEmpty()) {
+                            return new HtmlString('<span class="text-xs italic opacity-70">No events</span>');
+                        }
+
+                        // We don't use latestOfMany because it's not compatible with Postgresql UUIDs
+                        $lastEvent = ucfirst($record->events->first()->name);
+                        $hasMoreEvents = $record->events->count() > 1
+                            ? '<div style="font-size: 0.65rem" class="mt-1 opacity-85 text-center">And ' . $record->events->count() - 1 . ' more</div>'
+                            : '';
+
+                        return new HtmlString(Blade::render(<<<HTML
+                            <x-filament::badge icon="heroicon-o-rss">
+                                $lastEvent
+                            </x-filament::badge>
+                            $hasMoreEvents
+                        HTML));
+                    }),
+
                 Tables\Columns\TextColumn::make('tries')
                     ->badge()
+                    ->icon('heroicon-o-arrow-path')
                     ->tooltip(function (Log $record) {
                         if ($record->status !== LogStatus::Failed || is_null($record->last_try_at)) {
                             return null;

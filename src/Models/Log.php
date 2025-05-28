@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\MassPrunable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Config;
 use MailCarrier\Dto\ContactDto;
 use MailCarrier\Dto\LogTemplateDto;
@@ -127,7 +128,7 @@ class Log extends Model
      */
     public function events(): HasMany
     {
-        return $this->hasMany(LogEvent::class);
+        return $this->hasMany(LogEvent::class)->latest();
     }
 
     /**

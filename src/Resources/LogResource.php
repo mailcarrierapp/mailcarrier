@@ -81,14 +81,16 @@ class LogResource extends Resource
                         // We don't use latestOfMany because it's not compatible with Postgresql UUIDs
                         $lastEvent = ucfirst($record->events->first()->name);
                         $hasMoreEvents = $record->events->count() > 1
-                            ? '<div style="font-size: 0.65rem" class="mt-1 opacity-85 text-center">And ' . $record->events->count() - 1 . ' more</div>'
+                            ? '<span style="font-size: 0.65rem" class="opacity-85 text-center">+ ' . $record->events->count() - 1 . ' more</span>'
                             : '';
 
                         return new HtmlString(Blade::render(<<<HTML
+                            <div class="flex gap-1">
                             <x-filament::badge icon="heroicon-o-rss">
                                 $lastEvent
                             </x-filament::badge>
                             $hasMoreEvents
+                            </div>
                         HTML));
                     }),
 

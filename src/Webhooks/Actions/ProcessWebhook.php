@@ -64,7 +64,7 @@ class ProcessWebhook extends Action
             ?->events()
             ?->create([
                 'name' => $data->eventName,
-                'createdAt' => $data->date,
+                'created_at' => $data->date,
             ]);
     }
 }

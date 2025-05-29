@@ -38,6 +38,7 @@ class LogEvent extends Model
     protected $fillable = [
         'log_id',
         'name',
+        'created_at',
     ];
 
     /**

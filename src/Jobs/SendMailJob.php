@@ -82,7 +82,8 @@ class SendMailJob implements ShouldQueue
             $sent = Mail::send(new GenericMail($override ?: $this->genericMailDto));
 
             if ($sent instanceof SentMessage) {
-                $this->log->message_id = $sent->getMessageId();
+                // MailGun for example sends <foo@domain.org> as value, but then in the Webhooks there are no < >
+                $this->log->message_id = str_replace(['<', '>'], '', $sent->getMessageId());
                 $this->log->save();
             }
         };

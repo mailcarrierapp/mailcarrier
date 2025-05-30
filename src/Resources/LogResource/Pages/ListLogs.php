@@ -19,7 +19,7 @@ class ListLogs extends ListRecords
     protected function getTableQuery(): EloquentBuilder
     {
         return Log::query()
-            ->with(['template', 'attachments'])
+            ->with(['template', 'attachments', 'events'])
             ->latest();
     }
 

@@ -10,6 +10,7 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Actions\Action as TablesAction;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
@@ -69,8 +70,33 @@ class LogResource extends Resource
                     ->icon(fn (Log $record) => $record->attachments->isNotEmpty() ? 'heroicon-o-paper-clip' : '')
                     ->iconColor('primary'),
 
+                Tables\Columns\TextColumn::make('events_count')
+                    ->counts('events')
+                    ->label('Events')
+                    ->formatStateUsing(function (Log $record): HtmlString {
+                        if ($record->events->isEmpty()) {
+                            return new HtmlString('<span class="text-xs italic opacity-70">No events</span>');
+                        }
+
+                        // We don't use latestOfMany because it's not compatible with Postgresql UUIDs
+                        $lastEvent = ucfirst($record->events->first()->name);
+                        $hasMoreEvents = $record->events->count() > 1
+                            ? '<span style="font-size: 0.65rem" class="opacity-85 text-center">+ ' . ($record->events->count() - 1) . ' more</span>'
+                            : '';
+
+                        return new HtmlString(Blade::render(<<<HTML
+                            <div class="flex gap-1">
+                            <x-filament::badge icon="heroicon-o-rss">
+                                $lastEvent
+                            </x-filament::badge>
+                            $hasMoreEvents
+                            </div>
+                        HTML));
+                    }),
+
                 Tables\Columns\TextColumn::make('tries')
                     ->badge()
+                    ->icon('heroicon-o-arrow-path')
                     ->tooltip(function (Log $record) {
                         if ($record->status !== LogStatus::Failed || is_null($record->last_try_at)) {
                             return null;

@@ -127,7 +127,7 @@ class Log extends Model
      */
     public function events(): HasMany
     {
-        return $this->hasMany(LogEvent::class);
+        return $this->hasMany(LogEvent::class)->latest();
     }
 
     /**

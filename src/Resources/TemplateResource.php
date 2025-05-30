@@ -49,7 +49,8 @@ class TemplateResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('tags')
-                    ->badge(),
+                    ->badge()
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

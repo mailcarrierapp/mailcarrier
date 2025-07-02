@@ -77,8 +77,10 @@ class MailgunStrategy implements Strategy
 
         $eventData = $payload['event-data'];
         $messageId = Arr::get($eventData, 'message.headers.message-id');
+        $event = Arr::get($eventData, 'event');
+        $timestamp = Arr::get($eventData, 'timestamp');
 
-        if (!isset($messageId, $eventData['event'], $eventData['timestamp'])) {
+        if (empty($messageId) || empty($event) || empty($timestamp)) {
             throw new \InvalidArgumentException('Invalid Mailgun webhook payload: missing required fields');
         }
 

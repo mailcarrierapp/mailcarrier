@@ -3,6 +3,7 @@
 namespace MailCarrier\Webhooks\Strategies;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use MailCarrier\Webhooks\Dto\IncomingWebhook;
 use MailCarrier\Webhooks\Dto\WebhookData;
@@ -75,13 +76,14 @@ class MailgunStrategy implements Strategy
         }
 
         $eventData = $payload['event-data'];
+        $messageId = Arr::get($eventData, 'message.headers.message-id');
 
-        if (!isset($eventData['id'], $eventData['event'], $eventData['timestamp'])) {
+        if (!isset($messageId, $eventData['event'], $eventData['timestamp'])) {
             throw new \InvalidArgumentException('Invalid Mailgun webhook payload: missing required fields');
         }
 
         return new WebhookData(
-            messageId: $eventData['id'],
+            messageId: $messageId,
             eventName: $eventData['event'],
             date: CarbonImmutable::createFromTimestamp($eventData['timestamp'])
         );

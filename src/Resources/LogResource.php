@@ -130,7 +130,8 @@ class LogResource extends Resource
             )
             ->actions(
                 Tables\Actions\ActionGroup::make(static::getTableActions())
-            );
+            )
+            ->paginationPageOptions([10, 25, 50, 100]);
     }
 
     /**

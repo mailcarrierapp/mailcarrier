@@ -31,7 +31,6 @@ class ListTemplates extends ListRecords
             ]);
     }
 
-
     protected function applySearchToTableQuery(EloquentBuilder $query): EloquentBuilder
     {
         $this->applyColumnSearchesToTableQuery($query);

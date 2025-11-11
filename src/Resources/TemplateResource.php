@@ -46,7 +46,13 @@ class TemplateResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->formatStateUsing(function (Template $record): HtmlString {
+                        return new HtmlString(<<<HTML
+                            <p>{$record->name}</p>
+                            <p class="text-xs text-gray-400">{$record->slug}</p>
+                        HTML);
+                    }),
 
                 Tables\Columns\TextColumn::make('tags')
                     ->badge()

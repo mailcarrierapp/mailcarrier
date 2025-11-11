@@ -30,4 +30,16 @@ class ListTemplates extends ListRecords
                 'layout',
             ]);
     }
+
+
+    protected function applySearchToTableQuery(EloquentBuilder $query): EloquentBuilder
+    {
+        $this->applyColumnSearchesToTableQuery($query);
+
+        if (filled($search = $this->getTableSearch())) {
+            $query->where('slug', 'like', '%' . $search . '%');
+        }
+
+        return $query;
+    }
 }

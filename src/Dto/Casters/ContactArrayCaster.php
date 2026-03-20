@@ -28,7 +28,7 @@ class ContactArrayCaster implements Caster
             return $value;
         }
 
-        if (is_array($value) && array_is_list($value) && is_string($value[0])) {
+        if (array_is_list($value) && $value !== [] && is_string($value[0])) {
             $value = array_map(
                 fn (string $item) => [
                     'email' => $item,

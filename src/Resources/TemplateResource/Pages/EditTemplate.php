@@ -3,9 +3,10 @@
 namespace MailCarrier\Resources\TemplateResource\Pages;
 
 use Filament\Actions;
-use Filament\Forms\Components;
-use Filament\Forms\Get;
+use Filament\Forms\Components\KeyValue;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use MailCarrier\Actions\Templates\Preview;
@@ -31,7 +32,7 @@ class EditTemplate extends EditRecord
     /**
      * Get resource top-right actions.
      */
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             SendTestAction::make(),
@@ -56,7 +57,7 @@ class EditTemplate extends EditRecord
         ];
     }
 
-    public static function getBuilderEditorSchema(): Components\Component|array
+    public static function getBuilderEditorSchema(): Component|array
     {
         return [
             TemplateResource::getFormEditor()
@@ -70,7 +71,7 @@ class EditTemplate extends EditRecord
                     );
                 }),
 
-            Components\KeyValue::make('variables')
+            KeyValue::make('variables')
                 ->keyLabel('Variable name')
                 ->valueLabel('Variable value')
                 ->valuePlaceholder('Fill or delete')

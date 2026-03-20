@@ -33,7 +33,7 @@ class SendTestAction extends Action
             'class' => 'button-send-test !bg-purple-500 hover:!bg-purple-400',
         ]);
 
-        $this->form([
+        $this->schema([
             Forms\Components\TextInput::make('email')
                 ->email()
                 ->required(),
@@ -51,7 +51,7 @@ class SendTestAction extends Action
             Forms\Components\Checkbox::make('enqueue'),
         ]);
 
-        $this->action(function (array $data, Forms\Form $form): void {
+        $this->action(function (array $data): void {
             // Reset error box if any
             $this->modalContent(null);
 

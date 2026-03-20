@@ -2,6 +2,7 @@
 
 namespace MailCarrier\Resources;
 
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -13,9 +14,9 @@ class ApiTokenResource extends Resource
 
     protected static ?string $modelLabel = 'API Tokens';
 
-    protected static ?string $navigationIcon = 'heroicon-o-key';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-key';
 
-    protected static ?string $navigationGroup = 'Management';
+    protected static string|\UnitEnum|null $navigationGroup = 'Management';
 
     /**
      * List all the records.
@@ -39,8 +40,8 @@ class ApiTokenResource extends Resource
                     ->placeholder('Never used')
                     ->sortable(),
             ])
-            ->actions([
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                DeleteAction::make(),
             ]);
     }
 

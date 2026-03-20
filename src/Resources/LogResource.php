@@ -3,13 +3,15 @@
 namespace MailCarrier\Resources;
 
 use Carbon\CarbonInterface;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\Width;
 use Filament\Tables;
-use Filament\Tables\Actions\Action as TablesAction;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
@@ -27,7 +29,7 @@ class LogResource extends Resource
 {
     protected static ?string $model = Log::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-envelope';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-envelope';
 
     /**
      * List all the records.
@@ -122,14 +124,15 @@ class LogResource extends Resource
             ->poll(Config::get('mailcarrier.logs.table_refresh_poll', '5s'))
             ->recordAction('details')
             ->filters(static::getTableFilters())
+            ->deferFilters(false)
             ->filtersTriggerAction(
-                fn (TablesAction $action) => $action
+                fn (Action $action) => $action
                     ->button()
                     ->label('Filter')
                     ->slideOver(),
             )
-            ->actions(
-                Tables\Actions\ActionGroup::make(static::getTableActions())
+            ->recordActions(
+                ActionGroup::make(static::getTableActions()),
             )
             ->paginationPageOptions([10, 25, 50, 100]);
     }
@@ -166,7 +169,7 @@ class LogResource extends Resource
     protected static function getTableActions(): array
     {
         return [
-            Tables\Actions\Action::make('details')
+            Action::make('details')
                 ->icon('heroicon-o-information-circle')
                 ->modalContent(fn (Log $record) => View::make('mailcarrier::modals.details', [
                     'log' => $record,
@@ -177,21 +180,21 @@ class LogResource extends Resource
                 ->modalCancelActionLabel('Close')
                 ->modalFooterActionsAlignment(Alignment::Right),
 
-            Tables\Actions\Action::make('preview')
+            Action::make('preview')
                 ->icon('heroicon-o-eye')
                 ->modalContent(fn (Log $record) => View::make('mailcarrier::modals.preview', [
                     'id' => $record->id,
                 ]))
-                ->modalWidth('7xl')
+                ->modalWidth(Width::SevenExtraLarge)
                 ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Close')
                 ->modalFooterActionsAlignment(Alignment::Right),
 
-            Tables\Actions\Action::make('resend_email')
+            Action::make('resend_email')
                 ->label(fn (Log $record) => $record->isFailed() ? 'Retry now' : 'Send again')
                 ->icon('heroicon-o-arrow-path')
                 ->color(fn (Log $record) => $record->isFailed() ? Color::Orange : 'primary')
-                ->form([
+                ->schema([
                     FileUpload::make('attachments')
                         ->label('Additional attachments')
                         ->helperText('Any extra attachment will be sent along the original ones')
@@ -199,7 +202,7 @@ class LogResource extends Resource
                         ->preserveFilenames()
                         ->storeFiles(false),
                 ])
-                ->modalWidth('2xl')
+                ->modalWidth(Width::TwoExtraLarge)
                 ->modalIcon('heroicon-o-arrow-path')
                 ->modalDescription(
                     fn (Log $record) => $record->isFailed()

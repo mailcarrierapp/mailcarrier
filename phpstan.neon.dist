@@ -12,3 +12,17 @@ parameters:
         - identifier: missingType.iterableValue
         - '#Method MailCarrier\\Resources\\(.*)\\Pages\\(.*)::getRecord\(\)(.*)#'
         - '#Unsafe usage of new static(.*)#'
+        -
+            identifier: traitUse.deprecatedTrait
+            path: src/Resources/TemplateResource/Pages/EditTemplate.php
+        -
+            identifier: class.extendsDeprecatedClass
+            path: src/Preview/PreviewBuilderEditor.php
+        -
+            identifier: method.deprecatedClass
+            path: src/Preview/PreviewBuilderEditor.php
+        -
+            message: '#Parameter .* of function view expects view-string#'
+            paths:
+                - src/Preview/PreviewBuilderEditor.php
+                - src/Preview/PreviewPlugin.php

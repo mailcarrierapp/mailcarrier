@@ -2,9 +2,13 @@
 
 namespace MailCarrier\Resources;
 
+use Filament\Actions\Action as FilamentAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\HtmlString;
@@ -18,11 +22,9 @@ class LayoutResource extends Resource
 {
     protected static ?string $model = Layout::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-squares-plus';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-squares-plus';
 
-    protected static ?string $navigationGroup = 'Design';
-
-    // protected static ?string $navigationGroup = 'Design';
+    protected static string|\UnitEnum|null $navigationGroup = 'Design';
 
     /**
      * Default HTML content.
@@ -43,12 +45,14 @@ class LayoutResource extends Resource
     /**
      * Build the form.
      */
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
-            static::getFormContent()->columnSpan(8),
-            static::getFormSidebar()->columnSpan(4),
-        ])->columns(12);
+        return $schema
+            ->components([
+                static::getFormContent()->columnSpan(8),
+                static::getFormSidebar()->columnSpan(4),
+            ])
+            ->columns(12);
     }
 
     /**
@@ -72,15 +76,14 @@ class LayoutResource extends Resource
                     ->dateTime()
                     ->sortable(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([])
             ->defaultSort('name')
             ->emptyStateHeading('No layout found')
             ->emptyStateDescription('Wanna create your first layout now?')
             ->emptyStateActions([
-                Tables\Actions\Action::make('create')
+                FilamentAction::make('create')
                     ->label('Create layout')
                     ->url(URL::route('filament.mailcarrier.resources.layouts.create'))
                     ->icon('heroicon-o-plus')
@@ -103,52 +106,56 @@ class LayoutResource extends Resource
     /**
      * Get the form content.
      */
-    protected static function getFormContent(): Forms\Components\Section
+    protected static function getFormContent(): Section
     {
-        return Forms\Components\Section::make([
-            Forms\Components\TextInput::make('name')
-                ->label('Internal name')
-                ->required()
-                ->autofocus()
-                // Disable field UI if the record exists and user can't unlock it
-                ->disabled(fn (?Layout $record) => !is_null($record) && $record->is_locked)
-                // Save the field if record does not exist or user can unlock it
-                ->dehydrated(fn (?Layout $record) => is_null($record) || !$record->is_locked),
+        return Section::make()
+            ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->label('Internal name')
+                    ->required()
+                    ->autofocus()
+                    // Disable field UI if the record exists and user can't unlock it
+                    ->disabled(fn (?Layout $record) => !is_null($record) && $record->is_locked)
+                    // Save the field if record does not exist or user can unlock it
+                    ->dehydrated(fn (?Layout $record) => is_null($record) || !$record->is_locked),
 
-            CodeEditor::make('content')
-                ->required()
-                ->hint(new HtmlString('<a href="https://twig.symfony.com/doc/3.x/templates.html" class="underline text-primary-500 cursor-help" target="_blank" tabindex="-1">Help with syntax</a>'))
-                ->hintIcon('heroicon-o-code-bracket-square')
-                ->columnSpanFull()
-                ->default(static::DEFAULT_CONTENT)
-                // Disable field UI if the record exists and user can't unlock it
-                ->disabled(fn (?Layout $record) => !is_null($record) && $record->is_locked)
-                // Save the field if record does not exist or user can unlock it
-                ->dehydrated(fn (?Layout $record) => is_null($record) || !$record->is_locked),
-        ]);
+                CodeEditor::make('content')
+                    ->required()
+                    ->hint(new HtmlString('<a href="https://twig.symfony.com/doc/3.x/templates.html" class="underline text-primary-500 cursor-help" target="_blank" tabindex="-1">Help with syntax</a>'))
+                    ->hintIcon('heroicon-o-code-bracket-square')
+                    ->columnSpanFull()
+                    ->default(static::DEFAULT_CONTENT)
+                    // Disable field UI if the record exists and user can't unlock it
+                    ->disabled(fn (?Layout $record) => !is_null($record) && $record->is_locked)
+                    // Save the field if record does not exist or user can unlock it
+                    ->dehydrated(fn (?Layout $record) => is_null($record) || !$record->is_locked),
+            ]);
     }
 
     /**
      * Get the form sidebar.
      */
-    protected static function getFormSidebar(): Forms\Components\Section
+    protected static function getFormSidebar(): Section
     {
-        return Forms\Components\Section::make([
-            Forms\Components\Toggle::make('is_locked')
-                ->inline(false)
-                // Disable field UI if the record exists and user can't unlock it
-                ->disabled(fn (?Layout $record) => !is_null($record) && !static::can('unlock', $record))
-                // Save the field if record does not exist or user can unlock it
-                ->dehydrated(fn (?Layout $record) => is_null($record) || static::can('unlock', $record)),
+        return Section::make()
+            ->schema([
+                Forms\Components\Toggle::make('is_locked')
+                    ->inline(false)
+                    // Disable field UI if the record exists and user can't unlock it
+                    ->disabled(fn (?Layout $record) => !is_null($record) && !static::can('unlock', $record))
+                    // Save the field if record does not exist or user can unlock it
+                    ->dehydrated(fn (?Layout $record) => is_null($record) || static::can('unlock', $record)),
 
-            Forms\Components\Placeholder::make('Separator')
-                ->label('')
-                ->content(new HtmlString('<div class="h-1 border-b border-gray-100 dark:border-gray-700"></div>')),
+                TextEntry::make('_layout_separator')
+                    ->label('')
+                    ->state('')
+                    ->formatStateUsing(fn (): HtmlString => new HtmlString('<div class="h-1 border-b border-gray-100 dark:border-gray-700"></div>')),
 
-            Forms\Components\Placeholder::make('Created by')
-                ->content(fn (?Layout $record) => $record?->user?->getFilamentName() ?: '-'),
+                TextEntry::make('_layout_created_by')
+                    ->label('Created by')
+                    ->state(fn (?Layout $record): string => $record?->user?->getFilamentName() ?: '-'),
 
-            ...Timestamps::make(),
-        ]);
+                ...Timestamps::make(),
+            ]);
     }
 }

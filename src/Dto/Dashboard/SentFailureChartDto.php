@@ -3,7 +3,7 @@
 namespace MailCarrier\Dto\Dashboard;
 
 use Illuminate\Support\Collection;
-use Spatie\DataTransferObject\DataTransferObject;
+use MailCarrier\Dto\DataTransferObject;
 
 class SentFailureChartDto extends DataTransferObject
 {

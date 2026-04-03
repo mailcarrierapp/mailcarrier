@@ -3,8 +3,7 @@
 namespace MailCarrier\Dto\Validators;
 
 use Attribute;
-use Spatie\DataTransferObject\Validation\ValidationResult;
-use Spatie\DataTransferObject\Validator;
+use MailCarrier\Dto\Contracts\Validator;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE)]
 class Email implements Validator

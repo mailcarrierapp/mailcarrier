@@ -2,10 +2,9 @@
 
 namespace MailCarrier\Dto;
 
+use MailCarrier\Dto\Attributes\CastWith;
+use MailCarrier\Dto\Casters\ArrayCaster;
 use MailCarrier\Models\Template;
-use Spatie\DataTransferObject\Attributes\CastWith;
-use Spatie\DataTransferObject\Casters\ArrayCaster;
-use Spatie\DataTransferObject\DataTransferObject;
 
 class GenericMailDto extends DataTransferObject
 {

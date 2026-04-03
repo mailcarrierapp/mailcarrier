@@ -4,7 +4,7 @@ namespace MailCarrier\Dto\Casters;
 
 use Illuminate\Support\Collection;
 use MailCarrier\Dto\ContactDto;
-use Spatie\DataTransferObject\Caster;
+use MailCarrier\Dto\Contracts\Caster;
 
 class ContactArrayCaster implements Caster
 {

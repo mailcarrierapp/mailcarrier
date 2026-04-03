@@ -2,11 +2,10 @@
 
 namespace MailCarrier\Dto;
 
+use MailCarrier\Dto\Attributes\CastWith;
+use MailCarrier\Dto\Casters\ArrayCaster;
 use MailCarrier\Dto\Casters\ContactArrayCaster;
 use MailCarrier\Dto\Validators\Email;
-use Spatie\DataTransferObject\Attributes\CastWith;
-use Spatie\DataTransferObject\Casters\ArrayCaster;
-use Spatie\DataTransferObject\DataTransferObject;
 
 class RecipientDto extends DataTransferObject
 {

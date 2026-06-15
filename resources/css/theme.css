@@ -1,7 +1,10 @@
-@import "../../vendor/filament/filament/resources/css/theme.css";
-@import "./hljs-dark.css";
-@import "./hljs-light.css";
-@config '../../tailwind.config.js';
+@import '../../vendor/filament/filament/resources/css/theme.css';
+@import './hljs-dark.css';
+@import './hljs-light.css';
+
+@source '../../src';
+@source '../../resources';
+@source inline("dark:flex max-w-[14rem]");
 
 .button-send-test svg {
   position: relative;

@@ -55,10 +55,20 @@ Then manually resolve anything the tool missed, applying these exact transformat
 4. **Width enum.** Replace `Filament\Support\Enums\MaxWidth` with `Filament\Support\Enums\Width`; convert string widths to enum cases (e.g. `'7xl'` → `Width::SevenExtraLarge`, `'2xl'` → `Width::TwoExtraLarge`).
 5. **Auth pages.** Replace `Filament\Pages\Auth\Login` with `Filament\Auth\Pages\Login`, and `Filament\Http\Responses\Auth\Contracts\LoginResponse` with `Filament\Auth\Http\Responses\Contracts\LoginResponse`.
 6. **Static → instance props.** Remove the `static` keyword from overridden panel/widget properties that are no longer static (e.g. `$pollingInterval`, navigation properties whose type changed to `string|\BackedEnum|null`).
+7. **Translation keys.** The panel auth translation namespace swapped `pages/auth` → `auth/pages`. Search for `filament-panels::pages/auth` and rewrite to `filament-panels::auth/pages` (e.g. `filament-panels::pages/auth/login.form.actions.authenticate.label` → `filament-panels::auth/pages/login.form.actions.authenticate.label`). A missed key renders as the raw string and looks like a broken page.
+8. **Custom theme (Tailwind v4) — common cause of an unstyled panel.** If the project registers a custom theme via `->theme(asset(...))`, the v3-compiled CSS will not work on Filament v4 (Tailwind v4 is CSS-first; the `tailwind.config.js` preset no longer exists). Migrate the theme CSS: replace the `content` array / `@config` with `@source` directives, port any `safelist` to `@source inline("...")`, and build with the `@tailwindcss/vite` plugin + `tailwindcss@^4`. Then rebuild assets. If the project only uses MailCarrier's bundled theme, no theme code change is needed — just re-publish assets (see below).
+9. **Stale published view overrides.** If the project published/overrode MailCarrier or plugin views, a `Class "...Support\View" not found` (filament-peek) or similar error means a stale override. Re-publish the views, or update the helper: `\Pboivin\FilamentPeek\Support\View` → `\Pboivin\FilamentPeek\Facades\Peek` (`isPreviewModalRegistered()` / `isBuilderPreviewRegistered()`).
 
 For anything ambiguous, consult the official Filament 3→4 upgrade guide rather than guessing.
 
-**Verification gate:** the app boots (`php artisan about` runs without class-not-found / type errors) and `php artisan filament:optimize-clear` succeeds.
+Re-publish MailCarrier assets so the Filament v4 theme reaches `public/`:
+
+```shell
+php artisan vendor:publish --tag="mailcarrier-assets" --force
+php artisan filament:optimize-clear
+```
+
+**Verification gate:** the app boots (`php artisan about` runs without class-not-found / type errors), `php artisan filament:optimize-clear` succeeds, and the panel renders **styled** (no raw `filament-panels::...` translation strings, login page has its normal layout).
 
 ## Phase 3 — Replace `spatie/data-transfer-object` references
 

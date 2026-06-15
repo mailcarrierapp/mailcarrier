@@ -39,7 +39,7 @@ class Login extends BaseLoginPage
         if (MailCarrier::getSocialAuthDriver()) {
             return [
                 Action::make('login')
-                    ->label(__('filament-panels::pages/auth/login.form.actions.authenticate.label'))
+                    ->label(__('filament-panels::auth/pages/login.form.actions.authenticate.label'))
                     ->action(fn () => redirect()->route('auth.redirect')),
             ];
         }

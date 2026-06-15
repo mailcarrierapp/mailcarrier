@@ -149,6 +149,41 @@ use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 
 Several panel/widget properties (e.g. `$pollingInterval`) are no longer `static`. If you override them in a subclass, drop the `static` keyword.
 
+#### Translation keys moved (`pages/auth/*` → `auth/pages/*`)
+
+Filament v4 reorganized its panel translation files, swapping the `pages/auth` segment to `auth/pages`. If you reference any auth translation keys (e.g. when customizing the login page actions), update the namespace:
+
+```php
+// v2 (Filament 3)
+__('filament-panels::pages/auth/login.form.actions.authenticate.label');
+
+// v3 (Filament 4)
+__('filament-panels::auth/pages/login.form.actions.authenticate.label');
+```
+
+A missed key renders as the raw, untranslated string (and, when used as a full-width form action label, makes the page look broken).
+
+#### Rebuild your custom theme (Tailwind v4)
+
+This is the most common cause of an **unstyled panel** after upgrading. Filament v4 uses **Tailwind CSS v4**, which is CSS-first (no `tailwind.config.js` preset). If you registered a custom theme with `->theme(asset(...))`, the v3-compiled CSS will not work on v4 and the entire panel (including the login page) will render without styles.
+
+If you maintain your own theme, migrate it to the v4 format:
+
+- Replace the `content` array / `@config` directive with `@source` directives in your theme CSS, and port any `safelist` to `@source inline("...")`.
+- Use the `@tailwindcss/vite` plugin and `tailwindcss@^4` instead of the v3 PostCSS toolchain.
+- Follow the [official Filament v4 theme guide](https://filamentphp.com/docs/4.x).
+
+MailCarrier's bundled theme is already migrated. You only need to **rebuild and republish the assets** so the new theme reaches your `public/` directory:
+
+```shell
+php artisan vendor:publish --tag="mailcarrier-assets" --force
+php artisan filament:optimize-clear
+```
+
+#### Re-publish overridden Filament/plugin views
+
+If you published and customized any MailCarrier or plugin views, re-publish them. For example, MailCarrier's `filament-peek` preview-modal override changed: the removed `\Pboivin\FilamentPeek\Support\View` helper is now the `\Pboivin\FilamentPeek\Facades\Peek` facade (`isPreviewModalRegistered()` / `isBuilderPreviewRegistered()`). A `Class "...Support\View" not found` error means a stale view override needs re-publishing.
+
 ---
 
 ### Step 3 — Migrate from `spatie/data-transfer-object`
@@ -248,6 +283,13 @@ php artisan view:clear
 composer test
 ```
 
+Re-publish the assets so the rebuilt Filament v4 theme reaches your `public/` directory (required — see "Rebuild your custom theme" above):
+
+```shell
+php artisan vendor:publish --tag="mailcarrier-assets" --force
+php artisan filament:optimize-clear
+```
+
 If you publish and override MailCarrier views or config, re-publish them to pick up any changes:
 
 ```shell
@@ -264,7 +306,9 @@ php artisan vendor:publish --tag="mailcarrier-views" --force
 - [ ] Application is on **PHP 8.4+** and **Laravel 13**.
 - [ ] `mailcarrier/mailcarrier` bumped to `^3.0` and `composer update -W` completed.
 - [ ] Filament upgraded to **v4** (ran `filament-upgrade` if you customize Filament).
+- [ ] Filament auth translation keys updated (`pages/auth/*` → `auth/pages/*`) if referenced.
+- [ ] Custom theme rebuilt for Tailwind v4 (if you maintain one) and assets re-published.
 - [ ] Any references to `Spatie\DataTransferObject\*` replaced with `MailCarrier\Dto\*`.
 - [ ] Custom casters/validators updated to the new interfaces.
-- [ ] Config/views re-published if customized.
+- [ ] Config/views re-published if customized (stale plugin view overrides re-published).
 - [ ] Test suite passes.

@@ -1,0 +1,18 @@
+# MailCarrier
+
+> User-friendly, provider-aware Laravel + Filament mailing platform with templates, previews, logs, attachments, queues, and webhooks. MailCarrier v3 requires PHP 8.4+, Laravel 13, and Filament v4.
+
+## Upgrading
+
+- [v2 → v3 agent upgrade instructions](https://raw.githubusercontent.com/mailcarrierapp/mailcarrier/main/ai/upgrades/v2-to-v3.md): step-by-step, command-first instructions written for AI coding agents to upgrade a host app to MailCarrier v3 (Filament v4, PHP 8.4, Laravel 13, in-house DTOs).
+- [v2 → v3 upgrade guide (human)](https://raw.githubusercontent.com/mailcarrierapp/mailcarrier/main/UPGRADE.md): the same migration written for humans, with rationale and before/after examples.
+
+## Documentation
+
+- [README](https://raw.githubusercontent.com/mailcarrierapp/mailcarrier/main/README.md): features, quick start (classic and Docker), and testing.
+- [composer.json](https://raw.githubusercontent.com/mailcarrierapp/mailcarrier/main/composer.json): current dependency constraints and supported PHP/Laravel/Filament versions.
+
+## Source
+
+- [Repository](https://github.com/mailcarrierapp/mailcarrier): full source code.
+- [Releases](https://github.com/mailcarrierapp/mailcarrier/releases): version history and changelog.

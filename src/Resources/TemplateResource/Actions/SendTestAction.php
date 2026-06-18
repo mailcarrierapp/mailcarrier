@@ -42,7 +42,7 @@ class SendTestAction extends Action
                 ->valueLabel('Variable value')
                 ->valuePlaceholder('Fill or delete')
                 ->default(
-                    Arr::mapWithKeys(
+                    fn (): array => Arr::mapWithKeys(
                         // @phpstan-ignore-next-line
                         TemplateManager::make($this->getRecord())->extractVariableNames(),
                         fn (string $value) => [$value => null]

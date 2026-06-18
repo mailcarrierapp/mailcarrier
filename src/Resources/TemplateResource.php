@@ -5,6 +5,8 @@ namespace MailCarrier\Resources;
 use Filament\Actions\Action as FilamentAction;
 use Filament\Actions\EditAction;
 use Filament\Forms;
+use Filament\Forms\Components\CodeEditor;
+use Filament\Forms\Components\CodeEditor\Enums\Language;
 use Filament\Forms\Components\Field;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
@@ -18,7 +20,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\HtmlString;
 use MailCarrier\Actions\Templates\GenerateSlug;
-use MailCarrier\Forms\Components\CodeEditor;
 use MailCarrier\Models\Template;
 use MailCarrier\Resources\TemplateResource\Actions\LivePreviewAction;
 use MailCarrier\Resources\TemplateResource\Pages;
@@ -118,6 +119,7 @@ class TemplateResource extends Resource
     public static function getFormEditor(): Field
     {
         return CodeEditor::make('content')
+            ->language(Language::Html)
             ->required()
             ->hint(new HtmlString('<a href="https://twig.symfony.com/doc/3.x/templates.html" class="underline text-primary-500 cursor-help" target="_blank" tabindex="-1">Help with syntax</a>'))
             ->hintIcon('heroicon-o-code-bracket-square')

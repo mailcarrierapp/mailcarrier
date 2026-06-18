@@ -5,6 +5,8 @@ namespace MailCarrier\Resources;
 use Filament\Actions\Action as FilamentAction;
 use Filament\Actions\EditAction;
 use Filament\Forms;
+use Filament\Forms\Components\CodeEditor;
+use Filament\Forms\Components\CodeEditor\Enums\Language;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
@@ -12,7 +14,6 @@ use Filament\Schemas\Schema;
 use Filament\Tables;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\HtmlString;
-use MailCarrier\Forms\Components\CodeEditor;
 use MailCarrier\Models\Layout;
 use MailCarrier\Models\User;
 use MailCarrier\Resources\LayoutResource\Pages;
@@ -120,6 +121,7 @@ class LayoutResource extends Resource
                     ->dehydrated(fn (?Layout $record) => is_null($record) || !$record->is_locked),
 
                 CodeEditor::make('content')
+                    ->language(Language::Html)
                     ->required()
                     ->hint(new HtmlString('<a href="https://twig.symfony.com/doc/3.x/templates.html" class="underline text-primary-500 cursor-help" target="_blank" tabindex="-1">Help with syntax</a>'))
                     ->hintIcon('heroicon-o-code-bracket-square')

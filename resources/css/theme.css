@@ -16,8 +16,8 @@
   @apply rounded bg-white;
 }
 
-.cm-editor {
-  @apply h-full;
+.fi-fo-code-editor .cm-editor {
+  height: 30rem;
 }
 
 .fi-fo-field-wrp-helper-text {

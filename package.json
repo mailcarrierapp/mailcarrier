@@ -4,14 +4,10 @@
     "build": "vite build"
   },
   "devDependencies": {
-    "@codemirror/lang-html": "^6.4.8",
-    "@codemirror/lang-json": "^6.0.1",
     "@tailwindcss/vite": "^4.0.0",
-    "codemirror": "^6.0.1",
     "highlight.js": "^11.9.0",
     "laravel-vite-plugin": "^1.0.2",
     "tailwindcss": "^4.0.0",
-    "thememirror": "^2.0.1",
     "vite": "^5.2.9",
     "vite-plugin-static-copy": "^1.0.2"
   }

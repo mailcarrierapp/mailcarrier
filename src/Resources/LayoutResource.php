@@ -17,6 +17,7 @@ use Illuminate\Support\HtmlString;
 use MailCarrier\Models\Layout;
 use MailCarrier\Models\User;
 use MailCarrier\Resources\LayoutResource\Pages;
+use MailCarrier\Schemas\Components\Divider;
 use RalphJSmit\Filament\Components\Forms\Timestamps;
 
 class LayoutResource extends Resource
@@ -148,10 +149,7 @@ class LayoutResource extends Resource
                     // Save the field if record does not exist or user can unlock it
                     ->dehydrated(fn (?Layout $record) => is_null($record) || static::can('unlock', $record)),
 
-                TextEntry::make('_layout_separator')
-                    ->label('')
-                    ->state('')
-                    ->formatStateUsing(fn (): HtmlString => new HtmlString('<div class="h-1 border-b border-gray-100 dark:border-gray-700"></div>')),
+                Divider::make(),
 
                 TextEntry::make('_layout_created_by')
                     ->label('Created by')

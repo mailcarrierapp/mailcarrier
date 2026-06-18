@@ -23,6 +23,7 @@ use MailCarrier\Actions\Templates\GenerateSlug;
 use MailCarrier\Models\Template;
 use MailCarrier\Resources\TemplateResource\Actions\LivePreviewAction;
 use MailCarrier\Resources\TemplateResource\Pages;
+use MailCarrier\Schemas\Components\Divider;
 use RalphJSmit\Filament\Components\Forms\Timestamps;
 
 class TemplateResource extends Resource
@@ -242,10 +243,7 @@ class TemplateResource extends Resource
 
                 Forms\Components\TagsInput::make('tags'),
 
-                TextEntry::make('_template_separator')
-                    ->label('')
-                    ->state('')
-                    ->formatStateUsing(fn (): HtmlString => new HtmlString('<div class="h-1 border-b border-slate-100 dark:border-slate-700"></div>')),
+                Divider::make(),
 
                 TextEntry::make('_template_created_by')
                     ->label('Created by')

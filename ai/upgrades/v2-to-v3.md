@@ -6,7 +6,8 @@ You are an AI coding agent upgrading a Laravel application that depends on the `
 
 - Minimum PHP raised to **8.4** (was 8.1).
 - Laravel required version is now **13** only (was 10/11/12).
-- Filament upgraded from **v3 to v4**.
+- Filament upgraded from **v3 to v5** (this package major spans two Filament majors; run both upgrade scripts in sequence).
+- Livewire upgraded from **v3 to v4**.
 - Laravel Sanctum required version is now **v4** only.
 - The dependency `spatie/data-transfer-object` is **removed**; MailCarrier now ships an in-house DTO layer under the `MailCarrier\Dto` namespace.
 
@@ -25,29 +26,37 @@ You are an AI coding agent upgrading a Laravel application that depends on the `
 2. If the project directly requires any of these, align them (skip ones not present):
    - `"laravel/framework": "^13.0"`
    - `"laravel/sanctum": "^4.0"`
-   - `"filament/filament": "^4.0"`
+   - `"filament/filament": "^5.0"`
+   - `"livewire/livewire": "^4.0"`
 3. Run:
 
    ```shell
    composer update mailcarrier/mailcarrier --with-all-dependencies
    ```
 
-**Stop condition:** If Composer reports an unresolvable conflict caused by another Filament plugin still requiring Filament v3, report the conflicting package(s) and ask the user how to proceed (usually: bump that plugin to its Filament v4 release). Do not force-downgrade Filament.
+**Stop condition:** If Composer reports an unresolvable conflict caused by another Filament plugin still requiring an older Filament major, report the conflicting package(s) and ask the user how to proceed (usually: bump that plugin to its Filament v5 release). Note a plugin's major often does **not** match Filament's (e.g. `pboivin/filament-peek` v4 targets Filament v5). Do not force-downgrade Filament.
 
 **Verification gate:** `composer update` completes and `vendor/mailcarrier/mailcarrier` is at `^3`.
 
-## Phase 2 — Filament v4 migration
+## Phase 2 — Filament migration (v3 → v4 → v5)
 
 If the project does **not** extend or customize any MailCarrier/Filament classes (no custom Resources, Pages, Widgets, Actions, or Schemas), skip to Phase 3.
 
-Otherwise run Filament's automated upgrade tool first:
+Otherwise run Filament's automated upgrade tools, **one major at a time, in this order**. First v3 → v4:
 
 ```shell
 composer require filament/upgrade:"^4.0" -W --dev
 vendor/bin/filament-upgrade
 ```
 
-Then manually resolve anything the tool missed, applying these exact transformations across the project's `app/` (and any published MailCarrier overrides):
+Then v4 → v5 (the script accepts the source directory as an argument to skip the prompt; for a package, pass `src`):
+
+```shell
+composer require filament/upgrade:"^5.0" -W --dev
+vendor/bin/filament-v5 app   # or: vendor/bin/filament-v5 src
+```
+
+Then manually resolve anything the tools missed, applying these exact transformations across the project's `app/` (and any published MailCarrier overrides). Items 1–6 are the v4 changes; items 10–12 are v5/Livewire v4 specific:
 
 1. **Form → Schema.** Replace `Filament\Forms\Form` with `Filament\Schemas\Schema`. Method signatures `form(Form $form): Form` become `form(Schema $schema): Schema`. Calls to `->schema([...])` that built a form's root become `->components([...])`. Action/builder `->form([...])` becomes `->schema([...])`.
 2. **Actions namespace.** Replace `Filament\Tables\Actions\Action` and `Filament\Tables\Actions\ActionGroup` with `Filament\Actions\Action` and `Filament\Actions\ActionGroup`. Tables register row actions via `->recordActions([...])` instead of `->actions([...])`.
@@ -58,10 +67,13 @@ Then manually resolve anything the tool missed, applying these exact transformat
 7. **Translation keys.** The panel auth translation namespace swapped `pages/auth` → `auth/pages`. Search for `filament-panels::pages/auth` and rewrite to `filament-panels::auth/pages` (e.g. `filament-panels::pages/auth/login.form.actions.authenticate.label` → `filament-panels::auth/pages/login.form.actions.authenticate.label`). A missed key renders as the raw string and looks like a broken page.
 8. **Custom theme (Tailwind v4) — common cause of an unstyled panel.** If the project registers a custom theme via `->theme(asset(...))`, the v3-compiled CSS will not work on Filament v4 (Tailwind v4 is CSS-first; the `tailwind.config.js` preset no longer exists). Migrate the theme CSS: replace the `content` array / `@config` with `@source` directives, port any `safelist` to `@source inline("...")`, and build with the `@tailwindcss/vite` plugin + `tailwindcss@^4`. Then rebuild assets. If the project only uses MailCarrier's bundled theme, no theme code change is needed — just re-publish assets (see below).
 9. **Stale published view overrides.** If the project published/overrode MailCarrier or plugin views, a `Class "...Support\View" not found` (filament-peek) or similar error means a stale override. Re-publish the views, or update the helper: `\Pboivin\FilamentPeek\Support\View` → `\Pboivin\FilamentPeek\Facades\Peek` (`isPreviewModalRegistered()` / `isBuilderPreviewRegistered()`).
+10. **(v5 / Livewire v4) Component names drop the `::` namespace.** Search for `Livewire::component('...::...'`, `@livewire('...::...')`, and `<livewire:...::...>` and rename to plain hyphenated names. Example: `filament-peek::builder-editor` → `filament-peek-builder-editor`. A missing-component error after upgrade is almost always a leftover `::` name.
+11. **(v5) Rebuild the theme.** The theme stays Tailwind v4; rebuild and re-publish assets so the CSS matches Filament v5 component classes (commands below).
+12. **(v5) Lazy evaluation in action `setUp()`.** In custom actions, wrap record-dependent values (e.g. schema field `->default(...)`) in a closure: `$this->getRecord()` is `null` during `setUp()`. Use `->default(fn () => ...)` instead of computing the value eagerly.
 
-For anything ambiguous, consult the official Filament 3→4 upgrade guide rather than guessing.
+For anything ambiguous, consult the official Filament [3→4](https://filamentphp.com/docs/4.x/upgrade-guide) and [4→5](https://filamentphp.com/docs/5.x/upgrade-guide) upgrade guides rather than guessing.
 
-Re-publish MailCarrier assets so the Filament v4 theme reaches `public/`:
+Re-publish MailCarrier assets so the Filament v5 theme reaches `public/`:
 
 ```shell
 php artisan vendor:publish --tag="mailcarrier-assets" --force

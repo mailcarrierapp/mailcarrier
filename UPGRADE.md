@@ -2,9 +2,11 @@
 
 ## Upgrading from v2 to v3
 
-MailCarrier v3 is a **major release** that modernizes the platform's foundations: it moves to **Filament v4**, raises the **PHP and Laravel** floors, and replaces the deprecated `spatie/data-transfer-object` dependency with a built-in DTO layer.
+MailCarrier v3 is a **major release** that modernizes the platform's foundations: it jumps straight from **Filament v3 to Filament v5** (and **Livewire v3 to v4**), raises the **PHP and Laravel** floors, and replaces the deprecated `spatie/data-transfer-object` dependency with a built-in DTO layer.
 
-> **Estimated time:** 15–30 minutes for a standard install, longer if you have heavily customized Filament resources.
+> **Note:** This single package major spans **two** Filament majors (v3 → v4 → v5). Because Filament recommends upgrading one major at a time, you run **both** Filament upgrade scripts in sequence (see Step 2). The package itself only ships once, as v3.
+
+> **Estimated time:** 30–60 minutes for a standard install, longer if you have heavily customized Filament resources.
 
 ---
 
@@ -16,7 +18,8 @@ Before upgrading, make sure your application meets the new minimum requirements:
 | --- | --- | --- |
 | PHP | `^8.1` | **`^8.4`** |
 | Laravel | 10 / 11 / 12 | **13** |
-| Filament | v3 | **v4** |
+| Filament | v3 | **v5** |
+| Livewire | v3 | **v4** |
 | Laravel Sanctum | v3 / v4 | **v4** |
 
 If you cannot move to PHP 8.4 and Laravel 13 yet, stay on v2 until you can.
@@ -42,20 +45,31 @@ Then update:
 composer update mailcarrier/mailcarrier --with-all-dependencies
 ```
 
-Composer will pull in Filament v4, Sanctum v4, and the Laravel 13 packages. If you have other Filament plugins installed, you may need to bump them to their Filament v4–compatible versions at the same time.
+Composer will pull in Filament v5, Livewire v4, Sanctum v4, and the Laravel 13 packages. If you have other Filament plugins installed, you may need to bump them to their Filament v5–compatible versions at the same time (note: a plugin's major often does **not** match Filament's — e.g. `pboivin/filament-peek` v4 targets Filament v5).
 
 ---
 
-### Step 2 — Upgrade Filament to v4
+### Step 2 — Upgrade Filament (v3 → v4 → v5)
 
-MailCarrier v3 runs on **Filament v4**. If your project customizes any Filament panels, resources, pages, widgets, or actions, follow the official [Filament 3.x → 4.x upgrade guide](https://filamentphp.com/docs/4.x/upgrade-guide). Filament ships an automated upgrade script that handles the majority of namespace changes:
+MailCarrier v3 runs on **Filament v5**. If your project customizes any Filament panels, resources, pages, widgets, or actions, upgrade **one major at a time** using Filament's automated scripts, following the official [3.x → 4.x](https://filamentphp.com/docs/4.x/upgrade-guide) and [4.x → 5.x](https://filamentphp.com/docs/5.x/upgrade-guide) upgrade guides.
+
+First, v3 → v4:
 
 ```shell
 composer require filament/upgrade:"^4.0" -W --dev
 vendor/bin/filament-upgrade
 ```
 
-The most relevant changes that also affect MailCarrier's own code (and likely yours) are summarized below.
+Then, v4 → v5:
+
+```shell
+composer require filament/upgrade:"^5.0" -W --dev
+vendor/bin/filament-v5
+```
+
+> The v5 script also checks that your PHP, Laravel, Livewire, and plugin versions are compatible, and prints the exact `composer require` commands for your Filament packages.
+
+The most relevant changes that affect MailCarrier's own code (and likely yours) are summarized below. The first group applies to the v4 step; the [v5-specific changes](#filament-v5-specific-changes-livewire-v4) follow.
 
 #### Forms are now "Schemas"
 
@@ -184,6 +198,34 @@ php artisan filament:optimize-clear
 
 If you published and customized any MailCarrier or plugin views, re-publish them. For example, MailCarrier's `filament-peek` preview-modal override changed: the removed `\Pboivin\FilamentPeek\Support\View` helper is now the `\Pboivin\FilamentPeek\Facades\Peek` facade (`isPreviewModalRegistered()` / `isBuilderPreviewRegistered()`). A `Class "...Support\View" not found` error means a stale view override needs re-publishing.
 
+<h4 id="filament-v5-specific-changes-livewire-v4">Filament v5-specific changes (Livewire v4)</h4>
+
+The v4 → v5 step is comparatively small for this package because the schema/actions/Tailwind work was already done in the v4 step. The notable changes:
+
+- **Livewire v4 component names drop the `::` namespace.** Registered component names and `@livewire(...)` / `<livewire:...>` references must use plain hyphenated names. If you register or reference MailCarrier/plugin Livewire components, rename them:
+
+  ```php
+  // Filament v4 (Livewire v3)
+  Livewire::component('filament-peek::builder-editor', PreviewBuilderEditor::class);
+
+  // Filament v5 (Livewire v4)
+  Livewire::component('filament-peek-builder-editor', PreviewBuilderEditor::class);
+  ```
+
+  Likewise in Blade: `@livewire('filament-peek::builder-editor')` → `@livewire('filament-peek-builder-editor')`. A missing-component error after upgrading is almost always a leftover `::` name.
+
+- **Re-run the theme build.** The theme remains Tailwind v4, but rebuild and republish assets so the CSS matches Filament v5's component classes (same commands as above).
+
+- **Action `setUp()` evaluates eagerly.** When customizing an action, compute schema defaults and any record-dependent values **lazily** (pass a closure), because `$this->getRecord()` is `null` while the action is being set up:
+
+  ```php
+  // Breaks: getRecord() is null at setUp() time
+  ->default(SomeHelper::make($this->getRecord())->values())
+
+  // Works: evaluated when the form renders
+  ->default(fn (): array => SomeHelper::make($this->getRecord())->values())
+  ```
+
 ---
 
 ### Step 3 — Migrate from `spatie/data-transfer-object`
@@ -283,7 +325,7 @@ php artisan view:clear
 composer test
 ```
 
-Re-publish the assets so the rebuilt Filament v4 theme reaches your `public/` directory (required — see "Rebuild your custom theme" above):
+Re-publish the assets so the rebuilt Filament v5 theme reaches your `public/` directory (required — see "Rebuild your custom theme" above):
 
 ```shell
 php artisan vendor:publish --tag="mailcarrier-assets" --force
@@ -305,7 +347,8 @@ php artisan vendor:publish --tag="mailcarrier-views" --force
 
 - [ ] Application is on **PHP 8.4+** and **Laravel 13**.
 - [ ] `mailcarrier/mailcarrier` bumped to `^3.0` and `composer update -W` completed.
-- [ ] Filament upgraded to **v4** (ran `filament-upgrade` if you customize Filament).
+- [ ] Filament upgraded **v3 → v4 → v5** (ran both `filament-upgrade` and `filament-v5` if you customize Filament).
+- [ ] Livewire upgraded to **v4**; component names migrated off the `::` namespace.
 - [ ] Filament auth translation keys updated (`pages/auth/*` → `auth/pages/*`) if referenced.
 - [ ] Custom theme rebuilt for Tailwind v4 (if you maintain one) and assets re-published.
 - [ ] Any references to `Spatie\DataTransferObject\*` replaced with `MailCarrier\Dto\*`.

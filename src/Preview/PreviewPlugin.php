@@ -13,8 +13,8 @@ class PreviewPlugin extends FilamentPeekPlugin
 {
     public function register(Panel $panel): void
     {
-        Livewire::component('filament-peek::builder-editor', PreviewBuilderEditor::class);
-        Livewire::component('mailcarrier::preview-template', PreviewTemplate::class);
+        Livewire::component('filament-peek-builder-editor', PreviewBuilderEditor::class);
+        Livewire::component('mailcarrier-preview-template', PreviewTemplate::class);
 
         $panel->renderHook(
             'panels::body.end',

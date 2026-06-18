@@ -2,7 +2,7 @@
 
 namespace MailCarrier\Dto;
 
-use Spatie\DataTransferObject\Attributes\Strict;
+use MailCarrier\Dto\Attributes\Strict;
 
 #[Strict]
 class LogTemplateDto extends CastableDataTransferObject

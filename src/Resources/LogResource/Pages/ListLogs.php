@@ -2,8 +2,8 @@
 
 namespace MailCarrier\Resources\LogResource\Pages;
 
-use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use MailCarrier\Enums\LogStatus;
 use MailCarrier\Models\Log;

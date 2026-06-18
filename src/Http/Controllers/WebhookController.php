@@ -17,7 +17,8 @@ class WebhookController extends Controller
     {
         $webhook = new IncomingWebhook(
             headers: (new Collection($request->headers->all()))
-                ->map(fn (array $values) => $values[0]),
+                ->map(fn (array $values) => $values[0] ?? null)
+                ->all(),
             body: $request->all(),
         );
 

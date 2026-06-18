@@ -1250,7 +1250,7 @@ it('allows to override the GenericMailDto from the sending middleware', function
     });
 
     MailCarrier::sending(function (GenericMailDto $mail, \Closure $next): void {
-        $next($mail->clone(
+        $next($mail->with(
             sender: [
                 'email' => 'new-sender@example.org',
             ],

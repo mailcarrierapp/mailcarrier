@@ -2,8 +2,8 @@
 
 namespace MailCarrier\Dto;
 
+use MailCarrier\Dto\Attributes\Strict;
 use MailCarrier\Dto\Validators\Email;
-use Spatie\DataTransferObject\Attributes\Strict;
 
 #[Strict]
 class ContactDto extends CastableDataTransferObject

@@ -1,5 +1,8 @@
 parameters:
     level: 5
+    # Package has config/ at repo root; Larastan defaults to Laravel's config_path() which is wrong here.
+    configDirectories:
+        - %currentWorkingDirectory%/config
     paths:
         - src
         - config
@@ -10,5 +13,23 @@ parameters:
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - identifier: missingType.iterableValue
+        # Twig Node::getIterator() is typed as Node children only; guard kept for clarity / future API safety.
+        -
+            identifier: instanceof.alwaysTrue
+            path: src/Helpers/TemplateManager.php
         - '#Method MailCarrier\\Resources\\(.*)\\Pages\\(.*)::getRecord\(\)(.*)#'
         - '#Unsafe usage of new static(.*)#'
+        -
+            identifier: traitUse.deprecatedTrait
+            path: src/Resources/TemplateResource/Pages/EditTemplate.php
+        -
+            identifier: class.extendsDeprecatedClass
+            path: src/Preview/PreviewBuilderEditor.php
+        -
+            identifier: method.deprecatedClass
+            path: src/Preview/PreviewBuilderEditor.php
+        -
+            message: '#Parameter .* of function view expects view-string#'
+            paths:
+                - src/Preview/PreviewBuilderEditor.php
+                - src/Preview/PreviewPlugin.php

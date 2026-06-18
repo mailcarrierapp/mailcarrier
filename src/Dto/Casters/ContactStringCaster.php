@@ -3,7 +3,7 @@
 namespace MailCarrier\Dto\Casters;
 
 use MailCarrier\Dto\ContactDto;
-use Spatie\DataTransferObject\Caster;
+use MailCarrier\Dto\Contracts\Caster;
 
 class ContactStringCaster implements Caster
 {

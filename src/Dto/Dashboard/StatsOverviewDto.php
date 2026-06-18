@@ -2,7 +2,7 @@
 
 namespace MailCarrier\Dto\Dashboard;
 
-use Spatie\DataTransferObject\DataTransferObject;
+use MailCarrier\Dto\DataTransferObject;
 
 class StatsOverviewDto extends DataTransferObject
 {

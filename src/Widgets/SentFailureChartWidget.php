@@ -9,13 +9,11 @@ use MailCarrier\Enums\Dashboard\SentFailureChartFilter;
 
 class SentFailureChartWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Sent and failure over time';
-
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     protected int|string|array $columnSpan = 2;
 
-    protected static ?string $maxHeight = '300px';
+    protected ?string $maxHeight = '300px';
 
     public ?string $filter = 'today';
 

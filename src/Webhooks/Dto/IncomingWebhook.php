@@ -3,16 +3,15 @@
 namespace MailCarrier\Webhooks\Dto;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 
 class IncomingWebhook
 {
     /**
-     * @param  Collection<string, string|null>  $headers
+     * @param  array<string, string|null>  $headers  First value per header name.
      * @param  array<string, mixed>  $body
      */
     public function __construct(
-        public readonly Collection $headers,
+        public readonly array $headers,
         public readonly array $body,
     ) {}
 
@@ -21,7 +20,7 @@ class IncomingWebhook
      */
     public function getHeader(string $name, ?string $default = null): ?string
     {
-        return $this->headers->get($name, $default);
+        return Arr::get($this->headers, $name, $default);
     }
 
     /**

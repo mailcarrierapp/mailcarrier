@@ -25,7 +25,7 @@ Design global layouts, compose your template, preview your emails and send them 
 
 ### Classic way
 
-**Prerequisites**: PHP 8.1, Composer
+**Prerequisites**: PHP 8.4, Laravel 13, Composer
 
 ```shell
 curl "https://mailcarrier.app/create" | bash
@@ -45,6 +45,21 @@ Learn more about [running with Docker](https://mailcarrier.app/docs/getting-star
 
 ```bash
 composer test
+```
+
+## Upgrading
+
+Upgrading from v2 to v3? See the [upgrade guide](UPGRADE.md).
+
+### Upgrade with your AI agent
+
+MailCarrier ships machine-readable upgrade instructions. Paste the following prompt into your AI coding agent (Cursor, Claude Code, Codex, etc.) and it will perform the v2 → v3 upgrade for you:
+
+```text
+Upgrade this project from MailCarrier v2 to v3 by following these instructions exactly:
+https://raw.githubusercontent.com/mailcarrierapp/mailcarrier/main/ai/upgrades/v2-to-v3.md
+
+Apply every phase in order, run the verification gate after each phase, run `composer test` at the end, and stop and report if any stop condition is hit.
 ```
 
 ## Changelog

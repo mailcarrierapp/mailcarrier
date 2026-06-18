@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use MailCarrier\Models\Log as LogModel;
@@ -26,8 +25,8 @@ it('passes correct data to ProcessWebhook action', function () {
         ->shouldReceive('run')
         ->once()
         ->withArgs(function (IncomingWebhook $webhook) {
-            return $webhook->headers instanceof Collection
-                && $webhook->headers->get('x-custom-header') === 'custom-value'
+            return is_array($webhook->headers)
+                && $webhook->getHeader('x-custom-header') === 'custom-value'
                 && $webhook->body === ['test' => 'data'];
         });
 

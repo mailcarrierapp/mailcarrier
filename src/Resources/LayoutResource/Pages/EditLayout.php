@@ -19,7 +19,7 @@ class EditLayout extends EditRecord
     /**
      * Get resource top-right actions.
      */
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\Action::make('save')

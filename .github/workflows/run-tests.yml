@@ -3,7 +3,7 @@ name: Tests
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
@@ -12,16 +12,11 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [8.1, 8.2, 8.3]
-        laravel: ["^11.0", "^10.0"]
+        php: [8.4, 8.5]
+        laravel: ["^13.0"]
         include:
-          - laravel: "^11.0"
-            testbench: 9.*
-          - laravel: "^10.0"
-            testbench: 8.*
-        exclude:
-          - laravel: "^11.0"
-            php: 8.1
+          - laravel: "^13.0"
+            testbench: 11.*
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
@@ -48,4 +43,4 @@ jobs:
           composer update --prefer-dist --no-interaction
 
       - name: Execute tests
-        run: vendor/bin/pest
+        run: vendor/bin/pest --no-coverage

@@ -24,8 +24,8 @@ use MailCarrier\Models\Concerns\IsUuid;
  * @property string|null $message_id
  * @property \MailCarrier\Dto\ContactDto $sender
  * @property \MailCarrier\Dto\ContactDto|null $replyTo
- * @property \Illuminate\Support\Collection<MailCarrier\Dto\ContactDto>|null $cc
- * @property \Illuminate\Support\Collection<MailCarrier\Dto\ContactDto>|null $bcc
+ * @property \Illuminate\Support\Collection<int, \MailCarrier\Dto\ContactDto>|null $cc
+ * @property \Illuminate\Support\Collection<int, \MailCarrier\Dto\ContactDto>|null $bcc
  * @property string $recipient
  * @property \MailCarrier\Dto\LogTemplateDto $template_frozen
  * @property array<string, mixed>|null $variables
@@ -59,7 +59,7 @@ class Log extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'template_id',
@@ -84,7 +84,7 @@ class Log extends Model
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [];
 

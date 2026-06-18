@@ -5,8 +5,10 @@ namespace MailCarrier\Resources\ApiTokenResource\Actions;
 use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Forms;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\Alignment;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use MailCarrier\Actions\Auth\GenerateToken;
 use MailCarrier\Resources\ApiTokenResource;
 
@@ -39,19 +41,19 @@ class CreateAction extends Action
 
         $this->modalFooterActionsAlignment(Alignment::End);
 
-        $this->modalWidth(MaxWidth::Large);
+        $this->modalWidth(Width::Large);
 
         $this->record(null);
 
-        $this->form([
+        $this->schema([
             Forms\Components\TextInput::make('name')
-                ->hidden(fn (Forms\Get $get) => !is_null($get(static::GENERATED_TOKEN_FIELD_NAME)))
+                ->hidden(fn (Get $get) => !is_null($get(static::GENERATED_TOKEN_FIELD_NAME)))
                 ->required(),
 
             Forms\Components\DateTimePicker::make('expires_at')
                 ->minDate(Carbon::now())
                 ->label('Expiration date (UTC)')
-                ->hidden(fn (Forms\Get $get) => !is_null($get(static::GENERATED_TOKEN_FIELD_NAME)))
+                ->hidden(fn (Get $get) => !is_null($get(static::GENERATED_TOKEN_FIELD_NAME)))
                 ->helperText('Leave empty to never expire'),
 
             Forms\Components\TextInput::make('generated_token')
@@ -61,11 +63,11 @@ class CreateAction extends Action
                 ->extraInputAttributes([
                     'onClick' => 'this.select()',
                 ])
-                ->visible(fn (Forms\Get $get) => !is_null($get(static::GENERATED_TOKEN_FIELD_NAME))),
+                ->visible(fn (Get $get) => !is_null($get(static::GENERATED_TOKEN_FIELD_NAME))),
         ]);
 
-        $this->action(function (array $data, Forms\Form $form): void {
-            $form->fill([
+        $this->action(function (array $data, Schema $schema): void {
+            $schema->fill([
                 static::GENERATED_TOKEN_FIELD_NAME => GenerateToken::resolve()->run(
                     $data['name'],
                     expiresAt: $data['expires_at'],

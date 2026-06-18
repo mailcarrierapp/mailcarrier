@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite';
 import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
@@ -20,6 +21,7 @@ export default defineConfig({
         'resources/js/mailcarrier.js',
       ],
     }),
+    tailwindcss(),
     viteStaticCopy({
       targets: [
         {

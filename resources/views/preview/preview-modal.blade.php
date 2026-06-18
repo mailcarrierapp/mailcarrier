@@ -1,4 +1,4 @@
-@if (\Pboivin\FilamentPeek\Support\View::needsPreviewModal())
+@if (\Pboivin\FilamentPeek\Facades\Peek::isPreviewModalRegistered())
     <div
         role="alertdialog"
         aria-modal="true"
@@ -9,7 +9,7 @@
             allowIframeOverflow: @js(config('filament-peek.allowIframeOverflow', false)),
             shouldCloseModalWithEscapeKey: @js(config('filament-peek.closeModalWithEscapeKey', true)),
             editorAutoRefreshDebounceTime: @js(config('filament-peek.builderEditor.autoRefreshDebounceMilliseconds', 500)),
-            shouldRestoreIframePositionOnRefresh: @js(config('filament-peek.builderEditor.preservePreviewScrollPosition', false)),
+            shouldRestoreIframePositionOnRefresh: @js(config('filament-peek.builderEditor.preservePreviewScrollPosition', true)),
             canResizeEditorSidebar: @js(config('filament-peek.builderEditor.canResizeSidebar', true)),
             editorSidebarMinWidth: @js(config('filament-peek.builderEditor.sidebarMinWidth', '30rem')),
             editorSidebarInitialWidth: @js(config('filament-peek.builderEditor.sidebarInitialWidth', '30rem')),
@@ -19,6 +19,7 @@
             'is-filament-peek-editor-resizing': editorIsResizing,
         }"
         x-bind:style="modalStyle"
+        x-on:open-preview-tab.window="onOpenPreviewTab($event)"
         x-on:open-preview-modal.window="onOpenPreviewModal($event)"
         x-on:refresh-preview-modal.window="onRefreshPreviewModal($event)"
         x-on:close-preview-modal.window="onClosePreviewModal($event)"
@@ -28,7 +29,7 @@
         x-trap="isOpen"
         x-cloak
     >
-        @if (\Pboivin\FilamentPeek\Support\View::needsBuilderEditor())
+        @if (\Pboivin\FilamentPeek\Facades\Peek::isBuilderPreviewRegistered())
             @livewire('filament-peek::builder-editor')
         @endif
 
@@ -51,7 +52,7 @@
                             >
                                 <x-filament::icon
                                     :icon="$presetConfig['icon'] ?? 'heroicon-o-computer-desktop'"
-                                    :class="Arr::toCssClasses(['rotate-90' => $presetConfig['rotateIcon'] ?? false])"
+                                    :class="\Illuminate\Support\Arr::toCssClasses(['rotate-90' => $presetConfig['rotateIcon'] ?? false])"
                                 />
                             </button>
                         @endforeach
@@ -74,7 +75,7 @@
 
             <div
                 x-ref="previewModalBody"
-                class="{{ Arr::toCssClasses([
+                class="{{ \Illuminate\Support\Arr::toCssClasses([
                     'filament-peek-panel-body' => true,
                     'allow-iframe-overflow' => config('filament-peek.allowIframeOverflow', false),
                 ]) }}"

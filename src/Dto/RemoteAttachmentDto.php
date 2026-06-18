@@ -2,8 +2,6 @@
 
 namespace MailCarrier\Dto;
 
-use Spatie\DataTransferObject\DataTransferObject;
-
 class RemoteAttachmentDto extends DataTransferObject
 {
     public string $resource;

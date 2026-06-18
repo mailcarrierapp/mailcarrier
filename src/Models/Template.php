@@ -26,7 +26,7 @@ class Template extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'user_id',
@@ -42,7 +42,7 @@ class Template extends Model
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [];
 
@@ -59,7 +59,7 @@ class Template extends Model
     /**
      * The relationships that should always be loaded.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $with = [
         'layout',

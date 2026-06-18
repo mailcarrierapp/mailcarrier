@@ -3,9 +3,9 @@
 namespace MailCarrier\Pages;
 
 use Filament\Actions\Action;
-use Filament\Forms\Form;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
-use Filament\Pages\Auth\Login as BaseLoginPage;
+use Filament\Auth\Http\Responses\Contracts\LoginResponse;
+use Filament\Auth\Pages\Login as BaseLoginPage;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\Support\Htmlable;
 use MailCarrier\Facades\MailCarrier;
 
@@ -25,13 +25,13 @@ class Login extends BaseLoginPage
         return '';
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
         if (MailCarrier::getSocialAuthDriver()) {
-            return $form->schema([]);
+            return $schema->components([]);
         }
 
-        return parent::form($form);
+        return parent::form($schema);
     }
 
     protected function getFormActions(): array
@@ -39,7 +39,7 @@ class Login extends BaseLoginPage
         if (MailCarrier::getSocialAuthDriver()) {
             return [
                 Action::make('login')
-                    ->label(__('filament-panels::pages/auth/login.form.actions.authenticate.label'))
+                    ->label(__('filament-panels::auth/pages/login.form.actions.authenticate.label'))
                     ->action(fn () => redirect()->route('auth.redirect')),
             ];
         }

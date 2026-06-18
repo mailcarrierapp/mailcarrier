@@ -33,7 +33,7 @@ class SendTestAction extends Action
             'class' => 'button-send-test !bg-purple-500 hover:!bg-purple-400',
         ]);
 
-        $this->form([
+        $this->schema([
             Forms\Components\TextInput::make('email')
                 ->email()
                 ->required(),
@@ -42,7 +42,7 @@ class SendTestAction extends Action
                 ->valueLabel('Variable value')
                 ->valuePlaceholder('Fill or delete')
                 ->default(
-                    Arr::mapWithKeys(
+                    fn (): array => Arr::mapWithKeys(
                         // @phpstan-ignore-next-line
                         TemplateManager::make($this->getRecord())->extractVariableNames(),
                         fn (string $value) => [$value => null]
@@ -51,7 +51,7 @@ class SendTestAction extends Action
             Forms\Components\Checkbox::make('enqueue'),
         ]);
 
-        $this->action(function (array $data, Forms\Form $form): void {
+        $this->action(function (array $data): void {
             // Reset error box if any
             $this->modalContent(null);
 

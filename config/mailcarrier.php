@@ -13,6 +13,41 @@ return [
     */
     'social_auth_driver' => env('MAILCARRIER_SOCIAL_AUTH_DRIVER'),
 
+    'mcp' => [
+        /*
+        |--------------------------------------------------------------------------
+        | MCP server enabled
+        |--------------------------------------------------------------------------
+        |
+        | Determine whether the Model Context Protocol (MCP) server is exposed.
+        | The server lets AI clients inspect, create and edit templates.
+        |
+        */
+        'enabled' => env('MAILCARRIER_MCP_ENABLED', true),
+
+        /*
+        |--------------------------------------------------------------------------
+        | MCP server path
+        |--------------------------------------------------------------------------
+        |
+        | The HTTP path where the MCP server is registered, e.g. "mcp" will
+        | expose it at https://your-domain.tld/mcp.
+        |
+        */
+        'path' => env('MAILCARRIER_MCP_PATH', 'mcp'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | MCP middleware
+        |--------------------------------------------------------------------------
+        |
+        | The middleware applied to the MCP server. By default it is protected
+        | by OAuth 2.1 (Laravel Passport) through the "auth:api" guard.
+        |
+        */
+        'middleware' => ['auth:api'],
+    ],
+
     'api_endpoint' => [
         /*
         |--------------------------------------------------------------------------

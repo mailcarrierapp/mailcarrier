@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
  * @property string $name
  * @property string $slug
  * @property string $content
+ * @property string|null $description
  * @property array|null $tags
  * @property-read \MailCarrier\Models\User|null $user
  * @property-read \MailCarrier\Models\Layout|null $layout

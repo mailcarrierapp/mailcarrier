@@ -30,6 +30,8 @@ class TestCase extends Orchestra
             \Filament\Support\SupportServiceProvider::class,
             \Filament\Forms\FormsServiceProvider::class,
             \Filament\Tables\TablesServiceProvider::class,
+            \Laravel\Passport\PassportServiceProvider::class,
+            \Laravel\Mcp\Server\McpServiceProvider::class,
             \MailCarrier\MailCarrierServiceProvider::class,
         ];
     }

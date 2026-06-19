@@ -20,6 +20,8 @@
         "flowframe/laravel-trend": "^0.5",
         "illuminate/contracts": "^13.0",
         "illuminate/database": "^13.0",
+        "laravel/mcp": "^0.8.1",
+        "laravel/passport": "^13.7",
         "laravel/prompts": "^0.3",
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.6.1",

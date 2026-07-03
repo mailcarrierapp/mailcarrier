@@ -48,12 +48,21 @@ class LogResource extends Resource
                         LogStatus::Failed => 'danger',
                         LogStatus::Sent => 'success',
                     })
-                    ->icon(fn (LogStatus $state): string => match ($state) {
-                        LogStatus::Pending => 'heroicon-o-clock',
-                        LogStatus::Failed => 'heroicon-o-exclamation-triangle',
-                        LogStatus::Sent => 'heroicon-o-check-circle',
+                    ->icon(fn (LogStatus $state, Log $record): string => match (true) {
+                        // Show the webhook event icon when a sent email produced an event
+                        $state === LogStatus::Sent && $record->events->isNotEmpty() => 'heroicon-o-rss',
+                        $state === LogStatus::Pending => 'heroicon-o-clock',
+                        $state === LogStatus::Failed => 'heroicon-o-exclamation-triangle',
+                        default => 'heroicon-o-check-circle',
                     })
-                    ->formatStateUsing(fn (LogStatus $state) => ucfirst(mb_strtolower($state->value)))
+                    ->formatStateUsing(function (LogStatus $state, Log $record): string {
+                        // When a sent email produced a webhook event, show the latest event instead
+                        if ($state === LogStatus::Sent && $record->events->isNotEmpty()) {
+                            return ucfirst($record->events->first()->name);
+                        }
+
+                        return ucfirst(mb_strtolower($state->value));
+                    })
                     ->tooltip(fn (Log $record) => $record->error),
 
                 Tables\Columns\TextColumn::make('subject')

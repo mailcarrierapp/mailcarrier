@@ -20,6 +20,12 @@
   height: 30rem;
 }
 
+/* Keep the line-number gutter as tall as the editor so it grows with it */
+.fi-fo-code-editor .cm-editor .cm-scroller,
+.fi-fo-code-editor .cm-editor .cm-gutters {
+  min-height: 30rem !important;
+}
+
 .fi-fo-field-wrp-helper-text {
   @apply text-xs text-slate-500 pl-2;
 }

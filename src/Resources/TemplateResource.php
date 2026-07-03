@@ -239,9 +239,17 @@ class TemplateResource extends Resource
                         return new HtmlString(<<<HTML
                         <a class="text-primary-500 text-xs block" href="{$viewLayoutUrl}" target="_blank">{$icon}</a>
                     HTML);
-                    }),
+                    })
+                    // Disable field UI if the record exists and user can't unlock it
+                    ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
+                    // Save the field if record does not exist or user can unlock it
+                    ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked),
 
-                Forms\Components\TagsInput::make('tags'),
+                Forms\Components\TagsInput::make('tags')
+                    // Disable field UI if the record exists and user can't unlock it
+                    ->disabled(fn (?Template $record) => !is_null($record) && $record->is_locked)
+                    // Save the field if record does not exist or user can unlock it
+                    ->dehydrated(fn (?Template $record) => is_null($record) || !$record->is_locked),
 
                 Divider::make(),
 

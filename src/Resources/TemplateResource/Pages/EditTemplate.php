@@ -89,14 +89,18 @@ class EditTemplate extends EditRecord
 
     public function mutateInitialBuilderEditorData(string $builderName, array $editorData): array
     {
+        // When the template is locked, the "content" field is not dehydrated, so it's
+        // missing from the editor data. Fall back to the raw form data in that case.
+        $content = $editorData['content'] ?? $this->data['content'] ?? '';
+
         return [
             '_internalId' => $internalId = $this->getPreviewInternalId(),
             'variables' => Arr::mapWithKeys(
-                // @phpstan-ignore-next-line
-                TemplateManager::makeFromId($internalId, $editorData['content'])->extractVariableNames(),
+                TemplateManager::makeFromId($internalId, $content)->extractVariableNames(),
                 fn (string $value) => [$value => null]
             ),
             ...$editorData,
+            'content' => $content,
         ];
     }
 
@@ -112,7 +116,7 @@ class EditTemplate extends EditRecord
             'token' => Preview::cacheChanges(
                 $this->getPreviewInternalId(),
                 Auth::user()->id,
-                $this->data['content']
+                $this->data['content'] ?? ''
             ),
         ]);
     }

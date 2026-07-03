@@ -19,7 +19,10 @@ class CreateTemplate extends CreateRecord
         return [
             ...$data,
             'user_id' => Auth::id(),
-            'slug' => (new GenerateSlug)->run($this->data['name']),
+            // Use the custom slug if the user provided one, otherwise generate it from the name
+            'slug' => (new GenerateSlug)->run(
+                filled($data['slug'] ?? null) ? $data['slug'] : $data['name']
+            ),
         ];
     }
 }

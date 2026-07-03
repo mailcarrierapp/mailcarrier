@@ -62,6 +62,9 @@ class EditTemplate extends EditRecord
         return [
             TemplateResource::getFormEditor()
                 ->live()
+                // The builder editor form has no bound record, so re-evaluate the lock
+                // state from the editor data to keep the content read-only when locked.
+                ->disabled(fn (Get $get): bool => (bool) $get('_isLocked'))
                 ->afterStateUpdated(function (Get $get, string $state) {
                     Preview::cacheChanges(
                         $get('_internalId'),
@@ -95,6 +98,7 @@ class EditTemplate extends EditRecord
 
         return [
             '_internalId' => $internalId = $this->getPreviewInternalId(),
+            '_isLocked' => (bool) $this->getRecord()->is_locked,
             'variables' => Arr::mapWithKeys(
                 TemplateManager::makeFromId($internalId, $content)->extractVariableNames(),
                 fn (string $value) => [$value => null]

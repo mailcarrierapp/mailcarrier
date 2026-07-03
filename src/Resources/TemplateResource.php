@@ -66,6 +66,9 @@ class TemplateResource extends Resource
 
                 Tables\Columns\TextColumn::make('tags')
                     ->badge()
+                    // Show only a few tags as an excerpt to keep the column narrow
+                    ->limitList(3)
+                    ->expandableLimitedList()
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('created_at')

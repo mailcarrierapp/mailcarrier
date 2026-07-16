@@ -29,6 +29,8 @@
         "ralphjsmit/laravel-filament-components": "^3.0",
         "socialiteproviders/manager": "^4.3",
         "spatie/laravel-package-tools": "^1.19",
+        "twig/extra-bundle": "^3.24",
+        "twig/intl-extra": "^3.26",
         "twig/twig": "^3.5.1"
     },
     "require-dev": {

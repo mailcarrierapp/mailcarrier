@@ -40,3 +40,29 @@ it('renders with variables', function () {
 
     expect($result)->toBe('Company MailCarrier Hello Foo!');
 });
+
+it('formats numbers using the format_number filter', function () {
+    $template = Template::factory()->create([
+        'layout_id' => null,
+        'content' => '{{ number|format_number(locale="en-US") }}',
+    ]);
+
+    $result = Render::resolve()->run($template, [
+        'number' => 1234.56,
+    ]);
+
+    expect($result)->toBe('1,234.56');
+});
+
+it('formats numbers using the format_number filter with a specific locale', function () {
+    $template = Template::factory()->create([
+        'layout_id' => null,
+        'content' => '{{ number|format_number(locale="de-DE") }}',
+    ]);
+
+    $result = Render::resolve()->run($template, [
+        'number' => 1234.56,
+    ]);
+
+    expect($result)->toBe('1.234,56');
+});

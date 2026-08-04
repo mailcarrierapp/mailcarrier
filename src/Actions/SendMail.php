@@ -9,6 +9,7 @@ use MailCarrier\Dto\GenericMailDto;
 use MailCarrier\Dto\RecipientDto;
 use MailCarrier\Dto\SendMailDto;
 use MailCarrier\Exceptions\MissingVariableException;
+use MailCarrier\Exceptions\TemplateNotActiveException;
 use MailCarrier\Exceptions\TemplateRenderException;
 use MailCarrier\Facades\MailCarrier;
 use MailCarrier\Jobs\SendMailJob;
@@ -35,6 +36,7 @@ class SendMail extends Action
      * Send or enqueue the email.
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \MailCarrier\Exceptions\TemplateNotActiveException
      */
     public function run(SendMailDto $params, ?Log $log = null): void
     {
@@ -45,6 +47,12 @@ class SendMail extends Action
         $this->log = $log;
         $this->params = $params;
         $this->template = (new Templates\FindBySlug)->run($params->template);
+
+        if (!$this->template->is_active) {
+            throw new TemplateNotActiveException(
+                sprintf('Template "%s" is not active.', $this->template->slug)
+            );
+        }
         $this->recipients = $params->recipients ?: [
             new RecipientDto(
                 email: $params->recipient,

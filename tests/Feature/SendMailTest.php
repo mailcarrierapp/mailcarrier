@@ -10,6 +10,7 @@ use MailCarrier\Dto\AttachmentDto;
 use MailCarrier\Dto\GenericMailDto;
 use MailCarrier\Dto\RemoteAttachmentDto;
 use MailCarrier\Dto\SendMailDto;
+use MailCarrier\Enums\ApiErrorKey;
 use MailCarrier\Enums\AttachmentLogStrategy;
 use MailCarrier\Enums\LogStatus;
 use MailCarrier\Facades\MailCarrier;
@@ -54,6 +55,26 @@ it('sends email to the recipient', function () {
 
     expect($log->status)->toBe(LogStatus::Sent);
     expect($log->error)->toBeNull();
+});
+
+it('does not send an inactive template', function () {
+    Template::factory()->create([
+        'slug' => 'welcome',
+        'is_active' => false,
+    ]);
+
+    postJson(route('mailcarrier.send'), [
+        'enqueue' => false,
+        'template' => 'welcome',
+        'subject' => 'Welcome!',
+        'recipient' => 'recipient@example.org',
+    ])
+        ->assertStatus(Response::HTTP_PRECONDITION_FAILED)
+        ->assertJsonPath('key', ApiErrorKey::TemplateNotActive->value);
+
+    Mail::assertNothingSent();
+    assertDatabaseCount('templates', 1);
+    assertDatabaseCount('logs', 0);
 });
 
 it('compiles the variable into the template', function () {

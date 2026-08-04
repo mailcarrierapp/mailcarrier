@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
  * @property int|null $user_id
  * @property int|null $layout_id
  * @property bool $is_locked
+ * @property bool $is_active
  * @property string $name
  * @property string $slug
  * @property string $content
@@ -32,6 +33,7 @@ class Template extends Model
         'user_id',
         'template_id',
         'is_locked',
+        'is_active',
         'name',
         'slug',
         'content',
@@ -53,6 +55,7 @@ class Template extends Model
      */
     protected $casts = [
         'is_locked' => 'boolean',
+        'is_active' => 'boolean',
         'tags' => 'array',
     ];
 

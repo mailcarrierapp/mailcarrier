@@ -16,6 +16,7 @@ class TemplateFactory extends Factory
             'user_id' => null,
             'layout_id' => Layout::factory(),
             'is_locked' => false,
+            'is_active' => true,
             'name' => $this->faker->word(),
             'slug' => $this->faker->unique()->slug(),
             'content' => $this->faker->randomHtml(),

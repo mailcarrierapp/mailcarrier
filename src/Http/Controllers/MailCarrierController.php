@@ -16,6 +16,7 @@ use MailCarrier\Enums\ApiErrorKey;
 use MailCarrier\Exceptions\AttachmentNotDownloadableException;
 use MailCarrier\Exceptions\AttachmentNotFoundException;
 use MailCarrier\Exceptions\MissingVariableException;
+use MailCarrier\Exceptions\TemplateNotActiveException;
 use MailCarrier\Http\ApiResponse;
 use MailCarrier\Http\Requests\SendMailRequest;
 use MailCarrier\Models\Attachment;
@@ -59,7 +60,7 @@ class MailCarrierController extends Controller
                         ->all(),
                 ])
             );
-        } catch (MissingVariableException $e) {
+        } catch (MissingVariableException|TemplateNotActiveException $e) {
             report($e);
 
             return ApiResponse::error(

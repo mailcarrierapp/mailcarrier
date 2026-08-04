@@ -6,6 +6,7 @@ enum ApiErrorKey: string
 {
     case UnexpectedError = 'UNEXPECTED_ERROR';
     case MissingVariable = 'MISSING_VARIABLE';
+    case TemplateNotActive = 'TEMPLATE_NOT_ACTIVE';
     case TemplateRender = 'TEMPLATE_RENDER';
     case SendingFailed = 'SENDING_FAILED';
     case AttachmentNotDownloadable = 'ATTACHMENT_NOT_DOWNLOADABLE';

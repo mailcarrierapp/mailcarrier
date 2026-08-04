@@ -95,6 +95,11 @@ class TemplateResource extends Resource
                     })
                     ->toggleable(),
 
+                Tables\Columns\IconColumn::make('is_active')
+                    ->label('Active')
+                    ->boolean()
+                    ->toggleable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
@@ -165,6 +170,9 @@ class TemplateResource extends Resource
     protected static function getTableFilters(): array
     {
         return [
+            Tables\Filters\TernaryFilter::make('is_active')
+                ->label('Active'),
+
             Tables\Filters\SelectFilter::make('tags')
                 ->searchable()
                 ->options(
@@ -250,6 +258,11 @@ class TemplateResource extends Resource
                     ->disabled(fn (?Template $record) => !is_null($record) && !static::can('unlock', $record))
                     // Save the field if record does not exist or user can unlock it
                     ->dehydrated(fn (?Template $record) => is_null($record) || static::can('unlock', $record)),
+
+                Forms\Components\Toggle::make('is_active')
+                    ->inline(false)
+                    ->default(true)
+                    ->helperText('Inactive templates cannot be sent through the API.'),
 
                 Forms\Components\Select::make('layoutId')
                     ->relationship('layout', 'name')

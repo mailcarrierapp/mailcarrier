@@ -3,6 +3,7 @@
 namespace MailCarrier\Commands;
 
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use MailCarrier\Actions\Auth\EnsureAuthManagerExists;
@@ -30,6 +31,7 @@ class InstallCommand extends Command
         $this->installFilament();
         $this->publishVendor();
         $this->migrate();
+        $this->setupMcp();
         $this->autoload();
         $this->setupSocialAuth();
 
@@ -208,7 +210,37 @@ class InstallCommand extends Command
             '--tag' => 'sanctum-migrations',
         ]);
 
+        if (Config::boolean('mailcarrier.mcp.enabled')) {
+            $this->callSilently('vendor:publish', [
+                '--tag' => 'passport-migrations',
+            ]);
+        }
+
         $this->labeledLine('Vendor files copied.');
+    }
+
+    /**
+     * Setup the MCP server (OAuth 2.1 via Passport).
+     */
+    protected function setupMcp(): void
+    {
+        if (!Config::boolean('mailcarrier.mcp.enabled')) {
+            return;
+        }
+
+        $this->labeledLine('Configuring MCP server...', 'DOING', 'blue-400');
+
+        // Publish the OAuth consent screen so it can be customised
+        $this->callSilently('vendor:publish', [
+            '--tag' => 'mcp-views',
+        ]);
+
+        // Generate the encryption keys used to issue OAuth access tokens
+        $this->callSilently('passport:keys', [
+            '--force' => true,
+        ]);
+
+        $this->labeledLine('MCP server configured.');
     }
 
     /**

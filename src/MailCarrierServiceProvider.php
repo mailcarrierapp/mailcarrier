@@ -4,7 +4,10 @@ namespace MailCarrier;
 
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\View;
+use Laravel\Passport\Passport;
 use MailCarrier\Commands\InstallCommand;
 use MailCarrier\Commands\RetryCommand;
 use MailCarrier\Commands\SocialCommand;
@@ -34,7 +37,7 @@ class MailCarrierServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('mailcarrier')
-            ->hasRoutes(['api', 'web'])
+            ->hasRoutes(['api', 'web', 'ai'])
             ->hasConfigFile()
             ->hasViews()
             ->hasAssets()
@@ -62,7 +65,11 @@ class MailCarrierServiceProvider extends PackageServiceProvider
             $this->app->register(\Livewire\LivewireServiceProvider::class);
             $this->app->register(\Filament\FilamentServiceProvider::class);
             $this->app->register(\Laravel\Socialite\SocialiteServiceProvider::class);
+            $this->app->register(\Laravel\Passport\PassportServiceProvider::class);
+            $this->app->register(\Laravel\Mcp\Server\McpServiceProvider::class);
         }
+
+        $this->registerMcpAuth();
 
         $this->app->scoped('mailcarrier', fn (): MailCarrierManager => new MailCarrierManager);
     }
@@ -82,6 +89,48 @@ class MailCarrierServiceProvider extends PackageServiceProvider
 
         // Register Social Auth event listener
         $this->listenSocialiteEvents();
+
+        // Wire the OAuth consent screen used by the MCP server
+        $this->bootMcpAuth();
+    }
+
+    /**
+     * Register the auth guard and provider used by the MCP server.
+     *
+     * The MCP server is protected by OAuth 2.1 (Passport) through a dedicated
+     * "api" guard backed by the {@see \MailCarrier\Mcp\Auth\OAuthUser} model.
+     * This keeps it isolated from the Sanctum-based token functionality that
+     * protects the mailing API endpoint.
+     */
+    protected function registerMcpAuth(): void
+    {
+        if (!Config::boolean('mailcarrier.mcp.enabled')) {
+            return;
+        }
+
+        Config::set('auth.guards.api', Config::array('auth.guards.api', [
+            'driver' => 'passport',
+            'provider' => 'mcp_users',
+        ]));
+
+        Config::set('auth.providers.mcp_users', Config::array('auth.providers.mcp_users', [
+            'driver' => 'eloquent',
+            'model' => \MailCarrier\Mcp\Auth\OAuthUser::class,
+        ]));
+    }
+
+    /**
+     * Boot the OAuth consent screen used by the MCP server.
+     */
+    protected function bootMcpAuth(): void
+    {
+        if (!Config::boolean('mailcarrier.mcp.enabled') || !class_exists(Passport::class)) {
+            return;
+        }
+
+        Passport::authorizationView(
+            View::exists('mcp.authorize') ? 'mcp.authorize' : 'mcp::authorize'
+        );
     }
 
     /**

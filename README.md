@@ -41,6 +41,14 @@ docker run -p 80:80 -ti mailcarrier/mailcarrier
 
 Learn more about [running with Docker](https://mailcarrier.app/docs/getting-started/running-docker).
 
+## MCP (AI agents)
+
+MailCarrier ships a [Model Context Protocol](https://modelcontextprotocol.io) server (built on [`laravel/mcp`](https://laravel.com/docs/12.x/mcp)) that lets AI clients such as Claude, ChatGPT or Cursor inspect, create and edit your email templates.
+
+The server is exposed at `/mcp` and protected by OAuth 2.1 via Laravel Passport: an MCP client registers itself, the user approves access after logging in with their usual MailCarrier credentials, and the client then talks to the server with a bearer token. Connect a client by pointing it at `https://<your-domain>/mcp`.
+
+Learn more in the machine-readable docs: [MCP server](ai/features/mcp.md) and [Authentication](ai/features/authentication.md).
+
 ## Testing
 
 ```bash

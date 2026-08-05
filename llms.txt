@@ -12,6 +12,11 @@
 - [README](https://raw.githubusercontent.com/mailcarrierapp/mailcarrier/main/README.md): features, quick start (classic and Docker), and testing.
 - [composer.json](https://raw.githubusercontent.com/mailcarrierapp/mailcarrier/main/composer.json): current dependency constraints and supported PHP/Laravel/Filament versions.
 
+## Features
+
+- [Authentication](https://raw.githubusercontent.com/mailcarrierapp/mailcarrier/main/ai/features/authentication.md): admin panel login (password + Social OAuth), Sanctum API tokens for the mailing endpoint, and OAuth 2.1 (Passport) for the MCP server.
+- [MCP server](https://raw.githubusercontent.com/mailcarrierapp/mailcarrier/main/ai/features/mcp.md): the Model Context Protocol server that lets AI clients inspect, create and edit email templates, including its tools, configuration and authentication.
+
 ## Source
 
 - [Repository](https://github.com/mailcarrierapp/mailcarrier): full source code.
